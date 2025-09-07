@@ -11,47 +11,8 @@ const Header: React.FC = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <header id="header" className="header mt-5">
-      
-
-      {/* Centered Navigation Menu */}
-      <div className="header-nav">
-        <nav 
-          id="nav-main" 
-          className="nav nav-main"
-          role="navigation"
-        >
-          <ul>
-            <li className="header-menu-item">
-              <Link href="/category/inspirational" className="header-menu-item-link">
-                Inspirational
-              </Link>
-            </li>
-            <li className="header-menu-item">
-              <Link href="/category/tips-trends" className="header-menu-item-link">
-                Tips and trends
-              </Link>
-            </li>
-            <li className="header-menu-item">
-              <Link href="/category/outstanding-content" className="header-menu-item-link">
-                Outstanding content
-              </Link>
-            </li>
-            <li className="header-menu-item">
-              <Link href="/category/ai" className="header-menu-item-link">
-                AI
-              </Link>
-            </li>
-            <li className="header-menu-item">
-              <Link href="/category/product-updates" className="header-menu-item-link">
-                Product updates
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-
-      <div className="header-actions">
+    <header id="header" className="header">
+      <div className="header-container">
         {/* Mobile menu button */}
         <div className="header-mobile-menu">
           <button 
@@ -65,6 +26,43 @@ const Header: React.FC = () => {
               <Menu className="header-menu-icon" />
             )}
           </button>
+        </div>
+
+        {/* Centered Navigation Menu */}
+        <div className="header-nav">
+          <nav 
+            id="nav-main" 
+            className="nav nav-main"
+            role="navigation"
+          >
+            <ul>
+              <li className="header-menu-item">
+                <Link href="/category/inspirational" className="header-menu-item-link">
+                  Inspirational
+                </Link>
+              </li>
+              <li className="header-menu-item">
+                <Link href="/category/tips-trends" className="header-menu-item-link">
+                  Tips and trends
+                </Link>
+              </li>
+              <li className="header-menu-item">
+                <Link href="/category/outstanding-content" className="header-menu-item-link">
+                  Outstanding content
+                </Link>
+              </li>
+              <li className="header-menu-item">
+                <Link href="/category/ai" className="header-menu-item-link">
+                  AI
+                </Link>
+              </li>
+              <li className="header-menu-item">
+                <Link href="/category/product-updates" className="header-menu-item-link">
+                  Product updates
+                </Link>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
 

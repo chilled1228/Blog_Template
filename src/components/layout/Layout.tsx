@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from './Header';
 import Footer from './Footer';
+import { NavBarDemo } from '@/components/ui/navbar-demo';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="freepik home blog wp-theme-freepik-blog hfeed">
-      <Header />
+      <NavBarDemo />
       <main id="main">
         <div id="content" role="main" className="main-container">
           {children}

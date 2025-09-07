@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "firecrawl-mcp": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "fc-6e714e14c3e34de5bca816c5180ac849"
+      }
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=ypqxojzjbocbzdbhphok"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_c8264ba52143b6f0468a599acfe2f0254e9e0113"
+      }
+    }
+  }
+}

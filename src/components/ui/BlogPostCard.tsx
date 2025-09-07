@@ -1,28 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-
-interface BlogPost {
-  id: number;
-  title: string;
-  url: string;
-  category: string;
-  categoryUrl: string;
-  author: string;
-  authorUrl: string;
-  date: string;
-  datetime: string;
-  image: string;
-}
+import { BlogPost } from '@/lib/blogService';
 
 interface BlogPostCardProps {
   post: BlogPost;
 }
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
+  // Use the slug for better SEO instead of the ID
+  const postUrl = `/blog/${post.slug}`;
+
   return (
     <article className="blog-post-card">
-      <Link href={post.url} className="blog-post-card-link">
+      <Link href={postUrl} className="blog-post-card-link">
         <div className="blog-post-image-container">
           <Image 
             src={post.image} 
@@ -37,7 +28,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       <div className="blog-post-content">
         <div>
           <Link 
-            href={post.categoryUrl} 
+            href={post.category_url} 
             className="blog-post-category-link"
           >
             {post.category}
@@ -46,7 +37,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         
         <h2 className="blog-post-title">
           <Link 
-            href={post.url}
+            href={postUrl}
             className="blog-post-title-link"
           >
             {post.title}
@@ -56,7 +47,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         <div className="blog-post-meta">
           <span>By</span>
           <Link 
-            href={post.authorUrl} 
+            href={post.author_url} 
             className="blog-post-author"
           >
             {post.author}
