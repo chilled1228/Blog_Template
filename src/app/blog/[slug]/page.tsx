@@ -2,8 +2,8 @@ import { getBlogPostBySlug } from '@/lib/blogService';
 import { notFound } from 'next/navigation';
 import React from 'react';
 import { Layout } from '@/components/layout';
-import Image from 'next/image';
 import BlogContentRenderer from '@/components/ui/BlogContentRenderer';
+import StructuredData from '@/components/ui/StructuredData';
 
 interface BlogPostPageProps {
   params: {
@@ -21,18 +21,19 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
 
   return (
     <Layout>
+      <StructuredData slug={slug} />
       <div className="blog-container">
         <div className="blog-content-wrapper">
           <article className="blog-article">
             {/* Featured Image */}
             <div className="blog-featured-image">
-              <Image 
+              <img 
                 src={post.image} 
                 alt={post.title}
-                width={800}
-                height={400}
+                width="800"
+                height="400"
                 style={{ width: '100%', height: 'auto' }}
-                priority
+                loading="eager"
               />
             </div>
 
@@ -42,12 +43,11 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
             {/* Author Section */}
             <div className="blog-author-section">
               <div className="blog-author-avatar">
-                <Image 
+                <img 
                   src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=48`} 
                   alt={post.author}
-                  width={24}
-                  height={24}
-                  className="rounded-full"
+                  width="24"
+                  height="24"
                 />
               </div>
               <div className="blog-author-info">
@@ -78,12 +78,11 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
             {/* Author Footer */}
             <div className="blog-author-footer">
               <div className="blog-author-avatar-large">
-                <Image 
+                <img 
                   src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=96`} 
                   alt={post.author}
-                  width={48}
-                  height={48}
-                  className="rounded-full"
+                  width="48"
+                  height="48"
                 />
               </div>
               <div className="blog-author-footer-info">

@@ -23,10 +23,12 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const imageUrl = post.image || `${siteUrl}/default-og-image.jpg`;
 
   return {
-    title: post.title,
-    description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post',
-    keywords: post.category ? [post.category] : [],
+    title: `${post.title} | Freepik Blog`,
+    description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post on Freepik Blog',
+    keywords: post.category ? [post.category, 'freepik blog', 'design', 'creative resources'] : ['freepik blog', 'design', 'creative resources'],
     authors: [{ name: post.author, url: post.author_url }],
+    creator: "Freepik",
+    publisher: "Freepik",
     openGraph: {
       title: post.title,
       description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post',
