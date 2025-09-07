@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { BlogPost } from '@/lib/blogService';
 
 interface BlogPostCardProps {
@@ -12,18 +11,17 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const postUrl = `/blog/${post.slug}`;
 
   return (
-    <article className="blog-post-card">
-      <Link href={postUrl} className="blog-post-card-link">
-        <div className="blog-post-image-container">
-          <Image 
+    <article className="blog-post-card" data-post-id={post.id}>
+      <div className="blog-post-image-container">
+        <Link href={postUrl} className="blog-post-image-link">
+          <img 
             src={post.image} 
             alt={post.title} 
-            fill
             className="blog-post-image"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
           />
-        </div>
-      </Link>
+        </Link>
+      </div>
       
       <div className="blog-post-content">
         <div>

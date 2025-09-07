@@ -155,6 +155,9 @@ export default function Footer() {
               <Link href="/sitemap.xml" className="text-gray-500 hover:text-gray-900 text-sm transition-colors">
                 Sitemap
               </Link>
+              <Link href="/admin" className="text-gray-500 hover:text-gray-900 text-sm transition-colors font-medium">
+                Admin
+              </Link>
             </div>
           </div>
         </div>
