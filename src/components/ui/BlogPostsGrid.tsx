@@ -164,7 +164,7 @@ const blogPostsData: BlogPost[] = [
 const BlogPostsGrid: React.FC = () => {
   return (
     <div className="row row--post mg-none">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 px-5">
         {blogPostsData.map((post) => (
           <BlogPostCard key={post.id} post={post} />
         ))}
