@@ -3,25 +3,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <header id="header" className="header">
-      <Link href="/" className="header-logo">
-        <Image 
-          src="/images/freepik-logo-blog-svg-1.svg" 
-          alt="Freepik Blog" 
-          width={150} 
-          height={40} 
-        />
-      </Link>
+    <header id="header" className="header mt-5">
+      
 
       {/* Centered Navigation Menu */}
       <div className="header-nav">
@@ -61,16 +52,6 @@ const Header: React.FC = () => {
       </div>
 
       <div className="header-actions">
-        <div className="search-button-holder">
-          <button 
-            className="trigger__button"
-            onClick={toggleSearch}
-            aria-label="Search"
-          >
-            <Search className="header-search-icon" />
-          </button>
-        </div>
-
         {/* Mobile menu button */}
         <div className="header-mobile-menu">
           <button 
@@ -117,34 +98,6 @@ const Header: React.FC = () => {
               </Link>
             </li>
           </ul>
-        </div>
-      )}
-
-      {/* Search Overlay */}
-      {isSearchOpen && (
-        <div className="search-overlay">
-          <div className="search-container">
-            <form role="search" method="get" id="searchform" className="search-form">
-              <div className="search-input-container">
-                <input 
-                  type="search" 
-                  id="s" 
-                  name="s" 
-                  className="search.input"
-                  placeholder="Search..."
-                  autoFocus
-                />
-                <button 
-                  className="search-close-button"
-                  type="button"
-                  onClick={toggleSearch}
-                  aria-label="Close search"
-                >
-                  <X className="search-close-icon" />
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
       )}
     </header>

@@ -143,11 +143,18 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: 1000;
   background: white;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   height: 3.5rem;
+}
 
+.header-logo {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
 }
 
 .header-nav {
@@ -202,6 +209,7 @@
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 1001;
 }
 
 .header-mobile-menu-button {
@@ -229,6 +237,7 @@
   padding: 1rem;
   border-top: 1px solid #e5e7eb;
   display: none;
+  z-index: 1000;
 }
 
 .header-mobile-nav.active {
@@ -775,7 +784,7 @@ body.freepik {
 }
 /* WordPress Block Styles (from original HTML) */
 body {
-  padding-top: 5rem;
+  padding-top: 3.5rem;
 }
 #footer {
   display: block !important;

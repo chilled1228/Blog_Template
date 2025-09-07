@@ -134,7 +134,7 @@ const Footer: React.FC = () => {
               <div className="row row--vertical-center mg-none-i items-center">
                 <Link className="logo link--text inline-block clearfix" href="https://freepik.com/">
                   <Image 
-                    src="https://www.freepik.com/blog/wp-content/themes/freepik-blog/media/img/logo/freepik-company.svg" 
+                    src="/images/cropped-Freepik_Primary_Logo_Isotype_PikiBlue_512×512px-192x192.png" 
                     alt="Freepik Company"
                     width={191} 
                     height={32}
