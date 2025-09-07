@@ -21,48 +21,48 @@ interface BlogPostCardProps {
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   return (
-    <article className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all duration-300 h-full">
-      <Link href={post.url} className="block p-2">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+    <article className="blog-post-card">
+      <Link href={post.url} className="blog-post-card-link">
+        <div className="blog-post-image-container">
           <Image 
             src={post.image} 
             alt={post.title} 
             fill
-            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-out"
+            className="blog-post-image"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         </div>
       </Link>
       
-      <div className="p-5">
-        <div className="mb-2">
+      <div className="blog-post-content">
+        <div>
           <Link 
             href={post.categoryUrl} 
-            className="inline-block px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold uppercase tracking-wide rounded-full hover:bg-blue-100 transition-colors"
+            className="blog-post-category-link"
           >
             {post.category}
           </Link>
         </div>
         
-        <h2 className="text-lg font-bold text-gray-900 mb-3 leading-tight">
+        <h2 className="blog-post-title">
           <Link 
             href={post.url}
-            className="hover:text-blue-600 transition-colors line-clamp-2"
+            className="blog-post-title-link"
           >
             {post.title}
           </Link>
         </h2>
         
-        <div className="flex items-center text-sm text-gray-600 mt-auto">
-          <span className="text-gray-500">By</span>
+        <div className="blog-post-meta">
+          <span>By</span>
           <Link 
             href={post.authorUrl} 
-            className="ml-1 font-medium text-gray-800 hover:text-blue-600 transition-colors"
+            className="blog-post-author"
           >
             {post.author}
           </Link>
-          <span className="mx-2 text-gray-400">•</span>
-          <time dateTime={post.datetime} className="text-gray-500">
+          <span className="blog-post-date">•</span>
+          <time dateTime={post.datetime} className="blog-post-date-time">
             {post.date}
           </time>
         </div>

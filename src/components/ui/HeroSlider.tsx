@@ -85,17 +85,17 @@ const HeroSlider: React.FC = () => {
 
   return (
     <div className="wrapper">
-      <div className="hero-slider bg-white rounded-2xl overflow-hidden">
-        <div className="content relative">
+      <div className="hero-slider">
+        <div className="hero-slider-content">
           {/* Slider Controls */}
-          <ul className="slider--controls absolute bottom-6 left-6 z-10 flex gap-3">
+          <ul className="slider-controls">
             {slidesData.map((slide) => (
               <li key={slide.id}>
                 <button 
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`slider-control-button ${
                     activeSlide === slide.id 
-                      ? 'bg-blue-600' 
-                      : 'bg-gray-500 hover:bg-gray-600'
+                      ? 'slider-control-button--active' 
+                      : 'slider-control-button--inactive'
                   }`}
                   onClick={() => setActiveSlide(slide.id)}
                   data-index={slide.id}
@@ -109,66 +109,66 @@ const HeroSlider: React.FC = () => {
           {slidesData.map((slide) => (
             <div 
               key={slide.id}
-              className={`slider__item ${activeSlide === slide.id ? 'is-active' : 'hidden'} grid grid-cols-1 lg:grid-cols-2 min-h-[500px]`} 
+              className={`slider-item ${activeSlide === slide.id ? '' : 'slider-item--inactive'}`} 
               data-index={slide.id}
             >
-              <div className="slide--text flex items-center p-6 lg:p-12 order-2 lg:order-1">
-                <div className="slide--text-content max-w-lg">
+              <div className="slide-text">
+                <div className="slide-text-content">
                   <Link 
                     href={slide.categoryUrl} 
-                    className="text__state--blue uppercase text-xs font-semibold tracking-wider text-blue-600 hover:text-blue-700 transition-colors"
+                    className="slide-category-link"
                   >
                     {/* Empty link as in original */}
                   </Link>
                   
-                  <ul className="slide--categories mb-4">
-                    <li>
+                  <ul className="slide-categories-list">
+                    <li className="slide-category-item">
                       <Link 
                         href={slide.categoryUrl}
-                        className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors uppercase tracking-wide"
+                        className="slide-category-item-link"
                       >
                         {slide.category}
                       </Link>
                     </li>
                   </ul>
                   
-                  <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-4 leading-tight">
+                  <h2 className="slide-title">
                     <Link 
                       href={slide.url}
-                      className="text-gray-900 hover:text-blue-600 transition-colors"
+                      className="slide-title-link"
                     >
                       {slide.title}
                     </Link>
                   </h2>
                   
-                  <p className="slide-description text-gray-600 mb-4 line-clamp-2 hidden lg:block">
+                  <p className="slide-description">
                     {slide.description}
                   </p>
                   
-                  <p className="slide-author text-sm text-gray-500">
+                  <p className="slide-author">
                     By{' '}
                     <Link 
                       href={slide.authorUrl}
-                      className="font-semibold text-gray-700 hover:text-blue-600 transition-colors"
+                      className="slide-author-link"
                     >
                       {slide.author}
                     </Link>
                     {' '}
-                    <time dateTime="2025-05-26T13:20:10+00:00" className="text-gray-500">
+                    <time dateTime="2025-05-26T13:20:10+00:00" className="slide-date">
                       {slide.date}
                     </time>
                   </p>
                 </div>
               </div>
 
-              <div className="slide--img relative overflow-hidden order-1 lg:order-2 p-2 lg:p-3">
-                <Link href={slide.url} className="block h-full">
-                  <div className="relative aspect-[16/9] lg:aspect-auto lg:h-full rounded-lg overflow-hidden">
+              <div className="slide-image-container">
+                <Link href={slide.url} className="slide-image-link">
+                  <div className="slide-image-wrapper">
                     <Image 
                       src={slide.image} 
                       alt={slide.title} 
                       fill
-                      className="object-cover hover:scale-105 transition-transform duration-500 ease-out"
+                      className="slide-image"
                       sizes="(max-width: 1024px) 100vw, 50vw"
                       priority={slide.id === 1}
                     />

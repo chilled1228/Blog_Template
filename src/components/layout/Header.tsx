@@ -12,64 +12,64 @@ const Header: React.FC = () => {
   const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
 
   return (
-    <header id="header" className="fixed top-0 left-0 right-0 z-50">
+    <header id="header" className="header">
       {/* Centered Navigation Menu */}
-      <div className="flex justify-center items-center h-16">
+      <div className="header-nav">
         <nav 
           id="nav-main" 
           className="nav nav-main"
           role="navigation"
         >
-          <ul className="flex items-center justify-center space-x-8">
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/inspirational" className="text-gray-700 hover:text-blue-600 no-underline font-medium">
+          <ul>
+            <li className="header-menu-item">
+              <Link href="/category/inspirational" className="header-menu-item-link">
                 Inspirational
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/tips-trends" className="text-gray-700 hover:text-blue-600 no-underline font-medium">
+            <li className="header-menu-item">
+              <Link href="/category/tips-trends" className="header-menu-item-link">
                 Tips and trends
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/outstanding-content" className="text-gray-700 hover:text-blue-600 no-underline font-medium">
+            <li className="header-menu-item">
+              <Link href="/category/outstanding-content" className="header-menu-item-link">
                 Outstanding content
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/ai" className="text-gray-700 hover:text-blue-600 no-underline font-medium">
+            <li className="header-menu-item">
+              <Link href="/category/ai" className="header-menu-item-link">
                 AI
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/product-updates" className="text-gray-700 hover:text-blue-600 no-underline font-medium">
+            <li className="header-menu-item">
+              <Link href="/category/product-updates" className="header-menu-item-link">
                 Product updates
               </Link>
             </li>
             
             <li className="search-button-holder">
               <button 
-                className="button button--icon button--icon--only trigger__button"
+                className="trigger__button"
                 onClick={toggleSearch}
                 aria-label="Search"
               >
-                <Search className="w-5 h-5 text-gray-700" />
+                <Search className="header-search-icon" />
               </button>
             </li>
           </ul>
         </nav>
 
         {/* Mobile menu button */}
-        <div className="absolute right-4 md:hidden">
+        <div className="header-mobile-menu">
           <button 
-            className="button button--md button--icon button--icon--only trigger__button"
+            className="header-mobile-menu-button"
             onClick={toggleMenu}
             aria-label="Menu"
           >
             {isMenuOpen ? (
-              <X className="w-6 h-6 text-gray-700" />
+              <X className="header-menu-icon" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-700" />
+              <Menu className="header-menu-icon" />
             )}
           </button>
         </div>
@@ -77,30 +77,30 @@ const Header: React.FC = () => {
 
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-16 left-0 right-0 bg-white py-4 border-t border-gray-200">
-          <ul className="flex flex-col space-y-4 px-4">
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/inspirational" className="text-gray-700 hover:text-blue-600 no-underline font-medium block py-2">
+        <div className="header-mobile-nav">
+          <ul>
+            <li className="header-menu-item">
+              <Link href="/category/inspirational" className="header-mobile-menu-link">
                 Inspirational
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/tips-trends" className="text-gray-700 hover:text-blue-600 no-underline font-medium block py-2">
+            <li className="header-menu-item">
+              <Link href="/category/tips-trends" className="header-mobile-menu-link">
                 Tips and trends
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/outstanding-content" className="text-gray-700 hover:text-blue-600 no-underline font-medium block py-2">
+            <li className="header-menu-item">
+              <Link href="/category/outstanding-content" className="header-mobile-menu-link">
                 Outstanding content
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/ai" className="text-gray-700 hover:text-blue-600 no-underline font-medium block py-2">
+            <li className="header-menu-item">
+              <Link href="/category/ai" className="header-mobile-menu-link">
                 AI
               </Link>
             </li>
-            <li className="menu-item menu-item-type-taxonomy menu-item-object-category">
-              <Link href="/category/product-updates" className="text-gray-700 hover:text-blue-600 no-underline font-medium block py-2">
+            <li className="header-menu-item">
+              <Link href="/category/product-updates" className="header-mobile-menu-link">
                 Product updates
               </Link>
             </li>
@@ -110,25 +110,25 @@ const Header: React.FC = () => {
 
       {/* Search Overlay */}
       {isSearchOpen && (
-        <div id="search" className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start pt-20 justify-center trigger search--holder">
-          <div className="bg-white rounded-lg w-11/12 max-w-2xl p-6 relative">
-            <form role="search" method="get" id="searchform" className="w-full">
-              <div className="flex items-center">
+        <div className="search-overlay">
+          <div className="search-container">
+            <form role="search" method="get" id="searchform" className="search-form">
+              <div className="search-input-container">
                 <input 
                   type="search" 
                   id="s" 
                   name="s" 
-                  className="flex-grow px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="search-input"
                   placeholder="Search..."
                   autoFocus
                 />
                 <button 
-                  className="bg-gray-200 hover:bg-gray-300 px-4 py-3 rounded-r-lg trigger__close"
+                  className="search-close-button"
                   type="button"
                   onClick={toggleSearch}
                   aria-label="Close search"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="search-close-icon" />
                 </button>
               </div>
             </form>
