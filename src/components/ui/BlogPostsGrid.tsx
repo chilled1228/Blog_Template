@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import BlogPostCard from './BlogPostCard';
+import BlogPostCardSkeleton from './BlogPostCardSkeleton';
 import { BlogPost, getBlogPosts } from '@/lib/blogService';
 
 const BlogPostsGrid: React.FC = () => {
@@ -25,7 +26,15 @@ const BlogPostsGrid: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div className="posts-grid-row">Loading blog posts...</div>;
+    return (
+      <div className="posts-grid-row">
+        <div className="posts-grid">
+          {[1, 2, 3, 4, 5, 6].map((_, index) => (
+            <BlogPostCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
