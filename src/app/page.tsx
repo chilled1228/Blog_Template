@@ -7,11 +7,9 @@ import Pagination from '@/components/ui/Pagination';
 const HomePage: React.FC = () => {
   return (
     <Layout>
-      <main className="main-content">
-        <HeroSlider />
-        <BlogPostsGrid />
-        <Pagination />
-      </main>
+      <HeroSlider />
+      <BlogPostsGrid />
+      <Pagination />
     </Layout>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import Footer from './Footer';
 import { NavBarDemo } from '@/components/ui/navbar-demo';
 
 interface LayoutProps {
@@ -7,14 +8,15 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="freepik home blog wp-theme-freepik-blog hfeed">
+    <div className="freepik home blog wp-theme-freepik-blog hfeed min-h-screen flex flex-col">
       <NavBarDemo />
-      <main id="main">
+      <main id="main" className="flex-grow">
         <div id="content" role="main" className="main-container">
           {children}
         </div>
       </main>
-      </div>
+      <Footer />
+    </div>
   );
 };
 
