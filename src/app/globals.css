@@ -835,6 +835,8 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 /* Improved mobile blog post cards */
@@ -1408,7 +1410,7 @@
 .blog-post-card {
   background-color: white;
   border-radius: 1rem;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
   height: 100%;
@@ -1416,8 +1418,7 @@
   flex-direction: column;
   width: 100%;
   position: relative;
-  z-index: 5;
-  isolation: isolate;
+  z-index: 50;
 }
 @media (min-width: 768px) {
   .main-content {
@@ -1438,7 +1439,7 @@
   height: 100%;
   width: 100%;
   position: relative;
-  z-index: 15;
+  z-index: 10000 !important;
   cursor: pointer;
   pointer-events: auto;
 }
@@ -1450,7 +1451,7 @@
   text-decoration: none;
   color: inherit;
   position: relative;
-  z-index: 15;
+  z-index: 10000 !important;
   cursor: pointer;
   pointer-events: auto;
 }
@@ -1484,15 +1485,31 @@
   color: inherit;
 }
 .blog-post-title-link:hover {
-  color: #2563eb;
+  color: #2563eb !important;
   text-decoration: none;
 }
 .blog-post-category-link:hover {
-  color: #2563eb;
+  color: #2563eb !important;
   text-decoration: none;
 }
+
+/* Ensure blog post cards are above all blocking elements */
+.posts-grid-row .blog-post-card {
+  z-index: 9999 !important;
+  position: relative;
+}
+
+/* Fix blocking element that intercepts clicks */
+div.fixed.z-50 {
+  z-index: 1 !important;
+  pointer-events: none;
+}
+
+div.fixed.z-50 * {
+  pointer-events: auto;
+}
 .blog-post-author:hover {
-  color: #2563eb;
+  color: #2563eb !important;
   text-decoration: none;
 }
 .blog-post-content {
@@ -1500,6 +1517,15 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.blog-post-content .blog-post-category-link,
+.blog-post-content .blog-post-title-link,
+.blog-post-content .blog-post-author {
+  pointer-events: auto;
 }
 /* Tablet */
 @media (min-width: 768px) {
