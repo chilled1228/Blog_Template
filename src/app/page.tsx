@@ -1,18 +1,17 @@
 import { Layout } from '@/components/layout';
-import { HeroSlider, BlogPostsGrid, Pagination } from '@/components/ui';
+import React from 'react';
+import HeroSlider from '@/components/ui/HeroSlider';
+import BlogPostsGrid from '@/components/ui/BlogPostsGrid';
+import Pagination from '@/components/ui/Pagination';
 
-export default function Home() {
+const HomePage: React.FC = () => {
   return (
-    <Layout>
-      <div className="page-wrapper">
-        <HeroSlider />
-        <div className="columns-holder">
-          <section className="columns-holder-section">
-            <BlogPostsGrid />
-          </section>
-        </div>
-        <Pagination />
-      </div>
-    </Layout>
+    <main className="main-content">
+      <HeroSlider />
+      <BlogPostsGrid />
+      <Pagination />
+    </main>
   );
-}
+};
+
+export default HomePage;

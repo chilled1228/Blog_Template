@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, Menu, X } from 'lucide-react';
 
 const Header: React.FC = () => {
@@ -13,6 +14,15 @@ const Header: React.FC = () => {
 
   return (
     <header id="header" className="header">
+      <Link href="/" className="header-logo">
+        <Image 
+          src="/images/freepik-logo-blog-svg-1.svg" 
+          alt="Freepik Blog" 
+          width={150} 
+          height={40} 
+        />
+      </Link>
+
       {/* Centered Navigation Menu */}
       <div className="header-nav">
         <nav 
@@ -46,18 +56,20 @@ const Header: React.FC = () => {
                 Product updates
               </Link>
             </li>
-            
-            <li className="search-button-holder">
-              <button 
-                className="trigger__button"
-                onClick={toggleSearch}
-                aria-label="Search"
-              >
-                <Search className="header-search-icon" />
-              </button>
-            </li>
           </ul>
         </nav>
+      </div>
+
+      <div className="header-actions">
+        <div className="search-button-holder">
+          <button 
+            className="trigger__button"
+            onClick={toggleSearch}
+            aria-label="Search"
+          >
+            <Search className="header-search-icon" />
+          </button>
+        </div>
 
         {/* Mobile menu button */}
         <div className="header-mobile-menu">
@@ -77,7 +89,7 @@ const Header: React.FC = () => {
 
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="header-mobile-nav">
+        <div className="header-mobile-nav active">
           <ul>
             <li className="header-menu-item">
               <Link href="/category/inspirational" className="header-mobile-menu-link">
@@ -118,7 +130,7 @@ const Header: React.FC = () => {
                   type="search" 
                   id="s" 
                   name="s" 
-                  className="search-input"
+                  className="search.input"
                   placeholder="Search..."
                   autoFocus
                 />
