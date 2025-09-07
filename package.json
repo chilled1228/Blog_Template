@@ -5,17 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "postbuild": "node scripts/purge-css.js",
-    "css-stats": "node scripts/css-stats.js",
-    "css-compare": "node scripts/compare-css.js",
-    "css-explain": "node scripts/final-explanation.js",
-    "css-clean": "node scripts/clean-globals-css.js",
-    "css-analyze": "node scripts/analyze-css.js",
-    "css-remove-empty": "node scripts/remove-empty-lines.js",
-    "css-aggressive-clean": "node scripts/aggressive-css-cleanup.js",
     "start": "next start",
-    "lint": "eslint",
-    "build:production": "next build --turbopack && node scripts/purge-css.js"
+    "lint": "eslint"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.0",
@@ -32,7 +23,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
-    "purgecss": "^5.0.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5"
   }

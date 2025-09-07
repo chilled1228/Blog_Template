@@ -20,53 +20,6 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## CSS Optimization
-
-This project uses PurgeCSS to remove unused CSS in production builds. The optimization is automatically applied when running:
-
-```bash
-npm run build
-```
-
-This will:
-1. Build the Next.js application
-2. Automatically run PurgeCSS to remove unused CSS from the generated CSS files
-
-The PurgeCSS configuration can be found in `purgecss.config.js` and includes safelisting for commonly used dynamic classes.
-
-To manually run the CSS optimization after building:
-```bash
-npm run postbuild
-```
-
-## Understanding CSS Optimization
-
-**Important**: Your source `src/app/globals.css` file will always show the full 2500+ lines because:
-- This is your development file that needs to remain complete
-- PurgeCSS works on the compiled output, not source files
-- The actual optimization happens in the build process
-- Only unused CSS in the compiled output is removed
-
-To understand how the optimization works:
-```bash
-npm run css-explain
-```
-
-## Utility Scripts
-
-The project includes several utility scripts to help you understand and manage CSS optimization:
-
-```bash
-# View CSS statistics (size, line count, etc.)
-npm run css-stats
-
-# Compare CSS before and after optimization
-npm run css-compare
-
-# Explain why globals.css still shows 2500+ lines
-npm run css-explain
-```
-
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

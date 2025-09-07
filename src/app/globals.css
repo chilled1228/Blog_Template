@@ -105,95 +105,9 @@
 .clearfix::after { content: ""; display: table; clear: both; }
 /* Text Color Classes */
 .link--text { color: inherit; text-decoration: none; }
-/* Button Classes - Mobile First */
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  background: transparent;
-  width: 100%;
-}
-/* Tablet Buttons */
-@media (min-width: 768px) {
-  .button {
-    width: auto;
-  }
-  .button--sm { padding: 6px 12px; font-size: 0.8125rem; }
-  .button--md { padding: 8px 16px; font-size: 0.875rem; }
-  .button--lg { padding: 12px 24px; font-size: 1rem; }
-  .button--xl { padding: 16px 32px; font-size: 1.125rem; }
-}
-.button--sm { padding: 6px 12px; font-size: 0.8125rem; }
-.button--md { padding: 8px 16px; font-size: 0.875rem; }
-.button--lg { padding: 12px 24px; font-size: 1rem; }
-.button--xl { padding: 16px 32px; font-size: 1.125rem; }
-.button--flat {
-  background: transparent;
-  color: var(--client-clr);
-}
-.button--flat:hover {
-  background: rgba(51, 106, 234, 0.1);
-}
-.button--inverted {
-  background: var(--client-clr);
-  color: white;
-}
-.button--inverted:hover {
-  background: var(--client-clr--hover);
-}
-.button--icon {
-  gap: 8px;
-}
-.button--icon--only {
-  padding: 8px;
-  aspect-ratio: 1;
-}
-.button--state {
-  position: relative;
-}
-/* State Classes */
-.state--inactive { display: inline-block; }
-.state--active { display: none; }
-.button--state.active .state--inactive { display: none; }
-.button--state.active .state--active { display: inline-block; }
 /* (Removed) WordPress Core Body Classes and unused main-content padding */
 .main-container {
   /* Styles will be inherited from content-wrapper */
-}
-/* Page Layout Classes - Mobile First */
-.page-wrapper {
-  width: 100%;
-}
-.columns-holder {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: -10px;
-  margin-right: -10px;
-}
-.columns-holder-section {
-  flex: 0 0 100%;
-  max-width: 100%;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-/* Tablet */
-@media (min-width: 768px) {
-  .columns-holder {
-    margin-left: -15px;
-    margin-right: -15px;
-  }
-  .columns-holder-section {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
 }
 /* Blog Posts Grid - Mobile First */
 .posts-grid-row {
@@ -233,11 +147,9 @@
   background: white;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   height: 3.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
+
 }
+
 .header-nav {
   display: none;
   justify-content: center;
@@ -245,12 +157,14 @@
   height: 3.5rem;
   padding: 0 1rem;
 }
+
 .header-nav ul {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
 }
+
 .header-menu-item a {
   color: #374151;
   text-decoration: none;
@@ -258,12 +172,15 @@
   font-size: 0.875rem;
   transition: color 0.2s ease;
 }
+
 .header-menu-item a:hover {
   color: #2563eb;
 }
+
 .search-button-holder {
   display: none;
 }
+
 .trigger__button {
   display: inline-flex;
   align-items: center;
@@ -273,14 +190,20 @@
   background: transparent;
   cursor: pointer;
 }
+
 .trigger__button svg {
   width: 1.25rem;
   height: 1.25rem;
   color: #374151;
 }
+
 .header-mobile-menu {
-  display: inline-flex;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
+
 .header-mobile-menu-button {
   display: inline-flex;
   align-items: center;
@@ -290,11 +213,13 @@
   background: transparent;
   cursor: pointer;
 }
+
 .header-mobile-menu-button svg {
   width: 1.5rem;
   height: 1.5rem;
   color: #374151;
 }
+
 .header-mobile-nav {
   position: absolute;
   top: 3.5rem;
@@ -305,14 +230,17 @@
   border-top: 1px solid #e5e7eb;
   display: none;
 }
+
 .header-mobile-nav.active {
   display: block;
 }
+
 .header-mobile-nav ul {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
+
 .header-mobile-nav a {
   display: block;
   padding: 0.5rem 0;
@@ -321,26 +249,34 @@
   font-weight: 500;
   transition: color 0.2s ease;
 }
+
 .header-mobile-nav a:hover {
   color: #2563eb;
 }
-/* Tablet Header */
+
+/* Tablet and Desktop Header */
 @media (min-width: 768px) {
-  .header {
-    justify-content: center;
-    padding: 0;
-  }
   .header-nav {
-    display: flex;
+    display: flex !important;
   }
+  
   .header-mobile-menu {
     display: none;
   }
+  
   .header-mobile-nav {
     display: none !important;
   }
+  
   .search-button-holder {
     display: block;
+  }
+}
+
+/* Desktop Header */
+@media (min-width: 1024px) {
+  .header-nav {
+    display: flex;
   }
 }
 .search-overlay {
@@ -765,53 +701,6 @@
 ol, ul {
   box-sizing: border-box;
 }
-.wp-block-quote {
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-}
-/* Utility Classes */
-.aligncenter {
-  clear: both;
-}
-.items-justified-left {
-  justify-content: flex-start;
-}
-.items-justified-center {
-  justify-content: center;
-}
-.items-justified-right {
-  justify-content: flex-end;
-}
-.items-justified-space-between {
-  justify-content: space-between;
-}
-.screen-reader-text {
-  border: 0;
-  clip-path: inset(50%);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  word-wrap: normal !important;
-}
-.screen-reader-text:focus {
-  background-color: #ddd;
-  clip-path: none;
-  color: #444;
-  display: block;
-  font-size: 1em;
-  height: auto;
-  left: 5px;
-  line-height: normal;
-  padding: 15px 23px 14px;
-  text-decoration: none;
-  top: 5px;
-  width: auto;
-  z-index: 100000;
-}
-/* Border and Image Utilities */
 /* WordPress Root Font Sizes */
 :root {
   --wp--preset--font-size--normal: 16px;
@@ -823,9 +712,6 @@ ol, ul {
   background: transparent;
   box-shadow: none;
 }
-/* Main Navigation - Centered */
-/* Mobile Navigation */
-/* Desktop Navigation */
 .search-overlay {
   backdrop-filter: blur(8px);
 }
@@ -852,18 +738,6 @@ a {
 a:hover {
   color: var(--client-clr--hover);
 }
-/* Button enhancements for daylight mode */
-.button {
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-.button--inverted {
-  background: var(--client-btn);
-  color: white;
-}
-.button--inverted:hover {
-  background: var(--client-btn--hover);
-}
 /* Footer styling for daylight mode */
 #footer {
   background: #f9fafb;
@@ -885,7 +759,6 @@ a:hover {
   border-radius: 1rem;
   overflow: hidden;
 }
-/* Enhanced slider controls */
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .hero-slider {
@@ -901,24 +774,16 @@ body.freepik {
   background-color: var(--background);
 }
 /* WordPress Block Styles (from original HTML) */
-/* Table of Contents Block Styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 24px;
-  margin: 0;
-  padding: 0;
-  /* Ensure light background for daylight mode */
-  background-color: #ffffff;
-  color: #374151;
+  padding-top: 5rem;
+}
+#footer {
+  display: block !important;
 }
 /* Force daylight mode styling */
 body * {
   color: inherit;
 }
-/* Utility Classes for removed inline styles */
 /* Freepik-specific styles */
 .content-wrapper {
   max-width: 1200px;
@@ -941,7 +806,6 @@ body * {
 .inline-block {
   display: inline-block;
 }
-/* Line clamp utility */
 /* Responsive grid columns */
 .col__xs--12 {
   width: 100%;
@@ -959,30 +823,6 @@ body * {
     width: 33.333333%;
   }
 }
-/* Aspect ratios */
-/* WordPress Separator Block */
-/* WordPress Site Logo Block */
-/* WordPress Site Title Block */
-/* WordPress Social Links Block */
-/* WordPress Table Block */
-/* WordPress Video Block */
-/* WordPress Preformatted and Verse Blocks */
-/* WordPress Pullquote Block */
-/* WordPress Search Block */
-/* WordPress Tag Cloud Block */
-/* WordPress File Block */
-/* WordPress Embed Block */
-/* WordPress Cover Block */
-/* WordPress Group Block */
-/* WordPress Heading Blocks */
-/* WordPress Latest Posts Block */
-/* WordPress Media Text Block */
-/* WordPress Navigation Block */
-/* WordPress Post Blocks */
-/* WordPress Query Blocks */
-/* WordPress Spacer Block */
-/* WordPress Utilities */
-/* Inter font utility class */
 /* Footer Component Classes */
 .footer {
   background-color: #f9fafb;
