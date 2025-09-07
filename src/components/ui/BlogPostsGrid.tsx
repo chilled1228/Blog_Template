@@ -40,12 +40,10 @@ const BlogPostsGrid: React.FC = () => {
   return (
     <div className="posts-grid-row">
       <div className="posts-grid">
-        {blogPosts.map((post, index) => (
+        {blogPosts.map((post) => (
           <BlogPostCard 
             key={post.id} 
             post={post} 
-            data-index={index}
-            data-column={index % 3 === 1 ? 'second-column' : index % 3 === 2 ? 'third-column' : 'first-column'}
           />
         ))}
       </div>

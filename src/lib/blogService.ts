@@ -55,3 +55,23 @@ export const getBlogPostBySlug = async (slug: string): Promise<BlogPost | null> 
     return null;
   }
 };
+
+export const getFeaturedPosts = async (limit: number = 5): Promise<BlogPost[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .order('date', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching featured posts:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching featured posts:', error);
+    return [];
+  }
+};

@@ -1,87 +1,43 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { BlogPost, getFeaturedPosts } from '@/lib/blogService';
+import HeroSliderSkeleton from './HeroSliderSkeleton';
 
-interface SlideData {
-  id: number;
-  category: string;
-  categoryUrl: string;
-  title: string;
-  url: string;
-  description: string;
-  author: string;
-  authorUrl: string;
-  date: string;
-  image: string;
-}
-
-const slidesData: SlideData[] = [
-  {
-    id: 1,
-    category: 'Technology',
-    categoryUrl: '/category/technology/',
-    title: 'Future of Web Development: Trends 2025',
-    url: '/blog/future-of-web-development-trends-2025',
-    description: 'Explore the latest trends shaping web development in 2025, including AI integration, new frameworks, and emerging technologies.',
-    author: 'Tech Team',
-    authorUrl: '/author/tech-team/',
-    date: 'June 15, 2025',
-    image: '/images/Workshop-Jerrod-Lew-Cover.png'
-  },
-  {
-    id: 2,
-    category: 'Backend',
-    categoryUrl: '/category/backend/',
-    title: 'Building Scalable APIs with Node.js and Express',
-    url: '/blog/building-scalable-apis-nodejs-express',
-    description: 'Learn how to build robust and scalable APIs using Node.js and Express framework with best practices and patterns.',
-    author: 'Backend Team',
-    authorUrl: '/author/backend-team/',
-    date: 'June 10, 2025',
-    image: '/images/Frame-7-1.jpg'
-  },
-  {
-    id: 3,
-    category: 'Frontend',
-    categoryUrl: '/category/frontend/',
-    title: 'React 19: What\'s New and Upgrade Guide',
-    url: '/blog/react-19-whats-new-upgrade-guide',
-    description: 'Discover the exciting new features in React 19 and learn how to upgrade your existing applications seamlessly.',
-    author: 'Frontend Team',
-    authorUrl: '/author/frontend-team/',
-    date: 'June 5, 2025',
-    image: '/images/cover.jpg'
-  },
-  {
-    id: 4,
-    category: 'CSS',
-    categoryUrl: '/category/css/',
-    title: 'CSS Grid vs Flexbox: When to Use Which',
-    url: '/blog/css-grid-vs-flexbox-when-to-use',
-    description: 'A comprehensive guide to understanding when to use CSS Grid versus Flexbox for your layout needs.',
-    author: 'CSS Team',
-    authorUrl: '/author/css-team/',
-    date: 'May 28, 2025',
-    image: '/images/Workshop-Geniasart-1.png'
-  },
-  {
-    id: 5,
-    category: 'Database',
-    categoryUrl: '/category/database/',
-    title: 'Database Design Principles for Modern Applications',
-    url: '/blog/database-design-principles-modern-applications',
-    description: 'Master the fundamental principles of database design and learn how to apply them to modern application development.',
-    author: 'Database Team',
-    authorUrl: '/author/database-team/',
-    date: 'May 20, 2025',
-    image: '/images/output_tight_mosaic_horizontal.jpeg'
-  }
-];
 
 const HeroSlider: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState(1);
+  const [slides, setSlides] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        setLoading(true);
+        const featuredPosts = await getFeaturedPosts(5);
+        setSlides(featuredPosts);
+        if (featuredPosts.length > 0) {
+          setActiveSlide(featuredPosts[0].id || 1);
+        }
+      } catch (error) {
+        console.error('Error fetching hero slider slides:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSlides();
+  }, []);
+
+  if (loading) {
+    return <HeroSliderSkeleton />;
+  }
+
+  if (slides.length === 0) {
+    return null; // Don't show slider if no posts
+  }
 
   return (
     <div className="wrapper">
@@ -89,7 +45,7 @@ const HeroSlider: React.FC = () => {
         <div className="hero-slider-content">
           {/* Slider Controls */}
           <ul className="slider-controls">
-            {slidesData.map((slide) => (
+            {slides.map((slide) => (
               <li key={slide.id}>
                 <button 
                   className={`slider-control-button ${
@@ -97,7 +53,7 @@ const HeroSlider: React.FC = () => {
                       ? 'slider-control-button--active' 
                       : 'slider-control-button--inactive'
                   }`}
-                  onClick={() => setActiveSlide(slide.id)}
+                  onClick={() => setActiveSlide(slide.id || 1)}
                   data-index={slide.id}
                   aria-label={`Go to slide ${slide.id}`}
                 />
@@ -106,7 +62,7 @@ const HeroSlider: React.FC = () => {
           </ul>
 
           {/* Slides */}
-          {slidesData.map((slide) => (
+          {slides.map((slide) => (
             <div 
               key={slide.id}
               className={`slider-item ${activeSlide === slide.id ? '' : 'slider-item--inactive'}`} 
@@ -115,7 +71,7 @@ const HeroSlider: React.FC = () => {
               <div className="slide-text">
                 <div className="slide-text-content">
                   <Link 
-                    href={slide.categoryUrl} 
+                    href={slide.category_url || '#'} 
                     className="slide-category-link"
                   >
                     {/* Empty link as in original */}
@@ -124,7 +80,7 @@ const HeroSlider: React.FC = () => {
                   <ul className="slide-categories-list">
                     <li className="slide-category-item">
                       <Link 
-                        href={slide.categoryUrl}
+                        href={slide.category_url || '#'}
                         className="slide-category-item-link"
                       >
                         {slide.category}
@@ -134,7 +90,7 @@ const HeroSlider: React.FC = () => {
                   
                   <h2 className="slide-title">
                     <Link 
-                      href={slide.url}
+                      href={`/blog/${slide.slug}`}
                       className="slide-title-link"
                     >
                       {slide.title}
@@ -142,19 +98,19 @@ const HeroSlider: React.FC = () => {
                   </h2>
                   
                   <p className="slide-description">
-                    {slide.description}
+                    {slide.excerpt || 'Read more about this article...'}
                   </p>
                   
                   <p className="slide-author">
                     By{' '}
                     <Link 
-                      href={slide.authorUrl}
+                      href={slide.author_url || '#'}
                       className="slide-author-link"
                     >
                       {slide.author}
                     </Link>
                     {' '}
-                    <time dateTime="2025-05-26T13:20:10+00:00" className="slide-date">
+                    <time dateTime={slide.datetime || slide.date} className="slide-date">
                       {slide.date}
                     </time>
                   </p>
@@ -162,7 +118,7 @@ const HeroSlider: React.FC = () => {
               </div>
 
               <div className="slide-image-container">
-                <Link href={slide.url} className="slide-image-link">
+                <Link href={`/blog/${slide.slug}`} className="slide-image-link">
                   <div className="slide-image-wrapper">
                     <Image 
                       src={slide.image} 
@@ -170,7 +126,7 @@ const HeroSlider: React.FC = () => {
                       fill
                       className="slide-image"
                       sizes="(max-width: 1024px) 100vw, 50vw"
-                      priority={slide.id === 1}
+                      priority={activeSlide === slide.id}
                     />
                   </div>
                 </Link>

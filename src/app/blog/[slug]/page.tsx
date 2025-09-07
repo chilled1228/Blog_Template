@@ -1,6 +1,7 @@
 import { getBlogPostBySlug } from '@/lib/blogService';
 import { notFound } from 'next/navigation';
 import React from 'react';
+import Image from 'next/image';
 import { Layout } from '@/components/layout';
 import BlogContentRenderer from '@/components/ui/BlogContentRenderer';
 import StructuredData from '@/components/ui/StructuredData';
@@ -12,7 +13,7 @@ interface BlogPostPageProps {
 }
 
 const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
-  const { slug } = params;
+  const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
 
   if (!post) {
@@ -27,13 +28,14 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
           <article className="blog-article">
             {/* Featured Image */}
             <div className="blog-featured-image">
-              <img 
+              <Image 
                 src={post.image} 
                 alt={post.title}
-                width="800"
-                height="400"
-                style={{ width: '100%', height: 'auto' }}
-                loading="eager"
+                width={800}
+                height={400}
+                className="w-full h-auto"
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 800px"
               />
             </div>
 
@@ -43,11 +45,11 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
             {/* Author Section */}
             <div className="blog-author-section">
               <div className="blog-author-avatar">
-                <img 
+                <Image 
                   src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=48`} 
                   alt={post.author}
-                  width="24"
-                  height="24"
+                  width={24}
+                  height={24}
                 />
               </div>
               <div className="blog-author-info">
@@ -78,11 +80,11 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
             {/* Author Footer */}
             <div className="blog-author-footer">
               <div className="blog-author-avatar-large">
-                <img 
+                <Image 
                   src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=96`} 
                   alt={post.author}
-                  width="48"
-                  height="48"
+                  width={48}
+                  height={48}
                 />
               </div>
               <div className="blog-author-footer-info">

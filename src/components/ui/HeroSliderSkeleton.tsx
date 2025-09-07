@@ -1,52 +1,41 @@
 import React from 'react';
-import Skeleton from './Skeleton';
 
-export default function HeroSliderSkeleton() {
+const HeroSliderSkeleton: React.FC = () => {
   return (
     <div className="wrapper">
       <div className="hero-slider">
         <div className="hero-slider-content">
-          {/* Slider Controls */}
+          {/* Slider Controls Skeleton */}
           <ul className="slider-controls">
-            {[1, 2, 3, 4, 5].map((_, index) => (
+            {[1, 2, 3, 4, 5].map((index) => (
               <li key={index}>
-                <div className="slider-control-button slider-control-button--skeleton">
-                  <Skeleton width="12px" height="12px" rounded={true} />
-                </div>
+                <div className="slider-control-button slider-control-button--inactive" />
               </li>
             ))}
           </ul>
 
-          {/* Active Slide */}
+          {/* Active Slide Skeleton */}
           <div className="slider-item">
             <div className="slide-text">
               <div className="slide-text-content">
-                <div className="slide-categories-list">
-                  <div className="slide-category-item">
-                    <Skeleton width="60px" height="20px" rounded={true} />
-                  </div>
-                </div>
+                {/* Category Skeleton */}
+                <div className="skeleton-line" style={{ width: '100px', height: '20px', marginBottom: '16px' }} />
                 
-                <h2 className="slide-title">
-                  <Skeleton height="32px" width="100%" />
-                  <Skeleton height="32px" width="80%" className="mt-1" />
-                </h2>
+                {/* Title Skeleton */}
+                <div className="skeleton-line" style={{ width: '80%', height: '32px', marginBottom: '16px' }} />
                 
-                <div className="slide-description">
-                  <Skeleton height="20px" width="100%" />
-                  <Skeleton height="20px" width="90%" className="mt-1" />
-                  <Skeleton height="20px" width="85%" className="mt-1" />
-                </div>
+                {/* Description Skeleton */}
+                <div className="skeleton-line" style={{ width: '100%', height: '20px', marginBottom: '8px' }} />
+                <div className="skeleton-line" style={{ width: '90%', height: '20px', marginBottom: '16px' }} />
                 
-                <div className="slide-author">
-                  <Skeleton width="140px" height="16px" />
-                </div>
+                {/* Author Skeleton */}
+                <div className="skeleton-line" style={{ width: '150px', height: '16px' }} />
               </div>
             </div>
 
             <div className="slide-image-container">
               <div className="slide-image-wrapper">
-                <Skeleton height="400px" rounded={false} />
+                <div className="skeleton-image" style={{ width: '100%', height: '100%', minHeight: '400px' }} />
               </div>
             </div>
           </div>
@@ -54,4 +43,6 @@ export default function HeroSliderSkeleton() {
       </div>
     </div>
   );
-}
+};
+
+export default HeroSliderSkeleton;
