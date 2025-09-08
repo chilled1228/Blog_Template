@@ -9,14 +9,14 @@
     "lint": "eslint",
     "init-supabase": "npx tsx src/lib/initSupabase.ts",
     "seed-blog-posts": "npx tsx src/lib/seedBlogPosts.ts",
-    "test-supabase": "npx tsx src/lib/testSupabase.ts",
-    "migrate-blog-posts": "npx tsx src/lib/migrateBlogPosts.ts"
+    "test-supabase": "npx tsx src/lib/testSupabase.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.2",
     "@tailwindcss/vite": "^4.0.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.2",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.542.0",
     "next": "15.5.0",

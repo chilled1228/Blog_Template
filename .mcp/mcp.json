@@ -6,13 +6,6 @@
         "@playwright/mcp@latest"
       ]
     },
-    "firecrawl-mcp": {
-      "command": "npx",
-      "args": ["-y", "firecrawl-mcp"],
-      "env": {
-        "FIRECRAWL_API_KEY": "fc-6e714e14c3e34de5bca816c5180ac849"
-      }
-    },
     "supabase": {
       "command": "npx",
       "args": [

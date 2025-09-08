@@ -75,3 +75,49 @@ export const getFeaturedPosts = async (limit: number = 5): Promise<BlogPost[]> =
     return [];
   }
 };
+
+export const getBlogPostsByCategory = async (categorySlug: string): Promise<BlogPost[]> => {
+  try {
+    // Convert slug back to category name
+    const categoryName = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
+    
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('category', categoryName)
+      .order('date', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching blog posts by category:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching blog posts by category:', error);
+    return [];
+  }
+};
+
+export const getBlogPostsByAuthor = async (authorSlug: string): Promise<BlogPost[]> => {
+  try {
+    // Convert slug back to author name (assuming author names are URL-friendly)
+    const authorName = authorSlug.replace(/-/g, ' ');
+    
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('author', authorName)
+      .order('date', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching blog posts by author:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching blog posts by author:', error);
+    return [];
+  }
+};

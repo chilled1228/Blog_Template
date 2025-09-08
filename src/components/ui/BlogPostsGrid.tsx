@@ -5,7 +5,11 @@ import BlogPostCard from './BlogPostCard';
 import BlogPostCardSkeleton from './BlogPostCardSkeleton';
 import { BlogPost, getBlogPosts } from '@/lib/blogService';
 
-const BlogPostsGrid: React.FC = () => {
+interface BlogPostsGridProps {
+  posts?: BlogPost[];
+}
+
+const BlogPostsGrid: React.FC<BlogPostsGridProps> = ({ posts: propPosts }) => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +17,8 @@ const BlogPostsGrid: React.FC = () => {
     const fetchBlogPosts = async () => {
       try {
         setLoading(true);
-        const posts = await getBlogPosts();
+        // If posts are provided as props, use them, otherwise fetch all posts
+        const posts = propPosts || await getBlogPosts();
         setBlogPosts(posts);
       } catch (error) {
         console.error('Error loading blog posts:', error);
@@ -23,7 +28,7 @@ const BlogPostsGrid: React.FC = () => {
     };
 
     fetchBlogPosts();
-  }, []);
+  }, [propPosts]);
 
   if (loading) {
     return (

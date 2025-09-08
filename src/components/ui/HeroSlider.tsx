@@ -90,7 +90,7 @@ const HeroSlider: React.FC = () => {
                   
                   <h2 className="slide-title">
                     <Link 
-                      href={`/blog/${slide.slug}`}
+                      href={`/${slide.slug}`}
                       className="slide-title-link"
                     >
                       {slide.title}
@@ -118,7 +118,7 @@ const HeroSlider: React.FC = () => {
               </div>
 
               <div className="slide-image-container">
-                <Link href={`/blog/${slide.slug}`} className="slide-image-link">
+                <Link href={`/${slide.slug}`} className="slide-image-link">
                   <div className="slide-image-wrapper">
                     <Image 
                       src={slide.image} 

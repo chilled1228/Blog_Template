@@ -8,7 +8,7 @@ interface BlogPostCardProps {
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   // Use the slug for better SEO instead of the ID
-  const postUrl = `/blog/${post.slug}`;
+  const postUrl = `/${post.slug}`;
 
   return (
     <article className="blog-post-card" data-post-id={post.id}>

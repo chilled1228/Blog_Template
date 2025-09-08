@@ -47,20 +47,24 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const postData = await request.json();
+    
+    // Generate URL if not provided
+    const url = postData.url || `/blog/${postData.slug}`;
+    const categoryUrl = postData.category_url || `/category/${postData.category.toLowerCase().replace(/\s+/g, '-')}`;
 
     const { data: post, error } = await supabase
       .from('blog_posts')
       .insert([{
         title: postData.title,
         slug: postData.slug,
-        url: postData.url || '',
+        url: url,
         content: postData.content || '',
         excerpt: postData.excerpt || '',
         image: postData.image || '',
         author: postData.author || 'Freepik Team',
         author_url: postData.author_url || '',
         category: postData.category || 'General',
-        category_url: postData.category_url || '',
+        category_url: categoryUrl,
         date: new Date().toLocaleDateString(),
         datetime: new Date().toISOString(),
         published: postData.published !== false,
@@ -69,11 +73,13 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
+      console.error('Supabase error:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({ post });
   } catch (error) {
+    console.error('POST error:', error);
     return NextResponse.json(
       { error: 'Failed to create post' },
       { status: 500 }

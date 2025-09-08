@@ -21,7 +21,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     "headline": post.title,
     "description": post.excerpt || post.content?.substring(0, 160) || '',
     "image": imageUrl,
-    "url": `${siteUrl}/blog/${slug}`,
+    "url": `${siteUrl}/${slug}`,
     "datePublished": post.datetime,
     "dateModified": post.datetime,
     "author": {
@@ -39,7 +39,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `${siteUrl}/blog/${slug}`
+      "@id": `${siteUrl}/${slug}`
     },
     "articleSection": post.category,
     "wordCount": post.content ? post.content.split(' ').length : 0,
@@ -72,7 +72,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
         "@type": "ListItem",
         "position": 4,
         "name": post.title,
-        "item": `${siteUrl}/blog/${slug}`
+        "item": `${siteUrl}/${slug}`
       }
     ]
   };

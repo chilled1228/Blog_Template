@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface BlogPost {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   url: string;
@@ -134,7 +134,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     setShowCreateForm(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) {
       return;
     }

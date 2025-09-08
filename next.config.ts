@@ -9,7 +9,9 @@ const nextConfig: NextConfig = {
   images: {
     domains: [
       'pub-141831e61e69445289222976a15b6fb3.r2.dev',
-      'ui-avatars.com'
+      'ui-avatars.com',
+      'trytechnical.com',
+      'images.unsplash.com'
     ],
     remotePatterns: [
       {
@@ -20,6 +22,16 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'ui-avatars.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'trytechnical.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
         pathname: '/**',
       },
     ],

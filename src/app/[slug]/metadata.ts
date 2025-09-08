@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     openGraph: {
       title: post.title,
       description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post',
-      url: `${siteUrl}/blog/${slug}`,
+      url: `${siteUrl}/${slug}`,
       siteName: 'Freepik Blog',
       images: [
         {
@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       creator: '@freepik',
     },
     alternates: {
-      canonical: `${siteUrl}/blog/${slug}`,
+      canonical: `${siteUrl}/${slug}`,
     },
     robots: {
       index: true,
