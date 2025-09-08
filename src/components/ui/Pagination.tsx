@@ -14,25 +14,25 @@ const Pagination: React.FC<PaginationProps> = ({
   prevPageUrl 
 }) => {
   return (
-    <div className="pagination">
-      <div className="pagination-button-container">
+    <div className="mt-8 sm:mt-12 px-4 sm:px-0">
+      <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6">
         {prevPageUrl && (
           <Link 
             href={prevPageUrl} 
-            className="pagination-prev-button"
+            className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
           >
-            <ChevronRight className="pagination-button-icon pagination-button-icon--prev" />
-            <span className="pagination-button-text">Previous page</span>
+            <ChevronRight className="w-5 h-5 rotate-180" />
+            <span>Previous page</span>
           </Link>
         )}
         
         {nextPageUrl && (
           <Link 
             href={nextPageUrl} 
-            className="pagination-next-button"
+            className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
           >
-            <span className="pagination-button-text">Next page</span>
-            <ChevronRight className="pagination-button-icon" />
+            <span>Next page</span>
+            <ChevronRight className="w-5 h-5" />
           </Link>
         )}
       </div>

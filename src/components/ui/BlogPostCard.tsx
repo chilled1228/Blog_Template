@@ -12,48 +12,54 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const postUrl = `/${post.slug}`;
 
   return (
-    <article className="blog-post-card" data-post-id={post.id}>
-      <div className="blog-post-image-container">
-        <Link href={postUrl} className="blog-post-image-link">
+    <article 
+      className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 h-full flex flex-col group"
+      data-post-id={post.id}
+    >
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl m-2 sm:m-3">
+        <Link 
+          href={postUrl} 
+          className="block h-full w-full"
+        >
           <Image 
             src={post.image} 
             alt={post.title} 
-            className="blog-post-image"
+            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105 rounded-lg"
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
       </div>
       
-      <div className="blog-post-content">
-        <div>
+      <div className="p-4 sm:p-5 flex-grow flex flex-col">
+        <div className="mb-3">
           <Link 
             href={post.category_url} 
-            className="blog-post-category-link"
+            className="inline-block px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-semibold uppercase tracking-wider rounded-full transition-colors duration-200"
           >
             {post.category}
           </Link>
         </div>
         
-        <h2 className="blog-post-title">
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-3 flex-grow leading-tight">
           <Link 
             href={postUrl}
-            className="blog-post-title-link"
+            className="hover:text-blue-600 transition-colors duration-200"
           >
             {post.title}
           </Link>
         </h2>
         
-        <div className="blog-post-meta">
-          <span>By</span>
+        <div className="flex items-center text-sm text-gray-500 mt-auto">
+          <span className="mr-1">By</span>
           <Link 
             href={post.author_url} 
-            className="blog-post-author"
+            className="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 mr-2"
           >
             {post.author}
           </Link>
-          <span className="blog-post-date">•</span>
-          <time dateTime={post.datetime} className="blog-post-date-time">
+          <span className="text-gray-300 mr-2">•</span>
+          <time dateTime={post.datetime} className="text-gray-500">
             {post.date}
           </time>
         </div>

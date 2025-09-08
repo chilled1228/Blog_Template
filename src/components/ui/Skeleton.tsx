@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 interface SkeletonProps {
   className?: string;
@@ -10,21 +11,21 @@ interface SkeletonProps {
 
 export default function Skeleton({ 
   className = '', 
-  width = '100%', 
-  height = '1rem', 
+  width = 'w-full', 
+  height = 'h-4', 
   rounded = false,
   animate = true 
 }: SkeletonProps) {
   return (
     <div 
-      className={`skeleton ${rounded ? 'rounded' : ''} ${animate ? 'animate-pulse' : ''} ${className}`}
-      style={{ 
-        width, 
+      className={cn(
+        'inline-block bg-gray-200',
+        width,
         height,
-        backgroundColor: '#e5e7eb',
-        display: 'inline-block',
-        borderRadius: rounded ? '0.375rem' : '0',
-      }}
+        rounded ? 'rounded-md' : '',
+        animate ? 'animate-pulse' : '',
+        className
+      )}
     />
   );
 }

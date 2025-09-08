@@ -3,26 +3,26 @@ import Skeleton from './Skeleton';
 
 export default function BlogPostCardSkeleton() {
   return (
-    <div className="blog-post-card">
-      <div className="blog-post-image">
-        <Skeleton height="200px" rounded={false} />
+    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 h-full flex flex-col animate-pulse">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl m-2 sm:m-3">
+        <Skeleton width="w-full" height="h-full" rounded={true} />
       </div>
-      <div className="blog-post-content">
-        <div className="blog-post-categories">
-          <Skeleton width="80px" height="20px" rounded={true} />
+      
+      <div className="p-4 sm:p-5 flex-grow flex flex-col">
+        <div className="mb-3">
+          <Skeleton width="w-16" height="h-5" rounded={true} />
         </div>
-        <h3 className="blog-post-title">
-          <Skeleton height="24px" width="100%" />
-          <Skeleton height="24px" width="80%" className="mt-1" />
-        </h3>
-        <div className="blog-post-meta">
-          <Skeleton width="120px" height="16px" />
-          <Skeleton width="100px" height="16px" className="ml-2" />
+        
+        <div className="mb-3 flex-grow">
+          <Skeleton width="w-full" height="h-5" className="mb-2" />
+          <Skeleton width="w-4/5" height="h-5" />
         </div>
-        <div className="blog-post-excerpt">
-          <Skeleton height="16px" width="100%" />
-          <Skeleton height="16px" width="90%" className="mt-1" />
-          <Skeleton height="16px" width="85%" className="mt-1" />
+        
+        <div className="flex items-center gap-2 mt-auto">
+          <Skeleton width="w-8" height="h-4" />
+          <Skeleton width="w-20" height="h-4" />
+          <Skeleton width="w-2" height="h-4" />
+          <Skeleton width="w-16" height="h-4" />
         </div>
       </div>
     </div>
