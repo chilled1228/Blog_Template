@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface AdminAuthProps {
   onAuth: () => void;
@@ -33,7 +32,7 @@ export default function AdminAuth({ onAuth }: AdminAuthProps) {
       } else {
         setError('Invalid credentials');
       }
-    } catch (err) {
+    } catch {
       setError('Authentication failed');
     } finally {
       setIsLoading(false);

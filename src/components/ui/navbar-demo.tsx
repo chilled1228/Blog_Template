@@ -7,9 +7,7 @@ export function NavBarDemo() {
     { name: 'Technology', url: '/category/technology', icon: 'Lightbulb' },
     { name: 'Frontend', url: '/category/frontend', icon: 'TrendingUp' },
     { name: 'Backend', url: '/category/backend', icon: 'Sparkles' },
-    { name: 'CSS', url: '/category/css', icon: 'Newspaper' },
-    { name: 'About', url: '/about', icon: 'Home' },
-    { name: 'Contact', url: '/contact', icon: 'Home' }
+    { name: 'CSS', url: '/category/css', icon: 'Newspaper' }
   ]
 
   return <NavBar items={navItems} />

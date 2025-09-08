@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface BlogPost {
   id: string;
@@ -111,7 +110,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       } else {
         alert('Failed to save post');
       }
-    } catch (error) {
+    } catch {
       alert('Failed to save post');
     }
   };
@@ -149,7 +148,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       } else {
         alert('Failed to delete post');
       }
-    } catch (error) {
+    } catch {
       alert('Failed to delete post');
     }
   };

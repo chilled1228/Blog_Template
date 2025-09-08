@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Home, Lightbulb, TrendingUp, Sparkles, Newspaper } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -26,18 +27,35 @@ const iconMap = {
 }
 
 export function NavBar({ items, className }: NavBarProps) {
-  const [activeTab, setActiveTab] = useState(items[0].name)
-  const [isMobile, setIsMobile] = useState(false)
+  const [clickedTab, setClickedTab] = useState<string | null>(null)
+  const pathname = usePathname()
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
+  // Function to determine if a nav item is active based on current pathname
+  const isItemActive = (item: NavItem) => {
+    // Handle exact match for home page
+    if (item.url === '/' && pathname === '/') {
+      return true
     }
-
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    
+    // Handle exact matches for other static pages
+    if (item.url !== '/' && pathname === item.url) {
+      return true
+    }
+    
+    // Handle category pages - check if we're on a category page that matches
+    if (item.url.includes('/category/')) {
+      const categorySlug = item.url.split('/category/')[1]
+      // Check if current pathname is exactly the category page or starts with it
+      return pathname === item.url || pathname.startsWith(`/category/${categorySlug}`)
+    }
+    
+    // Handle dynamic routes - if pathname starts with the item URL (but not for home)
+    if (item.url !== '/' && pathname.startsWith(item.url + '/')) {
+      return true
+    }
+    
+    return false
+  }
 
   return (
     <div
@@ -49,13 +67,13 @@ export function NavBar({ items, className }: NavBarProps) {
       <div className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
         {items.map((item) => {
           const Icon = iconMap[item.icon as keyof typeof iconMap]
-          const isActive = activeTab === item.name
+          const isActive = isItemActive(item)
 
           return (
             <Link
               key={item.name}
               href={item.url}
-              onClick={() => setActiveTab(item.name)}
+              onClick={() => setClickedTab(item.name)}
               className={cn(
                 "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
                 "text-foreground/80 hover:text-primary",

@@ -10,8 +10,6 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ 
-  currentPage = 1, 
-  totalPages = 10,
   nextPageUrl = '/page/2/',
   prevPageUrl 
 }) => {

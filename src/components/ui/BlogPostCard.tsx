@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { BlogPost } from '@/lib/blogService';
 
 interface BlogPostCardProps {
@@ -14,11 +15,12 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     <article className="blog-post-card" data-post-id={post.id}>
       <div className="blog-post-image-container">
         <Link href={postUrl} className="blog-post-image-link">
-          <img 
+          <Image 
             src={post.image} 
             alt={post.title} 
             className="blog-post-image"
-            loading="lazy"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
       </div>
