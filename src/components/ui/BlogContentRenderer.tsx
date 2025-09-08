@@ -1,98 +1,192 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import CodeBlock from './CodeBlock';
+
+// Chart.js type definitions
+interface ChartDataset {
+  label: string;
+  data: number[];
+  borderColor?: string;
+  backgroundColor?: string;
+  tension?: number;
+}
+
+interface ChartData {
+  labels: string[];
+  datasets: ChartDataset[];
+}
+
+interface ChartOptions {
+  responsive?: boolean;
+  maintainAspectRatio?: boolean;
+  plugins?: {
+    legend?: {
+      display?: boolean;
+      position?: string;
+    };
+  };
+  animation?: {
+    duration?: number;
+    easing?: string;
+  };
+}
+
+interface ChartConfig {
+  type: string;
+  data: ChartData;
+  options?: ChartOptions;
+}
+
+interface ChartConstructor {
+  new (ctx: CanvasRenderingContext2D, config: ChartConfig): ChartInstance;
+}
+
+interface ChartInstance {
+  destroy?: () => void;
+}
+
+interface WindowWithChart extends Window {
+  Chart?: ChartConstructor;
+}
 
 interface BlogContentRendererProps {
   content: string;
 }
 
 const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) => {
-  const [processedContent, setProcessedContent] = useState<React.ReactNode[]>([]);
+  const hasInitialized = useRef(false);
+  const chartJsLoaded = useRef(false);
 
-  useEffect(() => {
-    // Load Chart.js if charts are detected
-    if (content.includes('chart') || content.includes('Chart') || content.includes('canvas')) {
-      const loadChartJS = () => {
-        if (typeof window !== 'undefined' && !(window as any).Chart) {
-          const script = document.createElement('script');
-          script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-          script.async = true;
-          script.onload = initializeCharts;
-          document.head.appendChild(script);
-        } else {
-          initializeCharts();
-        }
-      };
+  const createChart = useCallback((canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-      const initializeCharts = () => {
-        // Initialize any charts after a short delay
-        setTimeout(() => {
-          const chartCanvases = document.querySelectorAll('.chart-container canvas');
-          chartCanvases.forEach((canvas) => {
-            const ctx = canvas.getContext('2d');
-            if (ctx && !(canvas as any).chartInstance) {
-              // Basic chart initialization - can be enhanced based on data attributes
-              try {
-                const chartInstance = new (window as any).Chart(ctx, {
-                  type: 'line',
-                  data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{
-                      label: 'Sample Data',
-                      data: [12, 19, 3, 5, 2, 3],
-                      borderColor: '#2563eb',
-                      backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                      tension: 0.4
-                    }]
-                  },
-                  options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        display: true,
-                        position: 'top'
-                      }
-                    }
-                  }
-                });
-                (canvas as any).chartInstance = chartInstance;
-              } catch (error) {
-                console.warn('Failed to initialize chart:', error);
-              }
+    try {
+      // Check for data attributes first
+      const chartType = canvas.dataset.chartType || 'line';
+      const chartData = canvas.dataset.chartData ? 
+        JSON.parse(canvas.dataset.chartData) : {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Sample Data',
+            data: [12, 19, 3, 5, 2, 3],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            tension: 0.4
+          }]
+        };
+
+      const windowWithChart = window as WindowWithChart;
+      if (!windowWithChart.Chart) return;
+
+      const chartInstance = new windowWithChart.Chart(ctx, {
+        type: chartType,
+        data: chartData,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
             }
-          });
-        }, 100);
-      };
+          },
+          animation: {
+            duration: 750,
+            easing: 'easeInOutQuart'
+          }
+        }
+      });
 
-      loadChartJS();
+      (canvas as HTMLCanvasElement & { chartInstance?: ChartInstance }).chartInstance = chartInstance;
+    } catch (error) {
+      console.warn('Failed to initialize chart:', error);
     }
+  }, []);
 
-    // Process interactive elements
-    processInteractiveElements();
-  }, [content]);
+  // Optimized chart initialization with intersection observer
+  const initializeCharts = useCallback(() => {
+    const windowWithChart = window as WindowWithChart;
+    if (typeof window === 'undefined' || !windowWithChart.Chart) return;
 
-  const processInteractiveElements = () => {
-    // Add click handlers to interactive buttons
-    const buttons = document.querySelectorAll('.interactive-button');
-    buttons.forEach((button) => {
-      button.addEventListener('click', (e) => {
+    // Use Intersection Observer for lazy loading charts
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const canvas = entry.target as HTMLCanvasElement;
+          if (!canvas.dataset.chartInitialized) {
+            canvas.dataset.chartInitialized = 'true';
+            createChart(canvas);
+            observer.unobserve(canvas);
+          }
+        }
+      });
+    }, {
+      rootMargin: '50px',
+      threshold: 0.1
+    });
+
+    const chartCanvases = document.querySelectorAll('.chart-container canvas');
+    chartCanvases.forEach((canvas) => {
+      if (!(canvas as HTMLCanvasElement).dataset.chartInitialized) {
+        observer.observe(canvas);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [createChart]);
+
+  // Optimized chart loading with lazy loading
+  const loadChartJS = useCallback(() => {
+    if (typeof window === 'undefined' || chartJsLoaded.current) return;
+    
+    const loadChart = () => {
+      const windowWithChart = window as WindowWithChart;
+      if (!windowWithChart.Chart) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+        script.async = true;
+        script.onload = () => {
+          chartJsLoaded.current = true;
+          initializeCharts();
+        };
+        script.onerror = () => {
+          console.warn('Failed to load Chart.js');
+        };
+        document.head.appendChild(script);
+      } else {
+        chartJsLoaded.current = true;
+        initializeCharts();
+      }
+    };
+
+    // Use requestIdleCallback for better performance
+    if ('requestIdleCallback' in window) {
+      (window as typeof window & { requestIdleCallback: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number }).requestIdleCallback(loadChart, { timeout: 2000 });
+    } else {
+      setTimeout(loadChart, 100);
+    }
+  }, [initializeCharts]);
+
+  // Optimized interactive element initialization with event delegation
+  const processInteractiveElements = useCallback(() => {
+    // Use event delegation for better performance
+    const handleButtonClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('interactive-button')) {
         e.preventDefault();
-        const target = e.target as HTMLElement;
         target.style.transform = 'scale(0.95)';
         setTimeout(() => {
           target.style.transform = '';
         }, 100);
-      });
-    });
+      }
+    };
 
-    // Initialize tab functionality
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach((button) => {
-      button.addEventListener('click', (e) => {
+    const handleTabClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('tab-button')) {
         e.preventDefault();
-        const target = e.target as HTMLElement;
         const tabContainer = target.closest('.tab-container');
         if (tabContainer) {
           // Remove active class from all buttons and contents
@@ -109,9 +203,41 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
             contents[tabIndex].removeAttribute('hidden');
           }
         }
-      });
-    });
-  };
+      }
+    };
+
+    // Add event listeners to the document with event delegation
+    document.addEventListener('click', handleButtonClick);
+    document.addEventListener('click', handleTabClick);
+
+    return () => {
+      document.removeEventListener('click', handleButtonClick);
+      document.removeEventListener('click', handleTabClick);
+    };
+  }, []);
+
+  // Optimized effect with proper cleanup
+  useEffect(() => {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+
+    // Only load Chart.js if actually needed
+    const hasCharts = content.includes('chart-container') || 
+                      content.includes('canvas') || 
+                      content.includes('Chart.js');
+    
+    const hasInteractiveElements = content.includes('interactive-button') || 
+                                content.includes('tab-button');
+
+    if (hasCharts) {
+      loadChartJS();
+    }
+
+    if (hasInteractiveElements) {
+      const cleanup = processInteractiveElements();
+      return cleanup;
+    }
+  }, [content, loadChartJS, processInteractiveElements]);
 
   // Parse the HTML content and replace code blocks
   const processContent = (htmlContent: string) => {
