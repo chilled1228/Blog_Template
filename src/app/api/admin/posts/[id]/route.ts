@@ -39,22 +39,44 @@ export async function PUT(
     const { id } = await params;
     const updateData = await request.json();
 
+    // Get current post to check if status changed
+    const { data: currentPost } = await supabase
+      .from('blog_posts')
+      .select('status')
+      .eq('id', id)
+      .single();
+
+    const updatedFields: any = {
+      title: updateData.title,
+      slug: updateData.slug,
+      url: updateData.url || `/${updateData.slug}`,
+      content: updateData.content,
+      excerpt: updateData.excerpt,
+      image: updateData.image,
+      author: updateData.author,
+      author_url: updateData.author_url,
+      category: updateData.category,
+      category_url: updateData.category_url,
+      status: updateData.status || 'draft',
+      meta_title: updateData.meta_title || '',
+      meta_description: updateData.meta_description || '',
+      meta_keywords: updateData.meta_keywords || '',
+      canonical_url: updateData.canonical_url || '',
+      featured: updateData.featured || false,
+    };
+
+    // Handle published_at field based on status change
+    if (updateData.status === 'published' && currentPost?.status !== 'published') {
+      // Publishing for the first time or republishing
+      updatedFields.published_at = new Date().toISOString();
+    } else if (updateData.status === 'draft' && currentPost?.status === 'published') {
+      // Unpublishing
+      updatedFields.published_at = null;
+    }
+
     const { data: post, error } = await supabase
       .from('blog_posts')
-      .update({
-        title: updateData.title,
-        slug: updateData.slug,
-        url: updateData.url,
-        content: updateData.content,
-        excerpt: updateData.excerpt,
-        image: updateData.image,
-        author: updateData.author,
-        author_url: updateData.author_url,
-        category: updateData.category,
-        category_url: updateData.category_url,
-        published: updateData.published,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatedFields)
       .eq('id', id)
       .select()
       .single();

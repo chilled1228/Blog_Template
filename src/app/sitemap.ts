@@ -3,7 +3,8 @@ import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
-  const posts = await getBlogPosts();
+  // Only include published posts in sitemap
+  const posts = await getBlogPosts(false);
 
   const staticPages = [
     {
@@ -82,8 +83,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     else changeFrequency = 'yearly';
     
     return {
-      url: `${siteUrl}/blog/${post.slug}`,
-      lastModified: postDate,
+      url: `${siteUrl}/${post.slug}`,
+      lastModified: post.published_at ? new Date(post.published_at) : postDate,
       changeFrequency,
       priority,
     };

@@ -11,11 +11,19 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
+    const status = searchParams.get('status'); // 'all', 'draft', 'published'
     const offset = (page - 1) * limit;
 
-    const { data: posts, error } = await supabase
+    let query = supabase
       .from('blog_posts')
-      .select('*')
+      .select('*');
+
+    // Filter by status if specified
+    if (status && status !== 'all') {
+      query = query.eq('status', status);
+    }
+
+    const { data: posts, error } = await query
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -23,9 +31,16 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const { count } = await supabase
+    // Get total count with same filter
+    let countQuery = supabase
       .from('blog_posts')
       .select('*', { count: 'exact', head: true });
+
+    if (status && status !== 'all') {
+      countQuery = countQuery.eq('status', status);
+    }
+
+    const { count } = await countQuery;
 
     return NextResponse.json({
       posts,
@@ -49,26 +64,39 @@ export async function POST(request: NextRequest) {
     const postData = await request.json();
     
     // Generate URL if not provided
-    const url = postData.url || `/blog/${postData.slug}`;
+    const url = postData.url || `/${postData.slug}`;
     const categoryUrl = postData.category_url || `/category/${postData.category.toLowerCase().replace(/\s+/g, '-')}`;
+    const currentDate = new Date();
+
+    const insertData = {
+      title: postData.title,
+      slug: postData.slug,
+      url: url,
+      content: postData.content || '',
+      excerpt: postData.excerpt || '',
+      image: postData.image || '',
+      author: postData.author || 'Freepik Team',
+      author_url: postData.author_url || '',
+      category: postData.category || 'Technology',
+      category_url: categoryUrl,
+      date: currentDate.toLocaleDateString(),
+      datetime: currentDate.toISOString(),
+      status: postData.status || 'draft',
+      meta_title: postData.meta_title || '',
+      meta_description: postData.meta_description || '',
+      meta_keywords: postData.meta_keywords || '',
+      canonical_url: postData.canonical_url || '',
+      featured: postData.featured || false,
+      view_count: 0,
+      // Set published_at if status is published
+      ...(postData.status === 'published' && {
+        published_at: currentDate.toISOString()
+      })
+    };
 
     const { data: post, error } = await supabase
       .from('blog_posts')
-      .insert([{
-        title: postData.title,
-        slug: postData.slug,
-        url: url,
-        content: postData.content || '',
-        excerpt: postData.excerpt || '',
-        image: postData.image || '',
-        author: postData.author || 'Freepik Team',
-        author_url: postData.author_url || '',
-        category: postData.category || 'General',
-        category_url: categoryUrl,
-        date: new Date().toLocaleDateString(),
-        datetime: new Date().toISOString(),
-        published: postData.published !== false,
-      }])
+      .insert([insertData])
       .select()
       .single();
 

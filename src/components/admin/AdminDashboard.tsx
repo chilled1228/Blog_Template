@@ -1,24 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { BlogPost, publishPost, unpublishPost, calculateReadingTime } from '@/lib/blogService';
 
-interface BlogPost {
-  id: string;
-  title: string;
-  slug: string;
-  url: string;
-  content: string;
-  excerpt: string;
-  image: string;
-  author: string;
-  author_url: string;
-  category: string;
-  category_url: string;
-  date: string;
-  datetime: string;
-  published: boolean;
+interface AdminBlogPost extends BlogPost {
+  id: number;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
 interface AdminDashboardProps {
@@ -26,10 +14,11 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<AdminBlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [editingPost, setEditingPost] = useState<AdminBlogPost | null>(null);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published'>('all');
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -46,15 +35,26 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     image: '',
     author: 'Freepik Team',
     author_url: '',
-    category: 'General',
-    category_url: '',
-    published: true
+    category: 'Technology',
+    category_url: '/category/technology',
+    status: 'draft' as 'draft' | 'published',
+    meta_title: '',
+    meta_description: '',
+    meta_keywords: '',
+    canonical_url: '',
+    featured: false
   });
 
   const fetchPosts = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/admin/posts?page=${page}&limit=10`);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '10',
+        ...(statusFilter !== 'all' && { status: statusFilter })
+      });
+      
+      const response = await fetch(`/api/admin/posts?${params}`);
       const data = await response.json();
       
       if (data.posts) {
@@ -68,9 +68,35 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     }
   };
 
+  const handlePublish = async (postId: number) => {
+    try {
+      const success = await publishPost(postId);
+      if (success) {
+        fetchPosts(pagination.page);
+      } else {
+        alert('Failed to publish post');
+      }
+    } catch (error) {
+      alert('Failed to publish post');
+    }
+  };
+
+  const handleUnpublish = async (postId: number) => {
+    try {
+      const success = await unpublishPost(postId);
+      if (success) {
+        fetchPosts(pagination.page);
+      } else {
+        alert('Failed to unpublish post');
+      }
+    } catch (error) {
+      alert('Failed to unpublish post');
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [statusFilter]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,9 +128,14 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
           image: '',
           author: 'Freepik Team',
           author_url: '',
-          category: 'General',
-          category_url: '',
-          published: true
+          category: 'Technology',
+          category_url: '/category/technology',
+          status: 'draft' as 'draft' | 'published',
+          meta_title: '',
+          meta_description: '',
+          meta_keywords: '',
+          canonical_url: '',
+          featured: false
         });
         fetchPosts(pagination.page);
       } else {
@@ -115,25 +146,30 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     }
   };
 
-  const handleEdit = (post: BlogPost) => {
+  const handleEdit = (post: AdminBlogPost) => {
     setEditingPost(post);
     setFormData({
       title: post.title,
       slug: post.slug,
       url: post.url,
-      content: post.content,
-      excerpt: post.excerpt,
+      content: post.content || '',
+      excerpt: post.excerpt || '',
       image: post.image,
       author: post.author,
       author_url: post.author_url,
       category: post.category,
       category_url: post.category_url,
-      published: post.published
+      status: post.status,
+      meta_title: post.meta_title || '',
+      meta_description: post.meta_description || '',
+      meta_keywords: post.meta_keywords || '',
+      canonical_url: post.canonical_url || '',
+      featured: post.featured
     });
     setShowCreateForm(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this post?')) {
       return;
     }
@@ -191,105 +227,221 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Title *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.title}
-                    onChange={(e) => handleTitleChange(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
+                {/* Basic Information */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Basic Information</h3>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Title *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.title}
+                        onChange={(e) => handleTitleChange(e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Slug *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.slug}
+                        onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Excerpt
+                      </label>
+                      <textarea
+                        value={formData.excerpt}
+                        onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                        rows={3}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Brief description of the post..."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Featured Image URL
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.image}
+                        onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Author
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.author}
+                          onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Category
+                        </label>
+                        <select
+                          value={formData.category}
+                          onChange={(e) => setFormData(prev => ({ 
+                            ...prev, 
+                            category: e.target.value,
+                            category_url: `/category/${e.target.value.toLowerCase()}`
+                          }))}
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                          <option value="Technology">Technology</option>
+                          <option value="Frontend">Frontend</option>
+                          <option value="Backend">Backend</option>
+                          <option value="CSS">CSS</option>
+                          <option value="Design">Design</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Slug *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.slug}
-                    onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Excerpt
-                  </label>
-                  <textarea
-                    value={formData.excerpt}
-                    onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
-                    rows={3}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Image URL
-                  </label>
-                  <input
-                    type="url"
-                    value={formData.image}
-                    onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
+                {/* Content */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Content</h3>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
-                      Author
+                      Content
                     </label>
-                    <input
-                      type="text"
-                      value={formData.author}
-                      onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+                    <textarea
+                      value={formData.content}
+                      onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                      rows={12}
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Write your blog post content here..."
                     />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Category
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.category}
-                      onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
+                    {formData.content && (
+                      <p className="mt-1 text-sm text-gray-500">
+                        Estimated reading time: {calculateReadingTime(formData.content)} minutes
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Content
-                  </label>
-                  <textarea
-                    value={formData.content}
-                    onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                    rows={10}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
+                {/* SEO Settings */}
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">SEO Settings</h3>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Meta Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.meta_title}
+                        onChange={(e) => setFormData(prev => ({ ...prev, meta_title: e.target.value }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Leave empty to use post title"
+                        maxLength={60}
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        {formData.meta_title.length}/60 characters
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Meta Description
+                      </label>
+                      <textarea
+                        value={formData.meta_description}
+                        onChange={(e) => setFormData(prev => ({ ...prev, meta_description: e.target.value }))}
+                        rows={3}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Brief description for search engines..."
+                        maxLength={160}
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        {formData.meta_description.length}/160 characters
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Meta Keywords
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.meta_keywords}
+                        onChange={(e) => setFormData(prev => ({ ...prev, meta_keywords: e.target.value }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="keyword1, keyword2, keyword3"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Canonical URL
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.canonical_url}
+                        onChange={(e) => setFormData(prev => ({ ...prev, canonical_url: e.target.value }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Leave empty to use default URL"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="published"
-                    checked={formData.published}
-                    onChange={(e) => setFormData(prev => ({ ...prev, published: e.target.checked }))}
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="published" className="ml-2 block text-sm text-gray-900">
-                    Published
-                  </label>
+                {/* Publishing Settings */}
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Publishing Settings</h3>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Status
+                      </label>
+                      <select
+                        value={formData.status}
+                        onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as 'draft' | 'published' }))}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      >
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                      </select>
+                    </div>
+
+                    <div className="flex items-center pt-6">
+                      <input
+                        type="checkbox"
+                        id="featured"
+                        checked={formData.featured}
+                        onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
+                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor="featured" className="ml-2 block text-sm text-gray-900">
+                        Featured Post
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex justify-end">
@@ -313,7 +465,21 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+              <div className="mt-2 flex items-center space-x-4">
+                <label className="text-sm font-medium text-gray-700">Filter by status:</label>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as 'all' | 'draft' | 'published')}
+                  className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="all">All Posts</option>
+                  <option value="draft">Drafts</option>
+                  <option value="published">Published</option>
+                </select>
+              </div>
+            </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowCreateForm(true)}
@@ -352,6 +518,9 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Views
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Date
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -363,11 +532,25 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   {posts.map((post) => (
                     <tr key={post.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {post.title}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          /blog/{post.slug}
+                        <div className="flex items-center">
+                          <div>
+                            <div className="text-sm font-medium text-gray-900">
+                              {post.title}
+                              {post.featured && (
+                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                                  ⭐ Featured
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              /{post.slug}
+                            </div>
+                            {post.content && (
+                              <div className="text-xs text-gray-400">
+                                {calculateReadingTime(post.content)} min read
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -377,30 +560,59 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                         <div className="text-sm text-gray-900">{post.author}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          post.published 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {post.published ? 'Published' : 'Draft'}
-                        </span>
+                        <div className="flex flex-col space-y-1">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            post.status === 'published' 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {post.status === 'published' ? 'Published' : 'Draft'}
+                          </span>
+                          {post.status === 'published' && post.published_at && (
+                            <div className="text-xs text-gray-500">
+                              {new Date(post.published_at).toLocaleDateString()}
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {post.view_count.toLocaleString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {new Date(post.datetime).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          onClick={() => handleEdit(post)}
-                          className="text-indigo-600 hover:text-indigo-900 mr-3"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(post.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Delete
-                        </button>
+                        <div className="flex flex-col space-y-1">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => handleEdit(post)}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Edit
+                            </button>
+                            {post.status === 'draft' ? (
+                              <button
+                                onClick={() => handlePublish(post.id)}
+                                className="text-green-600 hover:text-green-900"
+                              >
+                                Publish
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleUnpublish(post.id)}
+                                className="text-orange-600 hover:text-orange-900"
+                              >
+                                Unpublish
+                              </button>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => handleDelete(post.id)}
+                            className="text-red-600 hover:text-red-900 text-left"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

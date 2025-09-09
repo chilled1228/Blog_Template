@@ -16,14 +16,30 @@ export interface BlogPost {
   content?: string;
   excerpt?: string;
   created_at?: string;
+  // New SEO and publishing fields
+  status: 'draft' | 'published';
+  published_at?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  canonical_url?: string;
+  featured: boolean;
+  view_count: number;
+  reading_time?: number;
 }
 
-export const getBlogPosts = async (): Promise<BlogPost[]> => {
+export const getBlogPosts = async (includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('blog_posts')
-      .select('*')
-      .order('date', { ascending: false });
+      .select('*');
+    
+    // Only show published posts for public users
+    if (!includeUnpublished) {
+      query = query.eq('status', 'published');
+    }
+    
+    const { data, error } = await query.order('published_at', { ascending: false, nullsFirst: false });
 
     if (error) {
       console.error('Error fetching blog posts:', error);
@@ -37,7 +53,7 @@ export const getBlogPosts = async (): Promise<BlogPost[]> => {
   }
 };
 
-export const getBlogPostBySlug = async (slug: string): Promise<BlogPost | null> => {
+export const getBlogPostBySlug = async (slug: string, includeUnpublished = false): Promise<BlogPost | null> => {
   try {
     // Check if Supabase is configured
     if (!supabase) {
@@ -45,11 +61,17 @@ export const getBlogPostBySlug = async (slug: string): Promise<BlogPost | null> 
       return getFallbackPostBySlug(slug);
     }
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('blog_posts')
       .select('*')
-      .eq('slug', slug)
-      .single();
+      .eq('slug', slug);
+    
+    // Only show published posts for public users
+    if (!includeUnpublished) {
+      query = query.eq('status', 'published');
+    }
+    
+    const { data, error } = await query.single();
 
     if (error) {
       // Handle specific Supabase errors
@@ -75,7 +97,7 @@ export const getBlogPostBySlug = async (slug: string): Promise<BlogPost | null> 
   }
 };
 
-export const getFeaturedPosts = async (limit: number = 5): Promise<BlogPost[]> => {
+export const getFeaturedPosts = async (limit: number = 5, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
     // Check if Supabase is configured
     if (!supabase) {
@@ -83,10 +105,17 @@ export const getFeaturedPosts = async (limit: number = 5): Promise<BlogPost[]> =
       return getFallbackFeaturedPosts(limit);
     }
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('blog_posts')
-      .select('*')
-      .order('date', { ascending: false })
+      .select('*');
+    
+    // Only show published posts for public users
+    if (!includeUnpublished) {
+      query = query.eq('status', 'published');
+    }
+    
+    const { data, error } = await query
+      .order('published_at', { ascending: false, nullsFirst: false })
       .limit(limit);
 
     if (error) {
@@ -106,7 +135,7 @@ export const getFeaturedPosts = async (limit: number = 5): Promise<BlogPost[]> =
   }
 };
 
-export const getBlogPostsByCategory = async (categorySlug: string): Promise<BlogPost[]> => {
+export const getBlogPostsByCategory = async (categorySlug: string, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
     // Check if Supabase is configured
     if (!supabase) {
@@ -117,11 +146,17 @@ export const getBlogPostsByCategory = async (categorySlug: string): Promise<Blog
     // Convert slug back to category name
     const categoryName = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
     
-    const { data, error } = await supabase
+    let query = supabase
       .from('blog_posts')
       .select('*')
-      .eq('category', categoryName)
-      .order('date', { ascending: false });
+      .eq('category', categoryName);
+    
+    // Only show published posts for public users
+    if (!includeUnpublished) {
+      query = query.eq('status', 'published');
+    }
+    
+    const { data, error } = await query.order('published_at', { ascending: false, nullsFirst: false });
 
     if (error) {
       console.error('Error fetching blog posts by category from database, using fallback:', {
@@ -236,5 +271,77 @@ export const getRelatedPosts = async (currentPostSlug: string, category: string,
     return fallbackBlogPosts
       .filter(post => post.category === category && post.slug !== currentPostSlug)
       .slice(0, limit);
+  }
+};
+
+// Admin functions for draft/publish management
+export const publishPost = async (id: number): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('blog_posts')
+      .update({ 
+        status: 'published',
+        published_at: new Date().toISOString()
+      })
+      .eq('id', id);
+
+    return !error;
+  } catch (error) {
+    console.error('Error publishing post:', error);
+    return false;
+  }
+};
+
+export const unpublishPost = async (id: number): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('blog_posts')
+      .update({ 
+        status: 'draft',
+        published_at: null
+      })
+      .eq('id', id);
+
+    return !error;
+  } catch (error) {
+    console.error('Error unpublishing post:', error);
+    return false;
+  }
+};
+
+export const incrementViewCount = async (id: number): Promise<void> => {
+  try {
+    await supabase.rpc('increment_view_count', { post_id: id });
+  } catch (error) {
+    console.error('Error incrementing view count:', error);
+  }
+};
+
+// SEO utility functions
+export const calculateReadingTime = (content: string): number => {
+  const wordsPerMinute = 200;
+  const wordCount = content.split(/\s+/).length;
+  return Math.ceil(wordCount / wordsPerMinute);
+};
+
+export const updatePostSEO = async (
+  id: number, 
+  seoData: {
+    meta_title?: string;
+    meta_description?: string;
+    meta_keywords?: string;
+    canonical_url?: string;
+  }
+): Promise<boolean> => {
+  try {
+    const { error } = await supabase
+      .from('blog_posts')
+      .update(seoData)
+      .eq('id', id);
+
+    return !error;
+  } catch (error) {
+    console.error('Error updating post SEO:', error);
+    return false;
   }
 };

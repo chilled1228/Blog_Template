@@ -7,7 +7,11 @@ import { BlogPost, getFeaturedPosts } from '@/lib/blogService';
 import HeroSliderSkeleton from './HeroSliderSkeleton';
 
 
-const HeroSlider: React.FC = () => {
+interface HeroSliderProps {
+  posts?: BlogPost[];
+}
+
+const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
   const [activeSlide, setActiveSlide] = useState(1);
   const [slides, setSlides] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,10 +25,11 @@ const HeroSlider: React.FC = () => {
     const fetchSlides = async () => {
       try {
         setLoading(true);
-        const featuredPosts = await getFeaturedPosts(5);
-        setSlides(featuredPosts);
-        if (featuredPosts.length > 0) {
-          setActiveSlide(featuredPosts[0].id || 1);
+        // Use provided posts or fetch featured posts
+        const slidePosts = posts || await getFeaturedPosts(5);
+        setSlides(slidePosts);
+        if (slidePosts.length > 0) {
+          setActiveSlide(slidePosts[0].id || 1);
         }
       } catch (error) {
         console.error('Error fetching hero slider slides:', error);
@@ -34,7 +39,7 @@ const HeroSlider: React.FC = () => {
     };
 
     fetchSlides();
-  }, []);
+  }, [posts]);
 
   // Auto-slide functionality
   const startAutoSlide = useCallback(() => {

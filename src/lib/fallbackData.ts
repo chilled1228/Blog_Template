@@ -104,14 +104,16 @@ export const fallbackBlogPosts: BlogPost[] = [
 ];
 
 export const getFallbackPostBySlug = (slug: string): BlogPost | null => {
-  return fallbackBlogPosts.find(post => post.slug === slug) || null;
+  // Return null to avoid showing demo posts in production
+  return null;
 };
 
 export const getFallbackFeaturedPosts = (limit: number = 5): BlogPost[] => {
-  return fallbackBlogPosts.slice(0, limit);
+  // Return empty array to avoid showing demo posts in production
+  return [];
 };
 
 export const getFallbackPostsByCategory = (categorySlug: string): BlogPost[] => {
-  const categoryName = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
-  return fallbackBlogPosts.filter(post => post.category.toLowerCase() === categoryName.toLowerCase());
+  // Return empty array to avoid showing demo posts in production
+  return [];
 };

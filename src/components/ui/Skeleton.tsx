@@ -19,11 +19,11 @@ export default function Skeleton({
   return (
     <div 
       className={cn(
-        'inline-block bg-gray-200',
+        'inline-block bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]',
         width,
         height,
         rounded ? 'rounded-md' : '',
-        animate ? 'animate-pulse' : '',
+        animate ? 'animate-shimmer' : '',
         className
       )}
     />
