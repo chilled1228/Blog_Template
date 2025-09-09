@@ -1270,31 +1270,47 @@ body * {
 
 /* Floating toggle button */
 .mobile-toc-toggle {
-  @apply fixed right-6 z-50 w-12 h-12 rounded-full flex items-center justify-center lg:hidden;
-  top: 50%;
-  transform: translateY(-50%);
+  @apply fixed right-4 z-50 flex flex-col items-center justify-center lg:hidden;
+  top: 80px;
+  width: 48px;
+  height: 140px;
+  border-radius: 24px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--black-olive);
   box-shadow: none !important;
   transition: opacity 0.3s ease, transform 0.2s ease;
+  padding: 12px 6px;
 }
 
 .mobile-toc-toggle-show {
   opacity: 1;
-  transform: translateY(-50%);
+  transform: translateY(0);
 }
 
 .mobile-toc-toggle-hide {
   opacity: 0;
-  transform: translateY(-50%);
+  transform: translateY(0);
   pointer-events: none;
 }
 
 .mobile-toc-toggle:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-50%) scale(1.05);
+  transform: scale(1.02);
+}
+
+.mobile-toc-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+  margin-top: 6px;
+  white-space: nowrap;
+  max-height: 80px;
+  overflow: hidden;
 }
 
 .mobile-toc-backdrop {
