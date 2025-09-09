@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import MediaLibrary, { MediaFile } from './MediaLibrary';
 
 interface SimpleEditorProps {
   value: string;
@@ -14,6 +15,7 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
   placeholder = 'Start writing your content...'
 }) => {
   const [isUploading, setIsUploading] = useState(false);
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,9 +45,6 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
     try {
       const response = await fetch('/api/admin/upload', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer admin123`,
-        },
         body: formData,
       });
 
@@ -72,6 +71,12 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
     if (file) {
       handleImageUpload(file);
     }
+  };
+
+  const handleMediaSelect = (media: MediaFile) => {
+    const imageMarkup = `\n<img src="${media.url}" alt="${media.key}" style="max-width: 100%; height: auto;" />\n`;
+    insertAtCursor(imageMarkup);
+    setShowMediaLibrary(false);
   };
 
   const insertHeading = (level: number) => {
@@ -168,9 +173,18 @@ console.log("Hello World!");
                 Uploading...
               </>
             ) : (
-              '📷 Image'
+              '📤 Upload'
             )}
           </label>
+
+          <button
+            type="button"
+            onClick={() => setShowMediaLibrary(true)}
+            className="px-3 py-1 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            title="Media Library"
+          >
+            📁 Library
+          </button>
 
           <button
             type="button"
@@ -239,6 +253,16 @@ console.log("Hello World!");
           💡 Tip: Use the toolbar buttons to insert HTML elements
         </span>
       </div>
+
+      {/* Media Library Modal */}
+      {showMediaLibrary && (
+        <MediaLibrary
+          isOpen={showMediaLibrary}
+          onClose={() => setShowMediaLibrary(false)}
+          onSelect={handleMediaSelect}
+          type="image"
+        />
+      )}
     </div>
   );
 };
