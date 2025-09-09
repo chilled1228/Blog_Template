@@ -169,8 +169,91 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     }
   }, [initializeCharts]);
 
+  // Process and execute inline scripts for games
+  const processInlineScripts = useCallback(() => {
+    const scripts = document.querySelectorAll('script:not([data-processed])');
+    scripts.forEach((script) => {
+      const scriptElement = script as HTMLScriptElement;
+      if (scriptElement.textContent && !scriptElement.src) {
+        try {
+          // Mark as processed to avoid re-execution
+          script.setAttribute('data-processed', 'true');
+          
+          // Clean and decode HTML entities in script content
+          let scriptContent = scriptElement.textContent?.trim() || '';
+          
+          // Skip empty scripts
+          if (!scriptContent) return;
+          
+          // Decode HTML entities properly
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = scriptContent;
+          scriptContent = tempDiv.textContent || tempDiv.innerText || '';
+          
+          // Additional HTML entity cleanup
+          scriptContent = scriptContent
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&')
+            .replace(/&quot;/g, '"')
+            .replace(/&#x27;/g, "'")
+            .replace(/&#39;/g, "'")
+            .trim();
+          
+          // Skip if still empty after cleanup
+          if (!scriptContent) return;
+          
+          // Log the script content for debugging
+          console.log('Processing script content:', scriptContent.substring(0, 100) + (scriptContent.length > 100 ? '...' : ''));
+          
+          // Try to validate basic JavaScript syntax
+          try {
+            new Function(scriptContent);
+          } catch (syntaxError) {
+            console.warn('Invalid JavaScript syntax in inline script:', syntaxError);
+            console.warn('Script content causing error:', scriptContent);
+            return;
+          }
+          
+          // Execute using Function constructor for better error handling
+          try {
+            // Check if script contains functions that need to be globally accessible
+            const globalFunctionPattern = /function\s+(\w+)\s*\(/g;
+            const globalFunctions = [];
+            let match;
+            
+            while ((match = globalFunctionPattern.exec(scriptContent)) !== null) {
+              globalFunctions.push(match[1]);
+            }
+            
+            // If we found global functions, execute in global scope
+            if (globalFunctions.length > 0 || scriptContent.includes('onclick=') || scriptContent.includes('resetGame')) {
+              // Use eval for scripts that need global access (safer than direct eval due to our validation)
+              (function() {
+                eval(scriptContent);
+              })();
+            } else {
+              // Use Function constructor for isolated execution
+              const executeScript = new Function(scriptContent);
+              executeScript();
+            }
+          } catch (runtimeError) {
+            console.warn('Runtime error in inline script:', runtimeError);
+            console.warn('Script content that caused runtime error:', scriptContent);
+          }
+          
+        } catch (error) {
+          console.warn('Error processing inline script:', error);
+        }
+      }
+    });
+  }, []);
+
   // Optimized interactive element initialization with event delegation
   const processInteractiveElements = useCallback(() => {
+    // Process any inline scripts first
+    processInlineScripts();
+    
     // Use event delegation for better performance
     const handleButtonClick = (e: Event) => {
       const target = e.target as HTMLElement;
@@ -216,9 +299,9 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     };
   }, []);
 
-  // Optimized effect with proper cleanup
+  // Optimized effect with proper cleanup - only run on client
   useEffect(() => {
-    if (hasInitialized.current) return;
+    if (typeof window === 'undefined' || hasInitialized.current) return;
     hasInitialized.current = true;
 
     // Only load Chart.js if actually needed
@@ -228,20 +311,30 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     
     const hasInteractiveElements = content.includes('interactive-button') || 
                                 content.includes('tab-button');
+    
+    const hasInlineScripts = content.includes('<script>') || 
+                           content.includes('function ') ||
+                           content.includes('onclick=') ||
+                           content.includes('addEventListener');
 
     if (hasCharts) {
       loadChartJS();
     }
 
-    if (hasInteractiveElements) {
-      const cleanup = processInteractiveElements();
-      return cleanup;
+    if (hasInteractiveElements || hasInlineScripts) {
+      // Delay execution to ensure DOM is ready
+      const timer = setTimeout(() => {
+        const cleanup = processInteractiveElements();
+        return cleanup;
+      }, 100);
+      
+      return () => clearTimeout(timer);
     }
   }, [content, loadChartJS, processInteractiveElements]);
 
   // Parse the HTML content and replace code blocks
   const processContent = (htmlContent: string) => {
-    // Split content by pre tags to handle code blocks
+    // Split content by pre tags to handle code blocks (H1 cleaning is done before this)
     const parts = htmlContent.split(/(<pre[^>]*>[\s\S]*?<\/pre>)/g);
     
     return parts.map((part, index) => {
@@ -294,12 +387,38 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     }).filter(Boolean);
   };
 
-  // If no code blocks found, render normally
-  if (!content.includes('<pre>')) {
-    return <div dangerouslySetInnerHTML={{ __html: content }} />;
-  }
+  // Effect to handle scripts after content is rendered - client only
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const timer = setTimeout(() => {
+      processInlineScripts();
+    }, 150);
+    
+    return () => clearTimeout(timer);
+  }, [content, processInlineScripts]);
 
-  return <>{processContent(content)}</>;
+  // Process content once and memoize to prevent hydration issues
+  const processedContent = React.useMemo(() => {
+    // Check for H1 conflicts and warn
+    const h1Count = (content.match(/<h1[^>]*>/gi) || []).length;
+    if (h1Count > 0) {
+      console.warn(`⚠️ H1 Conflict Detected: Found ${h1Count} H1 tag(s) in content. Converting to H2 for proper SEO structure.`);
+      console.warn('💡 Best Practice: Use only <h2>, <h3>, etc. in blog content. The page title is already an H1.');
+    }
+    
+    // Convert H1 to H2 to maintain proper heading hierarchy
+    const cleanedContent = content.replace(/<h1([^>]*)>/gi, '<h2$1>').replace(/<\/h1>/gi, '</h2>');
+    
+    // If no code blocks found, return cleaned content
+    if (!cleanedContent.includes('<pre>')) {
+      return <div dangerouslySetInnerHTML={{ __html: cleanedContent }} />;
+    }
+
+    return <>{processContent(cleanedContent)}</>;
+  }, [content]);
+
+  return processedContent;
 };
 
 export default BlogContentRenderer;

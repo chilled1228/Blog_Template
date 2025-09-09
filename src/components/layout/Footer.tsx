@@ -6,9 +6,9 @@ export default function Footer() {
   return (
     <footer className="mt-16" style={{ background: 'linear-gradient(135deg, #f9f3f2 0%, #f4edec 50%, #efebe9 100%)', borderTop: '1px solid #3d8a8e', color: '#44403D' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-10 lg:gap-12">
           {/* Brand Section */}
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div className="col-span-2 sm:col-span-2 lg:col-span-1">
             <h3 className={`${typography.h4} ${textSpacing.subheading} text-inherit`}>
               Freepik Blog
             </h3>

@@ -207,17 +207,33 @@
   @apply max-w-full h-auto rounded-lg my-6 shadow-md mx-auto block;
 }
 .blog-content table {
-  @apply w-full border-collapse my-8 text-base;
+  @apply w-full border-collapse my-8 text-base rounded-lg overflow-hidden shadow-sm;
+  border: 1px solid #3d8a8e;
 }
 .blog-content th,
 .blog-content td {
-  @apply px-4 py-3 text-left border-b border-gray-200;
+  @apply px-4 py-3 text-left border-b border-r;
+  border-color: rgba(61, 138, 142, 0.3);
+}
+.blog-content th:last-child,
+.blog-content td:last-child {
+  border-right: none;
 }
 .blog-content th {
-  @apply font-semibold text-gray-900 bg-gray-50;
+  @apply font-semibold;
+  background: linear-gradient(135deg, #fef9f8 0%, #f9f3f2 50%, #f4edec 100%);
+  color: var(--black-olive);
+  border-bottom: 2px solid #3d8a8e;
 }
 .blog-content td {
-  @apply text-gray-700;
+  color: var(--text-secondary);
+  background: rgba(254, 249, 248, 0.5);
+}
+.blog-content tr:hover td {
+  background: rgba(247, 144, 135, 0.05);
+}
+.blog-content tr:last-child td {
+  border-bottom: none;
 }
 /* Interactive Content - Simplified with Tailwind */
 .blog-content .interactive-container {
@@ -242,6 +258,54 @@
 }
 .blog-content .data-visualization img {
   @apply my-4 mx-auto block;
+}
+
+/* HTML Game Support */
+.blog-content .game-container {
+  @apply my-8 p-6 rounded-xl shadow-sm relative;
+  background: linear-gradient(135deg, #fef9f8 0%, #f9f3f2 50%, #f4edec 100%);
+  border: 1px solid #3d8a8e;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.blog-content .game-container canvas,
+.blog-content .game-container svg {
+  @apply max-w-full h-auto mx-auto block;
+}
+
+.blog-content .game-container button {
+  @apply inline-block px-4 py-2 text-white rounded-lg no-underline font-medium transition-all duration-200 border-none cursor-pointer m-1 hover:-translate-y-px hover:shadow-lg;
+  background-color: var(--coral-pink);
+}
+
+.blog-content .game-container button:hover {
+  background-color: var(--client-btn--hover);
+  box-shadow: 0 10px 25px rgba(247, 144, 135, 0.3);
+}
+
+.blog-content .game-container input,
+.blog-content .game-container select {
+  @apply px-3 py-2 border rounded-md bg-white text-gray-700 border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 mr-2 mb-2;
+}
+
+.blog-content .game-container .game-score,
+.blog-content .game-container .game-status {
+  @apply font-semibold text-lg mb-2;
+  color: var(--black-olive);
+}
+
+/* Mobile responsive games */
+@media (max-width: 768px) {
+  .blog-content .game-container {
+    @apply p-4 my-6;
+  }
+  
+  .blog-content .game-container canvas,
+  .blog-content .game-container svg {
+    max-width: 100%;
+    height: auto;
+  }
 }
 .blog-content .interactive-button {
   @apply inline-block px-6 py-3 text-white rounded-lg no-underline font-medium transition-all duration-200 border-none cursor-pointer m-2 hover:-translate-y-px hover:shadow-lg;
@@ -281,6 +345,18 @@
   
   .blog-content .interactive-iframe {
     @apply min-h-[300px];
+  }
+  
+  .blog-content table {
+    @apply text-sm my-6;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .blog-content th,
+  .blog-content td {
+    @apply px-3 py-2;
   }
 }
 /* Enhanced Code Block Styles - Simplified */
