@@ -142,25 +142,15 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
           background: 'linear-gradient(135deg, #fef9f8 0%, #f9f3f2 30%, #f4edec 70%, #efebe9 100%)',
           border: '1px solid #3d8a8e'
         }}
-        onMouseEnter={(e) => {
-          setIsPaused(true);
-          e.currentTarget.style.borderColor = '#4CA4A8';
-          e.currentTarget.style.boxShadow = '0 15px 35px rgba(61, 138, 142, 0.2)';
-          e.currentTarget.style.transform = 'translateY(-2px)';
-        }}
-        onMouseLeave={(e) => {
-          setIsPaused(false);
-          e.currentTarget.style.borderColor = '#3d8a8e';
-          e.currentTarget.style.boxShadow = '';
-          e.currentTarget.style.transform = '';
-        }}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
         <div className="relative overflow-hidden">
           {/* Slides Container - Fixed height to prevent UI shift */}
-          <div className="relative min-h-[400px] sm:min-h-[450px] lg:min-h-[500px] max-h-[600px]">
+          <div className="relative h-[400px] sm:h-[450px] lg:h-[500px]">
             {slides.map((slide) => (
               <div 
                 key={slide.id}
@@ -238,7 +228,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                       ? 'opacity-100 scale-100' 
                       : 'opacity-0 scale-105'
                   }`}>
-                    <div className="aspect-[16/10] sm:aspect-[4/3] lg:aspect-auto lg:h-full">
+                    <div className="relative aspect-[16/10] sm:aspect-[4/3] lg:h-full">
                       <Image 
                         src={slide.image} 
                         alt={slide.title} 

@@ -14,20 +14,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
   return (
     <article 
-      className="rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 h-full flex flex-col group"
+      className="rounded-2xl overflow-hidden h-full flex flex-col group"
       style={{ 
         background: 'linear-gradient(135deg, #fef9f8 0%, #f9f3f2 50%, #f4edec 100%)',
         border: '1px solid #3d8a8e'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = '#4CA4A8';
-        e.currentTarget.style.background = 'linear-gradient(135deg, #fdf7f6 0%, #f7f0ef 50%, #f2eae9 100%)';
-        e.currentTarget.style.boxShadow = '0 10px 25px rgba(61, 138, 142, 0.15)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = '#3d8a8e';
-        e.currentTarget.style.background = 'linear-gradient(135deg, #fef9f8 0%, #f9f3f2 50%, #f4edec 100%)';
-        e.currentTarget.style.boxShadow = '';
       }}
       data-post-id={post.id}
     >
