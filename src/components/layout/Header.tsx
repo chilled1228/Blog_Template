@@ -24,7 +24,7 @@ const Header: React.FC = () => {
         <div className="absolute left-4 lg:hidden">
           <button 
             className="inline-flex items-center justify-center p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset transition-colors duration-200"
-            style={{ color: 'var(--text-secondary)', focusRingColor: 'var(--verdigris)' }}
+            style={{ color: 'var(--text-secondary)' }}
             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--black-olive)'}
             onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
             onClick={toggleMenu}
