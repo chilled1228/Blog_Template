@@ -191,3 +191,50 @@ export const getBlogPostsByAuthor = async (authorSlug: string): Promise<BlogPost
     );
   }
 };
+
+export const getRelatedPosts = async (currentPostSlug: string, category: string, limit: number = 4): Promise<BlogPost[]> => {
+  try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      console.warn('Supabase client not configured. Using fallback data.');
+      return fallbackBlogPosts
+        .filter(post => post.category === category && post.slug !== currentPostSlug)
+        .slice(0, limit);
+    }
+
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('category', category)
+      .neq('slug', currentPostSlug)
+      .order('date', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching related posts from database, using fallback:', {
+        code: error.code,
+        message: error.message,
+        category,
+        currentPostSlug
+      });
+      return fallbackBlogPosts
+        .filter(post => post.category === category && post.slug !== currentPostSlug)
+        .slice(0, limit);
+    }
+
+    return data && data.length > 0 
+      ? data 
+      : fallbackBlogPosts
+          .filter(post => post.category === category && post.slug !== currentPostSlug)
+          .slice(0, limit);
+  } catch (error) {
+    console.error('Unexpected error fetching related posts, using fallback:', {
+      error: error instanceof Error ? error.message : error,
+      category,
+      currentPostSlug
+    });
+    return fallbackBlogPosts
+      .filter(post => post.category === category && post.slug !== currentPostSlug)
+      .slice(0, limit);
+  }
+};

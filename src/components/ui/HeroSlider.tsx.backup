@@ -151,6 +151,8 @@ const HeroSlider: React.FC = () => {
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
       >
         <div className="relative overflow-hidden">
           {/* Slides Container - Fixed height to prevent UI shift */}

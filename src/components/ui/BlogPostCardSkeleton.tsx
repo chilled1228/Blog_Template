@@ -3,7 +3,7 @@ import Skeleton from './Skeleton';
 
 export default function BlogPostCardSkeleton() {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 h-full flex flex-col animate-pulse">
+    <div className="rounded-2xl overflow-hidden h-full flex flex-col animate-pulse" style={{ background: 'linear-gradient(135deg, #fef9f8 0%, #f9f3f2 50%, #f4edec 100%)', border: '1px solid #3d8a8e' }}>
       <div className="relative aspect-[4/3] overflow-hidden rounded-xl m-2 sm:m-3">
         <Skeleton width="w-full" height="h-full" rounded={true} />
       </div>

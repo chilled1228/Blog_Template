@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Layout } from '@/components/layout';
 import BlogContentRenderer from '@/components/ui/BlogContentRenderer';
 import StructuredData from '@/components/ui/StructuredData';
+import RelatedPosts from '@/components/ui/RelatedPosts';
 
 interface BlogPostPageProps {
   params: {
@@ -94,6 +95,13 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
             </div>
           </article>
         </div>
+
+        {/* Related Posts Section */}
+        <RelatedPosts 
+          currentPostSlug={post.slug} 
+          category={post.category} 
+          limit={4} 
+        />
       </div>
     </Layout>
   );
