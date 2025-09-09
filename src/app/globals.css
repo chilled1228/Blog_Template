@@ -845,6 +845,9 @@ body.freepik {
 /* WordPress Block Styles (from original HTML) */
 body {
   padding-top: 3.5rem;
+  background-color: var(--background);
+  font-family: var(--font-funnel-sans), system-ui, sans-serif;
+  color: var(--foreground);
 }
 #footer {
   display: block !important;
