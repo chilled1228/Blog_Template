@@ -1,18 +1,13 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
-  // Specify the root directory for Turbopack to avoid warnings
+  // Specify absolute root directory for Turbopack to avoid warnings
   turbopack: {
-    root: "."
+    root: path.resolve(__dirname)
   },
-  // Configure image domains for Next.js Image component
+  // Configure image remote patterns (domains is deprecated)
   images: {
-    domains: [
-      'pub-141831e61e69445289222976a15b6fb3.r2.dev',
-      'ui-avatars.com',
-      'trytechnical.com',
-      'images.unsplash.com'
-    ],
     remotePatterns: [
       {
         protocol: 'https',

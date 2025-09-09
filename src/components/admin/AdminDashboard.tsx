@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { BlogPost, publishPost, unpublishPost, calculateReadingTime } from '@/lib/blogService';
+import SimpleEditor from './SimpleEditor';
 
 interface AdminBlogPost extends BlogPost {
   id: number;
@@ -325,14 +326,12 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Content</h3>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Content
                     </label>
-                    <textarea
+                    <SimpleEditor
                       value={formData.content}
-                      onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                      rows={12}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      onChange={(content) => setFormData(prev => ({ ...prev, content }))}
                       placeholder="Write your blog post content here..."
                     />
                     {formData.content && (

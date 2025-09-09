@@ -260,11 +260,21 @@ Test your games in:
 
 ## Integration Steps
 
-1. **Write your game HTML**: Use the structure above
-2. **Test locally**: Ensure no syntax errors
-3. **Embed in blog post**: Paste HTML directly in post content
-4. **Preview**: Check game works in blog template
-5. **Publish**: Games will auto-execute on page load
+1. **Use the Admin Editor**: Click the "🎮 Game" button in the toolbar to insert a game template
+2. **Customize the template**: Replace placeholder content with your game
+3. **Test locally**: Ensure no syntax errors in the preview
+4. **Use image uploads**: Click "📷 Image" to upload and insert images from R2 storage
+5. **Preview**: Check game works in blog template
+6. **Publish**: Games will auto-execute on page load
+
+### Admin Editor Features
+
+The blog admin panel includes a WordPress-like editor with:
+- **Game Templates**: One-click insertion of game containers
+- **Image Upload**: Direct upload to Cloudflare R2 with automatic URL insertion
+- **Code Blocks**: Syntax-highlighted code insertion
+- **HTML Formatting**: Bold, italic, links, headings
+- **Live Preview**: Real-time character and word count
 
 ## Support
 
