@@ -7,6 +7,8 @@ import BlogContentRenderer from '@/components/ui/BlogContentRenderer';
 import StructuredData from '@/components/ui/StructuredData';
 import RelatedPosts from '@/components/ui/RelatedPosts';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import TableOfContents from '@/components/ui/TableOfContents';
+import MobileTableOfContents from '@/components/ui/MobileTableOfContents';
 
 interface BlogPostPageProps {
   params: {
@@ -26,76 +28,98 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
     <Layout>
       <ScrollToTop />
       <StructuredData slug={slug} />
+      <MobileTableOfContents />
       <div className="blog-container">
-        <div className="blog-content-wrapper">
-          <article className="blog-article">
-            {/* Featured Image */}
-            <div className="blog-featured-image">
-              <Image 
-                src={post.image} 
-                alt={post.title}
-                width={800}
-                height={400}
-                className="w-full h-auto"
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 800px"
-              />
-            </div>
-
-            {/* Title */}
-            <h1 className="blog-main-title">{post.title}</h1>
-
-            {/* Author Section */}
-            <div className="blog-author-section">
-              <div className="blog-author-avatar">
+        <div className="flex flex-col lg:flex-row lg:gap-8">
+          {/* Main Content */}
+          <div className="blog-main-content">
+            <div className="blog-content-wrapper">
+              <article className="blog-article">
+              {/* Featured Image */}
+              <div className="blog-featured-image">
                 <Image 
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=48`} 
-                  alt={post.author}
-                  width={24}
-                  height={24}
+                  src={post.image} 
+                  alt={post.title}
+                  width={800}
+                  height={400}
+                  className="w-full h-auto"
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 800px"
                 />
               </div>
-              <div className="blog-author-info">
-                <span>By </span>
-                <a href={post.author_url} className="blog-author-link">{post.author}</a>
-              </div>
-              <div className="blog-meta-divider">•</div>
-              <div className="blog-category-section">
-                <a href={post.category_url} className="blog-category-link">
-                  {post.category}
-                </a>
-              </div>
-              <div className="blog-meta-divider">|</div>
-              <div className="blog-date-section">
-                <time dateTime={post.datetime}>{post.date}</time>
-              </div>
-            </div>
 
-            {/* Content */}
-            <div className="blog-content">
-              {post.content ? (
-                <BlogContentRenderer content={post.content} />
-              ) : (
-                <p>Content will be added soon...</p>
-              )}
-            </div>
+              {/* Title */}
+              <h1 className="blog-main-title">{post.title}</h1>
 
-            {/* Author Footer */}
-            <div className="blog-author-footer">
-              <div className="blog-author-avatar-large">
-                <Image 
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=96`} 
-                  alt={post.author}
-                  width={48}
-                  height={48}
-                />
+              {/* Author Section */}
+              <div className="blog-author-section">
+                <div className="blog-author-avatar">
+                  <Image 
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=48`} 
+                    alt={post.author}
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <div className="blog-author-info">
+                  <span>By </span>
+                  <a href={post.author_url} className="blog-author-link">{post.author}</a>
+                </div>
+                <div className="blog-meta-divider">•</div>
+                <div className="blog-category-section">
+                  <a href={post.category_url} className="blog-category-link">
+                    {post.category}
+                  </a>
+                </div>
+                <div className="blog-meta-divider">|</div>
+                <div className="blog-date-section">
+                  <time dateTime={post.datetime}>{post.date}</time>
+                </div>
               </div>
-              <div className="blog-author-footer-info">
-                <span>By </span>
-                <a href={post.author_url} className="blog-author-footer-link">{post.author}</a>
+
+              {/* Content */}
+              <div className="blog-content">
+                {/* Mobile TOC inside blog content - shows at start, animates to floating button when scrolled */}
+                <div className="lg:hidden mb-8" style={{background: 'transparent'}}>
+                  <div id="inline-mobile-toc" className="mobile-toc-inline" style={{background: 'none', backgroundColor: 'transparent'}}>
+                    <div className="mobile-toc-inline-header">
+                      <span className="mobile-toc-icon">📄</span>
+                      <span className="mobile-toc-title">Table of Contents</span>
+                    </div>
+                    {/* TOC content will be populated by MobileTableOfContents component */}
+                  </div>
+                </div>
+                
+                {post.content ? (
+                  <BlogContentRenderer content={post.content} />
+                ) : (
+                  <p>Content will be added soon...</p>
+                )}
               </div>
+
+              {/* Author Footer */}
+              <div className="blog-author-footer">
+                <div className="blog-author-avatar-large">
+                  <Image 
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=96`} 
+                    alt={post.author}
+                    width={48}
+                    height={48}
+                  />
+                </div>
+                <div className="blog-author-footer-info">
+                  <span>By </span>
+                  <a href={post.author_url} className="blog-author-footer-link">{post.author}</a>
+                </div>
+              </div>
+              </article>
             </div>
-          </article>
+          </div>
+
+          {/* Sidebar with Table of Contents - Desktop Only */}
+          <aside className="hidden lg:block lg:w-64">
+            <TableOfContents />
+          </aside>
         </div>
 
         {/* Related Posts Section */}

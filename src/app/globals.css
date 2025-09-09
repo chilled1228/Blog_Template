@@ -58,7 +58,11 @@
 }
 /* Blog Post Styling - Converted to Tailwind */
 .blog-container {
-  @apply max-w-3xl mx-auto px-5 py-10;
+  @apply max-w-7xl mx-auto px-5 py-10;
+}
+
+.blog-main-content {
+  @apply max-w-3xl mx-auto;
 }
 .blog-content-wrapper {
   background: transparent;
@@ -1116,4 +1120,281 @@ body * {
 
 .animate-shimmer {
   animation: shimmer 1.5s infinite;
+}
+
+/* Table of Contents - Clean Transparent Design */
+.toc {
+  @apply sticky top-24 p-4 mb-8;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  z-index: 10;
+}
+
+.toc-header {
+  @apply flex items-center gap-2 mb-6 pb-0;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.toc-icon {
+  color: var(--coral-pink);
+  font-size: 16px;
+}
+
+.toc-title {
+  @apply text-base font-semibold m-0;
+  color: var(--black-olive);
+  font-family: var(--font-funnel-sans);
+}
+
+.toc-nav {
+  @apply max-h-96 overflow-y-auto;
+  padding-left: 16px;
+  background: transparent !important;
+  position: relative;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.toc-list {
+  @apply list-none p-0 m-0 space-y-2;
+}
+
+.toc-item {
+  @apply relative;
+}
+
+.toc-level-1 {
+  @apply ml-0;
+}
+
+.toc-level-2 {
+  @apply ml-0;
+}
+
+.toc-level-3 {
+  @apply ml-0;
+}
+
+.toc-level-4 {
+  @apply ml-0;
+}
+
+.toc-level-5 {
+  @apply ml-0;
+}
+
+.toc-level-6 {
+  @apply ml-0;
+}
+
+.toc-link {
+  @apply w-full text-left bg-none border-none py-0 px-0 text-sm transition-colors duration-150 cursor-pointer block;
+  color: var(--text-secondary);
+  font-family: var(--font-funnel-sans);
+  line-height: 1.5;
+}
+
+.toc-link:hover {
+  color: var(--verdigris);
+}
+
+.toc-active {
+  @apply font-medium;
+  color: var(--black-olive);
+  position: relative;
+}
+
+.toc-active::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--coral-pink);
+}
+
+/* Hide scrollbar */
+.toc-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.toc-nav {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile Table of Contents */
+
+/* Inline TOC at start of blog */
+.mobile-toc-inline {
+  @apply mb-8 p-0;
+  background: none !important;
+  border-left: 3px solid var(--coral-pink);
+  padding-left: 16px;
+  box-shadow: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-toc-inline.transitioning {
+  opacity: 0;
+}
+
+.mobile-toc-inline-header {
+  @apply flex items-center gap-2 mb-4 pb-2;
+  border-bottom: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+.mobile-toc-inline-nav {
+  @apply pl-0;
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Floating toggle button */
+.mobile-toc-toggle {
+  @apply fixed right-6 z-50 w-12 h-12 rounded-full flex items-center justify-center lg:hidden;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--black-olive);
+  box-shadow: none !important;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.mobile-toc-toggle-show {
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+.mobile-toc-toggle-hide {
+  opacity: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.mobile-toc-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.mobile-toc-backdrop {
+  @apply fixed inset-0 bg-black/50 z-40;
+}
+
+.mobile-toc-drawer {
+  @apply fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 transform transition-transform duration-300 ease-in-out translate-x-full;
+  background: var(--background) !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-left: 1px solid var(--coral-pink);
+}
+
+.mobile-toc-drawer-open {
+  @apply translate-x-0;
+}
+
+.mobile-toc-header {
+  @apply flex items-center justify-between p-6 pb-4;
+  border-bottom: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mobile-toc-icon {
+  color: var(--coral-pink);
+  font-size: 16px;
+}
+
+.mobile-toc-title {
+  @apply text-base font-semibold;
+  color: var(--black-olive);
+  font-family: var(--font-funnel-sans);
+}
+
+.mobile-toc-close {
+  @apply w-8 h-8 flex items-center justify-center rounded-full transition-colors duration-200;
+  color: var(--text-secondary);
+}
+
+.mobile-toc-close:hover {
+  background: rgba(76, 164, 168, 0.1);
+  color: var(--verdigris);
+}
+
+.mobile-toc-nav {
+  @apply p-6 pt-4 overflow-y-auto;
+  max-height: calc(100vh - 120px);
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mobile-toc-list {
+  @apply list-none p-0 m-0 space-y-3;
+  background: transparent !important;
+}
+
+.mobile-toc-item {
+  @apply relative;
+  background: transparent !important;
+}
+
+.mobile-toc-link {
+  @apply w-full text-left bg-none border-none py-2 px-0 text-sm transition-colors duration-150 cursor-pointer block;
+  color: var(--text-secondary);
+  font-family: var(--font-funnel-sans);
+  line-height: 1.5;
+  background: transparent !important;
+}
+
+.mobile-toc-link:hover {
+  color: var(--verdigris);
+  background: transparent !important;
+}
+
+.mobile-toc-active {
+  @apply font-medium;
+  color: var(--black-olive);
+  position: relative;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.mobile-toc-active::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--coral-pink);
+}
+
+/* Hide mobile TOC scrollbar */
+.mobile-toc-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-toc-nav {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
