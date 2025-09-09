@@ -77,19 +77,19 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
                 </div>
               </div>
 
+              {/* Mobile TOC outside blog content to prevent layout conflicts */}
+              <div className="lg:hidden mb-8" style={{background: 'transparent'}}>
+                <div id="inline-mobile-toc" className="mobile-toc-inline" style={{background: 'none', backgroundColor: 'transparent'}}>
+                  <div className="mobile-toc-inline-header">
+                    <span className="mobile-toc-icon">📄</span>
+                    <span className="mobile-toc-title">Table of Contents</span>
+                  </div>
+                  {/* TOC content will be populated by MobileTableOfContents component */}
+                </div>
+              </div>
+
               {/* Content */}
               <div className="blog-content">
-                {/* Mobile TOC inside blog content - shows at start, animates to floating button when scrolled */}
-                <div className="lg:hidden mb-8" style={{background: 'transparent'}}>
-                  <div id="inline-mobile-toc" className="mobile-toc-inline" style={{background: 'none', backgroundColor: 'transparent'}}>
-                    <div className="mobile-toc-inline-header">
-                      <span className="mobile-toc-icon">📄</span>
-                      <span className="mobile-toc-title">Table of Contents</span>
-                    </div>
-                    {/* TOC content will be populated by MobileTableOfContents component */}
-                  </div>
-                </div>
-                
                 {post.content ? (
                   <BlogContentRenderer content={post.content} />
                 ) : (

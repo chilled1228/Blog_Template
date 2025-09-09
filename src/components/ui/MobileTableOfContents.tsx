@@ -78,10 +78,13 @@ const MobileTableOfContents: React.FC = () => {
       }
     };
 
+    // Try immediately and with shorter delays
+    findHeadings();
     const timers = [
+      setTimeout(findHeadings, 100),
+      setTimeout(findHeadings, 300),
       setTimeout(findHeadings, 500),
-      setTimeout(findHeadings, 1000),
-      setTimeout(findHeadings, 2000)
+      setTimeout(findHeadings, 1000)
     ];
 
     return () => {

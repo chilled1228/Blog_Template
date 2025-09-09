@@ -233,19 +233,21 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
 
               <div className="relative overflow-hidden p-2 sm:p-3 lg:p-4 order-1 lg:order-2">
                 <Link href={`/${slide.slug}`} className="block h-full group">
-                  <div className={`relative aspect-[4/3] lg:aspect-auto lg:h-full rounded-lg sm:rounded-xl overflow-hidden max-h-[180px] sm:max-h-[250px] lg:max-h-none transition-all duration-700 delay-200 ${
+                  <div className={`relative w-full rounded-lg sm:rounded-xl overflow-hidden transition-all duration-700 delay-200 ${
                     activeSlide === slide.id 
                       ? 'opacity-100 scale-100' 
                       : 'opacity-0 scale-105'
                   }`}>
-                    <Image 
-                      src={slide.image} 
-                      alt={slide.title} 
-                      fill
-                      className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
-                      priority={activeSlide === slide.id}
-                    />
+                    <div className="aspect-[16/10] sm:aspect-[4/3] lg:aspect-auto lg:h-full">
+                      <Image 
+                        src={slide.image} 
+                        alt={slide.title} 
+                        fill
+                        className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
+                        priority={activeSlide === slide.id}
+                      />
+                    </div>
                   </div>
                 </Link>
               </div>
