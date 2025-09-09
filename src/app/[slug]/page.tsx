@@ -6,6 +6,7 @@ import { Layout } from '@/components/layout';
 import BlogContentRenderer from '@/components/ui/BlogContentRenderer';
 import StructuredData from '@/components/ui/StructuredData';
 import RelatedPosts from '@/components/ui/RelatedPosts';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 
 interface BlogPostPageProps {
   params: {
@@ -23,6 +24,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
 
   return (
     <Layout>
+      <ScrollToTop />
       <StructuredData slug={slug} />
       <div className="blog-container">
         <div className="blog-content-wrapper">
