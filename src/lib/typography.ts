@@ -99,6 +99,10 @@ export const typography = {
   
   // Hero specific styles
   heroTitle: 'text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black leading-tight',
+  heroSubtitle: 'text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed',
+  
+  // Card title styles
+  title: 'text-base sm:text-lg font-bold leading-tight',
 } as const;
 
 // Responsive text utilities

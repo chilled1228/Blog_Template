@@ -208,7 +208,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                     </Link>
                   </h1>
                   
-                  <p className={`${typography.bodySmall} ${textColors.muted} ${textSpacing.relaxed} line-clamp-2 sm:line-clamp-3`}>
+                  <p className={`${typography.heroSubtitle} ${textSpacing.relaxed} line-clamp-2 sm:line-clamp-3`} style={{ color: '#4B5D58' }}>
                     {slide.excerpt || 'Read more about this article...'}
                   </p>
                   
