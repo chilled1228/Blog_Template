@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BlogPost, getFeaturedPosts } from '@/lib/blogService';
+import { BlogPost, getBlogPosts } from '@/lib/blogService';
 import HeroSliderSkeleton from './HeroSliderSkeleton';
+import { typography, textColors, textSpacing } from '@/lib/typography';
 
 
 interface HeroSliderProps {
@@ -25,8 +26,8 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
     const fetchSlides = async () => {
       try {
         setLoading(true);
-        // Use provided posts or fetch featured posts
-        const slidePosts = posts || await getFeaturedPosts(5);
+        // Use provided posts or fetch all published posts
+        const slidePosts = posts || await getBlogPosts();
         setSlides(slidePosts);
         if (slidePosts.length > 0) {
           setActiveSlide(slidePosts[0].id || 1);
@@ -136,7 +137,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div 
         ref={sliderRef}
-        className="rounded-xl sm:rounded-2xl transition-all duration-300 my-4 sm:my-8 overflow-hidden"
+        className="rounded-xl sm:rounded-2xl transition-all duration-300 my-6 sm:my-8 lg:my-12 overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, #fef9f8 0%, #f9f3f2 30%, #f4edec 70%, #efebe9 100%)',
           border: '1px solid #3d8a8e'
@@ -184,7 +185,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                       <li>
                         <Link 
                           href={slide.category_url || '#'}
-                          className="inline-block text-xs sm:text-sm font-semibold uppercase tracking-wider transition-colors duration-200"
+                          className={`${typography.badge} inline-block transition-colors duration-200`}
                           style={{ color: '#4CA4A8' }}
                           onMouseEnter={(e) => e.currentTarget.style.color = '#3d8a8e'}
                           onMouseLeave={(e) => e.currentTarget.style.color = '#4CA4A8'}
@@ -195,27 +196,27 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                     </ul>
                   )}
                   
-                  <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold mb-2 sm:mb-3 lg:mb-4 leading-tight" style={{ color: '#44403D' }}>
+                  <h1 className={`${typography.heroTitle} ${textSpacing.heading} line-clamp-2 sm:line-clamp-3`} style={{ color: '#44403D' }}>
                     <Link 
                       href={`/${slide.slug}`}
-                      className="transition-colors duration-200 line-clamp-2 sm:line-clamp-3"
+                      className={`${typography.link} transition-colors duration-200`}
                       style={{ color: 'inherit' }}
                       onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
                       onMouseLeave={(e) => e.currentTarget.style.color = '#44403D'}
                     >
                       {slide.title}
                     </Link>
-                  </h2>
+                  </h1>
                   
-                  <p className="text-xs sm:text-sm lg:text-base text-gray-600 mb-3 sm:mb-4 lg:mb-6 line-clamp-2 sm:line-clamp-3 leading-relaxed">
+                  <p className={`${typography.bodySmall} ${textColors.muted} ${textSpacing.relaxed} line-clamp-2 sm:line-clamp-3`}>
                     {slide.excerpt || 'Read more about this article...'}
                   </p>
                   
-                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-gray-500">
+                  <div className={`flex flex-wrap items-center gap-1 sm:gap-2 ${typography.metaSmall} ${textColors.muted}`}>
                     <span>By</span>
                     <Link 
                       href={slide.author_url || '#'}
-                      className="transition-colors duration-200 font-medium truncate"
+                      className={`${typography.link} truncate`}
                       style={{ color: '#4B5D58' }}
                       onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
                       onMouseLeave={(e) => e.currentTarget.style.color = '#4B5D58'}
@@ -223,7 +224,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                       {slide.author}
                     </Link>
                     <span>•</span>
-                    <time dateTime={slide.datetime || slide.date} className="text-gray-500">
+                    <time dateTime={slide.datetime || slide.date} className={textColors.muted}>
                       {slide.date}
                     </time>
                   </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BlogPost } from '@/lib/blogService';
+import { typography, textColors, textSpacing } from '@/lib/typography';
 
 interface BlogPostCardProps {
   post: BlogPost;
@@ -46,10 +47,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       </div>
       
       <div className="p-4 sm:p-5 flex-grow flex flex-col">
-        <div className="mb-3">
+        <div className={textSpacing.tight}>
           <Link 
             href={post.category_url} 
-            className="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full transition-colors duration-200"
+            className={`${typography.badge} inline-block px-3 py-1 rounded-full transition-colors duration-200`}
             style={{ backgroundColor: 'rgba(76, 164, 168, 0.1)', color: '#4CA4A8' }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(76, 164, 168, 0.2)'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(76, 164, 168, 0.1)'}
@@ -58,23 +59,23 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </Link>
         </div>
         
-        <h2 className="text-base sm:text-lg font-bold mb-3 flex-grow leading-tight" style={{ color: '#44403D' }}>
+        <h1 className={`${typography.title} ${textSpacing.title} flex-grow`} style={{ color: '#44403D' }}>
           <Link 
             href={postUrl}
-            className="transition-colors duration-200"
+            className={`${typography.link} transition-colors duration-200`}
             style={{ color: 'inherit' }}
             onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
             onMouseLeave={(e) => e.currentTarget.style.color = '#44403D'}
           >
             {post.title}
           </Link>
-        </h2>
+        </h1>
         
-        <div className="flex items-center text-sm text-gray-500 mt-auto">
+        <div className={`flex items-center ${typography.meta} mt-auto`}>
           <span className="mr-1">By</span>
           <Link 
             href={post.author_url} 
-            className="font-medium transition-colors duration-200 mr-2"
+            className={`${typography.link} mr-2`}
             style={{ color: '#4B5D58' }}
             onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
             onMouseLeave={(e) => e.currentTarget.style.color = '#4B5D58'}
@@ -82,7 +83,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             {post.author}
           </Link>
           <span className="text-gray-300 mr-2">•</span>
-          <time dateTime={post.datetime} className="text-gray-500">
+          <time dateTime={post.datetime} className={textColors.muted}>
             {post.date}
           </time>
         </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import { typography, textColors } from '@/lib/typography';
 
 interface PaginationProps {
   currentPage?: number;
@@ -19,7 +20,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {prevPageUrl && (
           <Link 
             href={prevPageUrl} 
-            className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
+            className={`${typography.button} flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg ${textColors.body} hover:bg-gray-50 hover:border-gray-400 transition-all duration-200`}
           >
             <ChevronRight className="w-5 h-5 rotate-180" />
             <span>Previous page</span>
@@ -29,7 +30,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {nextPageUrl && (
           <Link 
             href={nextPageUrl} 
-            className="flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium"
+            className={`${typography.button} flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg ${textColors.body} hover:bg-gray-50 hover:border-gray-400 transition-all duration-200`}
           >
             <span>Next page</span>
             <ChevronRight className="w-5 h-5" />

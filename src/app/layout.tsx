@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Funnel_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const funnelSans = Funnel_Sans({
+  variable: "--font-funnel-sans",
   subsets: ["latin"],
+  weight: "variable",
+  style: "normal",
 });
 
 export const metadata: Metadata = {
@@ -51,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased freepik home blog wp-theme-freepik-blog hfeed`}>
+      <body className={`${funnelSans.variable} font-sans antialiased freepik home blog wp-theme-freepik-blog hfeed`}>
         {children}
       </body>
     </html>

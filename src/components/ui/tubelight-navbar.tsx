@@ -6,6 +6,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, Lightbulb, TrendingUp, Sparkles, Newspaper } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { typography } from "@/lib/typography"
 
 interface NavItem {
   name: string
@@ -60,7 +61,7 @@ export function NavBar({ items, className }: NavBarProps) {
   return (
     <div
       className={cn(
-        "fixed bottom-0 sm:top-0 left-1/2 -translate-x-1/2 z-[9999] mb-6 sm:pt-6",
+        "fixed bottom-0 sm:top-0 left-1/2 -translate-x-1/2 z-[9999] mb-4 sm:mb-6 sm:pt-6",
         className,
       )}
     >
@@ -75,7 +76,7 @@ export function NavBar({ items, className }: NavBarProps) {
               href={item.url}
               onClick={() => setClickedTab(item.name)}
               className={cn(
-                "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
+                `${typography.nav} relative cursor-pointer px-6 py-2 rounded-full transition-colors`,
                 "text-foreground/80 hover:text-primary",
                 isActive && "bg-muted text-primary",
               )}

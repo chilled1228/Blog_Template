@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { getBlogPosts } from '@/lib/blogService';
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';

@@ -1,5 +1,4 @@
 import { getBlogPostBySlug } from '@/lib/blogService';
-import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 interface BlogPostPageProps {

@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Layout } from '@/components/layout'
+import { typography, textSpacing, textColors } from '@/lib/typography'
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -14,10 +15,10 @@ export default function About() {
         <div className="max-w-4xl mx-auto px-4 py-16">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h1 className={`${typography.h1} ${textSpacing.heading} ${textColors.heading}`}>
               About Us
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className={`${typography.bodyLarge} ${textColors.secondary} max-w-2xl mx-auto`}>
               We&apos;re passionate about sharing knowledge and helping developers grow in their careers through 
               high-quality content and expert insights.
             </p>
@@ -26,8 +27,8 @@ export default function About() {
           {/* Mission Section */}
           <section className="mb-16">
             <div className="bg-gray-50 p-8 rounded-lg">
-              <h2 className="text-2xl font-bold mb-4 text-gray-900">Our Mission</h2>
-              <p className="text-gray-700 leading-relaxed">
+              <h2 className={`${typography.h2} ${textSpacing.subheading} ${textColors.heading}`}>Our Mission</h2>
+              <p className={`${typography.body} ${textColors.body} leading-relaxed`}>
                 We are passionate about sharing knowledge and helping developers grow in their careers. 
                 Our blog focuses on providing high-quality content about web development, programming, 
                 and technology trends.
@@ -37,14 +38,14 @@ export default function About() {
 
           {/* What We Cover */}
           <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-8 text-gray-900">What We Cover</h2>
+            <h2 className={`${typography.h2} ${textSpacing.subheading} ${textColors.heading}`}>What We Cover</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white border border-gray-200 p-6 rounded-lg">
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">🎨</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-gray-900">Frontend Development</h3>
-                <p className="text-gray-600">
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Frontend Development</h3>
+                <p className={`${typography.body} ${textColors.secondary}`}>
                   Modern JavaScript frameworks, CSS techniques, responsive design, and user experience best practices.
                 </p>
               </div>
@@ -53,8 +54,8 @@ export default function About() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">⚙️</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-gray-900">Backend Development</h3>
-                <p className="text-gray-600">
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Backend Development</h3>
+                <p className={`${typography.body} ${textColors.secondary}`}>
                   Server-side technologies, databases, APIs, cloud computing, and scalable architecture patterns.
                 </p>
               </div>
@@ -63,8 +64,8 @@ export default function About() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">🚀</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-gray-900">Technology Trends</h3>
-                <p className="text-gray-600">
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Technology Trends</h3>
+                <p className={`${typography.body} ${textColors.secondary}`}>
                   Emerging technologies, industry insights, career advice, and software development methodologies.
                 </p>
               </div>
@@ -73,8 +74,8 @@ export default function About() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">✨</span>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-gray-900">CSS & Design</h3>
-                <p className="text-gray-600">
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>CSS & Design</h3>
+                <p className={`${typography.body} ${textColors.secondary}`}>
                   Modern CSS techniques, animations, design systems, and creating beautiful user interfaces.
                 </p>
               </div>

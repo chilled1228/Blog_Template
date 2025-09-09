@@ -1,5 +1,4 @@
 import { supabase } from './supabaseClient';
-import { fallbackBlogPosts, getFallbackPostBySlug, getFallbackFeaturedPosts, getFallbackPostsByCategory } from './fallbackData';
 
 export interface BlogPost {
   id?: number;
@@ -16,7 +15,6 @@ export interface BlogPost {
   content?: string;
   excerpt?: string;
   created_at?: string;
-  // New SEO and publishing fields
   status: 'draft' | 'published';
   published_at?: string;
   meta_title?: string;
@@ -55,12 +53,6 @@ export const getBlogPosts = async (includeUnpublished = false): Promise<BlogPost
 
 export const getBlogPostBySlug = async (slug: string, includeUnpublished = false): Promise<BlogPost | null> => {
   try {
-    // Check if Supabase is configured
-    if (!supabase) {
-      console.warn('Supabase client not configured. Using fallback data.');
-      return getFallbackPostBySlug(slug);
-    }
-
     let query = supabase
       .from('blog_posts')
       .select('*')
@@ -74,40 +66,27 @@ export const getBlogPostBySlug = async (slug: string, includeUnpublished = false
     const { data, error } = await query.single();
 
     if (error) {
-      // Handle specific Supabase errors
       if (error.code === 'PGRST116') {
-        console.warn(`Blog post not found in database for slug: ${slug}, trying fallback data`);
-        return getFallbackPostBySlug(slug);
+        // Post not found
+        return null;
       }
-      console.error('Error fetching blog post from database, using fallback:', {
-        code: error.code,
-        message: error.message,
-        slug
-      });
-      return getFallbackPostBySlug(slug);
+      console.error('Error fetching blog post:', error);
+      return null;
     }
 
-    return data || getFallbackPostBySlug(slug);
+    return data;
   } catch (error) {
-    console.error('Unexpected error fetching blog post, using fallback:', {
-      error: error instanceof Error ? error.message : error,
-      slug
-    });
-    return getFallbackPostBySlug(slug);
+    console.error('Error fetching blog post:', error);
+    return null;
   }
 };
 
 export const getFeaturedPosts = async (limit: number = 5, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    // Check if Supabase is configured
-    if (!supabase) {
-      console.warn('Supabase client not configured. Using fallback data.');
-      return getFallbackFeaturedPosts(limit);
-    }
-
     let query = supabase
       .from('blog_posts')
-      .select('*');
+      .select('*')
+      .eq('featured', true);
     
     // Only show published posts for public users
     if (!includeUnpublished) {
@@ -119,30 +98,19 @@ export const getFeaturedPosts = async (limit: number = 5, includeUnpublished = f
       .limit(limit);
 
     if (error) {
-      console.error('Error fetching featured posts from database, using fallback:', {
-        code: error.code,
-        message: error.message
-      });
-      return getFallbackFeaturedPosts(limit);
+      console.error('Error fetching featured posts:', error);
+      return [];
     }
 
-    return data && data.length > 0 ? data : getFallbackFeaturedPosts(limit);
+    return data || [];
   } catch (error) {
-    console.error('Unexpected error fetching featured posts, using fallback:', {
-      error: error instanceof Error ? error.message : error
-    });
-    return getFallbackFeaturedPosts(limit);
+    console.error('Error fetching featured posts:', error);
+    return [];
   }
 };
 
 export const getBlogPostsByCategory = async (categorySlug: string, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    // Check if Supabase is configured
-    if (!supabase) {
-      console.warn('Supabase client not configured. Using fallback data.');
-      return getFallbackPostsByCategory(categorySlug);
-    }
-
     // Convert slug back to category name
     const categoryName = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
     
@@ -159,122 +127,48 @@ export const getBlogPostsByCategory = async (categorySlug: string, includeUnpubl
     const { data, error } = await query.order('published_at', { ascending: false, nullsFirst: false });
 
     if (error) {
-      console.error('Error fetching blog posts by category from database, using fallback:', {
-        code: error.code,
-        message: error.message,
-        categorySlug
-      });
-      return getFallbackPostsByCategory(categorySlug);
+      console.error('Error fetching blog posts by category:', error);
+      return [];
     }
 
-    return data && data.length > 0 ? data : getFallbackPostsByCategory(categorySlug);
+    return data || [];
   } catch (error) {
-    console.error('Unexpected error fetching blog posts by category, using fallback:', {
-      error: error instanceof Error ? error.message : error,
-      categorySlug
-    });
-    return getFallbackPostsByCategory(categorySlug);
+    console.error('Error fetching blog posts by category:', error);
+    return [];
   }
 };
 
-export const getBlogPostsByAuthor = async (authorSlug: string): Promise<BlogPost[]> => {
+export const getBlogPostsByAuthor = async (authorSlug: string, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    // Check if Supabase is configured
-    if (!supabase) {
-      console.warn('Supabase client not configured. Using fallback data.');
-      return fallbackBlogPosts.filter(post => 
-        post.author.toLowerCase().replace(/\s+/g, '-') === authorSlug
-      );
-    }
-
-    // Convert slug back to author name (assuming author names are URL-friendly)
-    const authorName = authorSlug.replace(/-/g, ' ');
+    // Convert slug back to author name
+    const authorName = authorSlug.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
     
-    const { data, error } = await supabase
+    let query = supabase
       .from('blog_posts')
       .select('*')
-      .eq('author', authorName)
-      .order('date', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching blog posts by author from database, using fallback:', {
-        code: error.code,
-        message: error.message,
-        authorSlug
-      });
-      return fallbackBlogPosts.filter(post => 
-        post.author.toLowerCase().replace(/\s+/g, '-') === authorSlug
-      );
-    }
-
-    // If we have data, return it; otherwise try fallback
-    if (data && data.length > 0) {
-      return data;
+      .eq('author', authorName);
+    
+    // Only show published posts for public users
+    if (!includeUnpublished) {
+      query = query.eq('status', 'published');
     }
     
-    // Return fallback posts for this author
-    return fallbackBlogPosts.filter(post => 
-      post.author.toLowerCase().replace(/\s+/g, '-') === authorSlug
-    );
-  } catch (error) {
-    console.error('Unexpected error fetching blog posts by author, using fallback:', {
-      error: error instanceof Error ? error.message : error,
-      authorSlug
-    });
-    return fallbackBlogPosts.filter(post => 
-      post.author.toLowerCase().replace(/\s+/g, '-') === authorSlug
-    );
-  }
-};
-
-export const getRelatedPosts = async (currentPostSlug: string, category: string, limit: number = 4): Promise<BlogPost[]> => {
-  try {
-    // Check if Supabase is configured
-    if (!supabase) {
-      console.warn('Supabase client not configured. Using fallback data.');
-      return fallbackBlogPosts
-        .filter(post => post.category === category && post.slug !== currentPostSlug)
-        .slice(0, limit);
-    }
-
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('category', category)
-      .neq('slug', currentPostSlug)
-      .order('date', { ascending: false })
-      .limit(limit);
+    const { data, error } = await query.order('published_at', { ascending: false, nullsFirst: false });
 
     if (error) {
-      console.error('Error fetching related posts from database, using fallback:', {
-        code: error.code,
-        message: error.message,
-        category,
-        currentPostSlug
-      });
-      return fallbackBlogPosts
-        .filter(post => post.category === category && post.slug !== currentPostSlug)
-        .slice(0, limit);
+      console.error('Error fetching blog posts by author:', error);
+      return [];
     }
 
-    return data && data.length > 0 
-      ? data 
-      : fallbackBlogPosts
-          .filter(post => post.category === category && post.slug !== currentPostSlug)
-          .slice(0, limit);
+    return data || [];
   } catch (error) {
-    console.error('Unexpected error fetching related posts, using fallback:', {
-      error: error instanceof Error ? error.message : error,
-      category,
-      currentPostSlug
-    });
-    return fallbackBlogPosts
-      .filter(post => post.category === category && post.slug !== currentPostSlug)
-      .slice(0, limit);
+    console.error('Error fetching blog posts by author:', error);
+    return [];
   }
 };
 
-// Admin functions for draft/publish management
 export const publishPost = async (id: number): Promise<boolean> => {
   try {
     const { error } = await supabase
@@ -284,7 +178,7 @@ export const publishPost = async (id: number): Promise<boolean> => {
         published_at: new Date().toISOString()
       })
       .eq('id', id);
-
+    
     return !error;
   } catch (error) {
     console.error('Error publishing post:', error);
@@ -301,7 +195,7 @@ export const unpublishPost = async (id: number): Promise<boolean> => {
         published_at: null
       })
       .eq('id', id);
-
+    
     return !error;
   } catch (error) {
     console.error('Error unpublishing post:', error);
@@ -324,24 +218,49 @@ export const calculateReadingTime = (content: string): number => {
   return Math.ceil(wordCount / wordsPerMinute);
 };
 
-export const updatePostSEO = async (
-  id: number, 
-  seoData: {
-    meta_title?: string;
-    meta_description?: string;
-    meta_keywords?: string;
-    canonical_url?: string;
-  }
-): Promise<boolean> => {
+export const getRelatedPosts = async (postSlug: string, category: string, limit: number = 3, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    const { error } = await supabase
+    let query = supabase
       .from('blog_posts')
-      .update(seoData)
-      .eq('id', id);
+      .select('*')
+      .eq('category', category)
+      .neq('slug', postSlug); // Exclude the current post
+    
+    // Only show published posts for public users
+    if (!includeUnpublished) {
+      query = query.eq('status', 'published');
+    }
+    
+    const { data, error } = await query
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .limit(limit);
 
-    return !error;
+    if (error) {
+      console.error('Error fetching related posts:', error);
+      return [];
+    }
+
+    return data || [];
   } catch (error) {
-    console.error('Error updating post SEO:', error);
-    return false;
+    console.error('Error fetching related posts:', error);
+    return [];
   }
+};
+
+export const generateExcerpt = (content: string, maxLength: number = 160): string => {
+  // Remove HTML tags
+  const plainText = content.replace(/<[^>]*>/g, '');
+  
+  if (plainText.length <= maxLength) {
+    return plainText;
+  }
+  
+  // Find the last space within the limit
+  const lastSpace = plainText.lastIndexOf(' ', maxLength);
+  
+  if (lastSpace === -1) {
+    return plainText.substring(0, maxLength) + '...';
+  }
+  
+  return plainText.substring(0, lastSpace) + '...';
 };

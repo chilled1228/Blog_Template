@@ -1,6 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+interface UpdatePostData {
+  title: string;
+  slug: string;
+  url?: string;
+  content: string;
+  excerpt: string;
+  image: string;
+  author: string;
+  author_url: string;
+  category: string;
+  category_url: string;
+  status?: 'draft' | 'published';
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  canonical_url?: string;
+  featured?: boolean;
+  published_at?: string | null;
+}
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -37,7 +57,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const updateData = await request.json();
+    const updateData = await request.json() as UpdatePostData;
 
     // Get current post to check if status changed
     const { data: currentPost } = await supabase
@@ -46,7 +66,7 @@ export async function PUT(
       .eq('id', id)
       .single();
 
-    const updatedFields: any = {
+    const updatedFields: Partial<UpdatePostData> = {
       title: updateData.title,
       slug: updateData.slug,
       url: updateData.url || `/${updateData.slug}`,

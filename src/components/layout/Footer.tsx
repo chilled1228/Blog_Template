@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { typography, textSpacing } from '@/lib/typography';
 
 export default function Footer() {
   return (
@@ -8,10 +9,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
           {/* Brand Section */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-inherit">
+            <h3 className={`${typography.h4} ${textSpacing.subheading} text-inherit`}>
               Freepik Blog
             </h3>
-            <p className="text-inherit text-sm leading-relaxed mb-4 sm:mb-6 max-w-sm">
+            <p className={`${typography.bodySmall} text-inherit mb-4 sm:mb-6 max-w-sm`}>
               The official Freepik blog with royalty-free stock images, vectors, trends, design tips, and free resources.
             </p>
             <div className="flex space-x-3 sm:space-x-4">
@@ -38,41 +39,41 @@ export default function Footer() {
 
           {/* Categories */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-inherit uppercase tracking-wider relative">
+            <h4 className={`${typography.badge} text-inherit relative mb-4`}>
               <span className="inline-block border-b-2 border-inherit pb-1">Categories</span>
             </h4>
             <ul className="space-y-2 sm:space-y-3">
               <li>
                 <Link href="/category/technology" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Technology
                 </Link>
               </li>
               <li>
                 <Link href="/category/frontend" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Frontend
                 </Link>
               </li>
               <li>
                 <Link href="/category/backend" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Backend
                 </Link>
               </li>
               <li>
                 <Link href="/category/css" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   CSS
                 </Link>
               </li>
               <li>
                 <Link href="/category/database" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Database
                 </Link>
@@ -82,34 +83,34 @@ export default function Footer() {
 
           {/* Resources */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-inherit uppercase tracking-wider relative">
+            <h4 className={`${typography.badge} text-inherit relative mb-4`}>
               <span className="inline-block border-b-2 border-inherit pb-1">Resources</span>
             </h4>
             <ul className="space-y-2 sm:space-y-3">
               <li>
                 <Link href="/blog" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   All Posts
                 </Link>
               </li>
               <li>
                 <Link href="/category/ai" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   AI & Machine Learning
                 </Link>
               </li>
               <li>
                 <Link href="/category/tips-trends" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Tips & Trends
                 </Link>
               </li>
               <li>
                 <Link href="/category/product-updates" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Product Updates
                 </Link>
@@ -119,34 +120,34 @@ export default function Footer() {
 
           {/* Company */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-inherit uppercase tracking-wider relative">
+            <h4 className={`${typography.badge} text-inherit relative mb-4`}>
               <span className="inline-block border-b-2 border-inherit pb-1">Company</span>
             </h4>
             <ul className="space-y-2 sm:space-y-3">
               <li>
                 <Link href="https://freepik.com" target="_blank" rel="noopener noreferrer" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Freepik
                 </Link>
               </li>
               <li>
                 <Link href="/about" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   About Us
                 </Link>
               </li>
               <li>
                 <Link href="/contact" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Contact
                 </Link>
               </li>
               <li>
                 <Link href="/privacy" 
-                      className="text-inherit hover:text-inherit text-sm transition-colors duration-200 flex items-center group">
+                      className={`${typography.link} text-inherit hover:text-inherit flex items-center group`}>
                   <span className="w-1 h-1 bg-inherit rounded-full mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                   Privacy Policy
                 </Link>
@@ -158,20 +159,20 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-            <p className="text-inherit text-xs sm:text-sm text-center sm:text-left">
+            <p className={`${typography.metaSmall} text-inherit text-center sm:text-left`}>
               © 2025 Freepik Blog. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center sm:justify-end gap-3 sm:gap-4 lg:gap-6">
               <Link href="/terms" 
-                    className="text-inherit hover:text-inherit text-xs sm:text-sm transition-colors duration-200">
+                    className={`${typography.linkSmall} text-inherit hover:text-inherit transition-colors duration-200`}>
                 Terms of Service
               </Link>
               <Link href="/privacy" 
-                    className="text-inherit hover:text-inherit text-xs sm:text-sm transition-colors duration-200">
+                    className={`${typography.linkSmall} text-inherit hover:text-inherit transition-colors duration-200`}>
                 Privacy Policy
               </Link>
               <Link href="/sitemap.xml" 
-                    className="text-inherit hover:text-inherit text-xs sm:text-sm transition-colors duration-200">
+                    className={`${typography.linkSmall} text-inherit hover:text-inherit transition-colors duration-200`}>
                 Sitemap
               </Link>
               <Link href="/admin" 
