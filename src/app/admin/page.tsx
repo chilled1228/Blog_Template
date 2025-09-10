@@ -11,23 +11,33 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+interface User {
+  id: string;
+  email: string;
+  role?: string;
+}
+
 export default function AdminPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
+      if (session?.user && session.user.email) {
+        setUser({
+          id: session.user.id,
+          email: session.user.email,
+          role: undefined
+        });
       }
       setIsLoading(false);
     };
 
     checkAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') {
         setUser(null);
       }
@@ -36,7 +46,7 @@ export default function AdminPage() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleAuth = (authenticatedUser: any) => {
+  const handleAuth = (authenticatedUser: User) => {
     setUser(authenticatedUser);
   };
 

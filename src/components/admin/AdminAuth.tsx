@@ -2,15 +2,31 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-interface AdminAuthProps {
-  onAuth: (user: any) => void;
+interface User {
+  id: string;
+  email: string;
+  role?: string;
 }
+
+interface AdminAuthProps {
+  onAuth: (user: User) => void;
+}
+
+const convertSupabaseUser = (supabaseUser: SupabaseUser): User | null => {
+  if (!supabaseUser.email) return null;
+  return {
+    id: supabaseUser.id,
+    email: supabaseUser.email,
+    role: undefined
+  };
+};
 
 export default function AdminAuth({ onAuth }: AdminAuthProps) {
   const [email, setEmail] = useState('');
@@ -25,7 +41,10 @@ export default function AdminAuth({ onAuth }: AdminAuthProps) {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        await verifyAdminAccess(session.user);
+        const user = convertSupabaseUser(session.user);
+        if (user) {
+          await verifyAdminAccess(user);
+        }
       }
     };
     checkUser();
@@ -33,14 +52,17 @@ export default function AdminAuth({ onAuth }: AdminAuthProps) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
-        await verifyAdminAccess(session.user);
+        const user = convertSupabaseUser(session.user);
+        if (user) {
+          await verifyAdminAccess(user);
+        }
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const verifyAdminAccess = async (user: any) => {
+  const verifyAdminAccess = async (user: User) => {
     try {
       // Check if user exists in admin_users table
       const { data: adminUser, error } = await supabase
@@ -89,7 +111,10 @@ export default function AdminAuth({ onAuth }: AdminAuthProps) {
       }
 
       if (data.user) {
-        await verifyAdminAccess(data.user);
+        const user = convertSupabaseUser(data.user);
+        if (user) {
+          await verifyAdminAccess(user);
+        }
       }
     } catch (error) {
       console.error('Sign in error:', error);

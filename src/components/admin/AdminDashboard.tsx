@@ -16,8 +16,32 @@ interface AdminBlogPost extends BlogPost {
   updated_at?: string;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  created_at: string;
+}
+
+interface AdminUser {
+  id: string;
+  name?: string;
+  email: string;
+  role: string;
+  is_active: boolean;
+  author_url?: string;
+  created_at: string;
+}
+
+interface User {
+  id: string;
+  email: string;
+  role?: string;
+}
+
 interface AdminDashboardProps {
-  user: any;
+  user: User;
   onLogout: () => void;
 }
 
@@ -43,13 +67,13 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     seo: false,
     publishing: false
   });
-  const [categories, setCategories] = useState<any[]>([]);
-  const [admins, setAdmins] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddAdmin, setShowAddAdmin] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '' });
   const [newAdmin, setNewAdmin] = useState({ name: '', email: '', password: '', role: 'admin' });
-  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -109,7 +133,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     }
   };
 
-  const handleUpdateCategory = async (id: string, updates: any) => {
+  const handleUpdateCategory = async (id: string, updates: Partial<Category>) => {
     try {
       const { error } = await supabase
         .from('categories')
@@ -176,7 +200,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     }
   };
 
-  const handleToggleAdminStatus = async (admin: any) => {
+  const handleToggleAdminStatus = async (admin: AdminUser) => {
     try {
       const { error } = await supabase
         .from('admin_users')
