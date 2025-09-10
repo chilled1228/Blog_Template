@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BlogPost, publishPost, unpublishPost, calculateReadingTime } from '@/lib/blogService';
 import SimpleEditor from './SimpleEditor';
+import MediaLibrary, { MediaFile } from './MediaLibrary';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -74,6 +75,8 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
   const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '' });
   const [newAdmin, setNewAdmin] = useState({ name: '', email: '', password: '', role: 'admin' });
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [activeEditTab, setActiveEditTab] = useState<'write' | 'media'>('write');
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -476,6 +479,42 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     }));
   };
 
+  const handleMediaSelect = (media: MediaFile) => {
+    setFormData(prev => ({
+      ...prev,
+      image: media.url
+    }));
+    setShowMediaLibrary(false);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'behind_brain');
+      
+      try {
+        const response = await fetch('/api/admin/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          setFormData(prev => ({
+            ...prev,
+            image: result.url
+          }));
+        } else {
+          alert('Upload failed: ' + result.error);
+        }
+      } catch (error) {
+        alert('Upload failed');
+      }
+    }
+  };
+
   const filteredPosts = posts.filter(post => 
     post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     post.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -493,10 +532,10 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
   if (showCreateForm) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* Enhanced Header */}
+        {/* Enhanced Header - Responsive */}
         <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => {
@@ -510,7 +549,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                   </svg>
                 </button>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
                     {editingPost ? 'Edit Post' : 'Create New Post'}
                   </h1>
                   <p className="text-sm text-gray-500 mt-1">
@@ -518,7 +557,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                   </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 {/* User Info */}
                 <div className="flex items-center space-x-3 px-3 py-2 bg-gray-50 rounded-lg">
                   <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
@@ -532,46 +571,48 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                   </div>
                 </div>
 
-                <button
-                  onClick={() => {
-                    setShowCreateForm(false);
-                    setEditingPost(null);
-                  }}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  form="post-form"
-                  className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                >
-                  {editingPost ? (
-                    <>
-                      <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                      </svg>
-                      Update Post
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                      Create Post
-                    </>
-                  )}
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setShowCreateForm(false);
+                      setEditingPost(null);
+                    }}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    form="post-form"
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm whitespace-nowrap"
+                  >
+                    {editingPost ? (
+                      <>
+                        <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                        Update Post
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Create Post
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </header>
         
-        {/* Enhanced Form - Two Column Layout */}
-        <main className="h-[calc(100vh-140px)] overflow-hidden">
-          <form onSubmit={handleSubmit} id="post-form" className="h-full flex">
-            {/* Left Sidebar - Form Information */}
-            <div className="w-96 flex-shrink-0 bg-white border-r border-gray-200 p-6 space-y-4">
+        {/* Enhanced Form - Responsive Two Column Layout */}
+        <main className="min-h-[calc(100vh-140px)] max-h-[calc(100vh-140px)] overflow-hidden">
+          <form onSubmit={handleSubmit} id="post-form" className="h-full flex flex-col lg:flex-row">
+            {/* Left Sidebar - Form Information - Responsive */}
+            <div className="w-full lg:w-80 xl:w-96 flex-shrink-0 bg-white border-r border-gray-200 p-4 lg:p-6 space-y-4 overflow-y-auto">
               {/* Basic Information */}
               <div className="border border-gray-200 rounded-lg">
                 <button
@@ -755,14 +796,53 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                 {expandedSections.publishing && (
                   <div className="px-4 pb-4 space-y-4 border-t border-gray-100">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Featured Image URL</label>
-                      <input
-                        type="url"
-                        value={formData.image}
-                        onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="https://example.com/image.jpg"
-                      />
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Featured Image</label>
+                      <div className="space-y-3">
+                        {/* Image Preview */}
+                        {formData.image && (
+                          <div className="border border-gray-200 rounded-lg overflow-hidden">
+                            <img
+                              src={formData.image}
+                              alt="Featured image preview"
+                              className="w-full h-32 object-cover"
+                              onError={(e) => {
+                                e.currentTarget.src = '';
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Image URL Input */}
+                        <div className="flex gap-2">
+                          <input
+                            type="url"
+                            value={formData.image}
+                            onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="https://example.com/image.jpg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowMediaLibrary(true)}
+                            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            title="Select from media library"
+                          >
+                            📁
+                          </button>
+                        </div>
+                        
+                        {/* Upload Option */}
+                        <div>
+                          <label className="block text-xs text-gray-500 mb-1">Or upload new image:</label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileUpload}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+                      </div>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
@@ -790,23 +870,44 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
               </div>
             </div>
             
-            {/* Right Side - Content Editor */}
-            <div className="flex-1 flex flex-col bg-gray-50">
-              <div className="p-6 bg-white border-b border-gray-200">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <svg className="w-5 h-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {/* Right Side - Content Editor with Tabs */}
+            <div className="flex-1 flex flex-col bg-gray-50 min-h-0">
+              {/* Tab Navigation */}
+              <div className="p-4 lg:p-6 bg-white border-b border-gray-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center space-x-1">
+                    <button
+                      type="button"
+                      onClick={() => setActiveEditTab('write')}
+                      className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+                        activeEditTab === 'write'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
-                    </div>
+                      Write
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveEditTab('media')}
+                      className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
+                        activeEditTab === 'media'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      Media
+                    </button>
                   </div>
-                  <div className="ml-3">
-                    <h3 className="text-xl font-semibold text-gray-900">Content Editor</h3>
-                    <p className="text-sm text-gray-500">Write your blog post content</p>
-                  </div>
-                  {formData.content && (
-                    <div className="ml-auto flex items-center text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                  
+                  {activeEditTab === 'write' && formData.content && (
+                    <div className="flex items-center text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                       <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
@@ -815,18 +916,139 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                   )}
                 </div>
               </div>
-              <div className="flex-1 p-6">
-                <div className="h-full border border-gray-300 rounded-lg overflow-hidden bg-white">
-                  <SimpleEditor
-                    value={formData.content}
-                    onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                    placeholder="Start writing your amazing content..."
-                  />
-                </div>
+              
+              {/* Tab Content */}
+              <div className="flex-1 p-4 lg:p-6 overflow-hidden">
+                {activeEditTab === 'write' && (
+                  <div className="h-full border border-gray-300 rounded-lg overflow-hidden bg-white">
+                    <SimpleEditor
+                      value={formData.content}
+                      onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                      placeholder="Start writing your amazing content..."
+                    />
+                  </div>
+                )}
+                
+                {activeEditTab === 'media' && (
+                  <div className="h-full space-y-6">
+                    {/* Featured Image Section */}
+                    <div className="bg-white rounded-lg border border-gray-200 p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">Featured Image</h3>
+                      <div className="space-y-4">
+                        {/* Current Image Preview */}
+                        {formData.image ? (
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">Current Image</label>
+                            <div className="border border-gray-200 rounded-lg overflow-hidden">
+                              <img
+                                src={formData.image}
+                                alt="Current featured image"
+                                className="w-full h-48 object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.src = '';
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <input
+                                type="text"
+                                value={formData.image}
+                                onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                                placeholder="Image URL"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
+                                className="ml-2 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+                            <div className="text-gray-400">
+                              <svg className="w-12 h-12 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              <p className="text-lg font-medium mb-2">No featured image</p>
+                              <p className="text-sm">Add a featured image to make your post more engaging</p>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setShowMediaLibrary(true)}
+                            className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center"
+                          >
+                            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Select from Media Library
+                          </button>
+                          
+                          <label className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center cursor-pointer">
+                            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            Upload New Image
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleFileUpload}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                        
+                        {/* Or Enter URL */}
+                        <div className="border-t pt-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Or enter image URL:</label>
+                          <input
+                            type="url"
+                            value={formData.image}
+                            onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="https://example.com/image.jpg"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Media Management Section */}
+                    <div className="bg-white rounded-lg border border-gray-200 p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900">Media Library</h3>
+                        <button
+                          type="button"
+                          onClick={() => setShowMediaLibrary(true)}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                          Manage Media
+                        </button>
+                      </div>
+                      <p className="text-gray-600">Access and manage all your uploaded images and media files.</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </form>
         </main>
+        
+        {/* Media Library Modal */}
+        <MediaLibrary
+          isOpen={showMediaLibrary}
+          onClose={() => setShowMediaLibrary(false)}
+          onSelect={handleMediaSelect}
+          type="image"
+          defaultFolder="behind_brain"
+        />
       </div>
     );
   }
