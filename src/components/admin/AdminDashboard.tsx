@@ -309,50 +309,100 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger shortcuts when user is typing in inputs, textareas, or contenteditable elements
+      if (e.target instanceof HTMLInputElement || 
+          e.target instanceof HTMLTextAreaElement || 
+          e.target instanceof HTMLSelectElement ||
+          (e.target as HTMLElement).isContentEditable) {
+        return;
+      }
+
       if (e.ctrlKey || e.metaKey) {
-        switch (e.key) {
+        switch (e.key.toLowerCase()) {
           case 'n':
-            e.preventDefault();
-            setEditingPost(null);
-            setFormData({
-              title: '',
-              slug: '',
-              url: '',
-              content: '',
-              excerpt: '',
-              image: '',
-              author: 'Freepik Team',
-              author_url: '',
-              category: 'Technology',
-              category_url: '/category/technology',
-              status: 'draft' as 'draft' | 'published',
-              meta_title: '',
-              meta_description: '',
-              meta_keywords: '',
-              canonical_url: '',
-              featured: false
-            });
-            setShowCreateForm(true);
-            break;
-          case 'f':
-            e.preventDefault();
-            const searchInput = document.querySelector('input[type="search"]') as HTMLInputElement;
-            searchInput?.focus();
-            break;
-          case 'a':
-            if (activeTab === 'posts') {
+            if (!showCreateForm) {
               e.preventDefault();
-              const selectAll = document.querySelector('input[type="checkbox"][data-select-all]') as HTMLInputElement;
-              selectAll?.click();
+              setEditingPost(null);
+              setFormData({
+                title: '',
+                slug: '',
+                url: '',
+                content: '',
+                excerpt: '',
+                image: '',
+                author: 'Freepik Team',
+                author_url: '',
+                category: 'Technology',
+                category_url: '/category/technology',
+                status: 'draft' as 'draft' | 'published',
+                meta_title: '',
+                meta_description: '',
+                meta_keywords: '',
+                canonical_url: '',
+                featured: false
+              });
+              setShowCreateForm(true);
             }
             break;
+          case 'f':
+            if (!showCreateForm && activeTab === 'posts') {
+              e.preventDefault();
+              setTimeout(() => {
+                const searchInput = document.querySelector('input[type="search"]') as HTMLInputElement;
+                if (searchInput) {
+                  searchInput.focus();
+                  searchInput.select();
+                }
+              }, 0);
+            }
+            break;
+          case 'a':
+            if (!showCreateForm && activeTab === 'posts') {
+              e.preventDefault();
+              setTimeout(() => {
+                const selectAll = document.querySelector('input[data-select-all]') as HTMLInputElement;
+                if (selectAll) {
+                  selectAll.click();
+                }
+              }, 0);
+            }
+            break;
+          case 's':
+            if (showCreateForm) {
+              e.preventDefault();
+              const form = document.getElementById('post-form') as HTMLFormElement;
+              if (form) {
+                form.requestSubmit();
+              }
+            }
+            break;
+          case 'w':
+            if (showCreateForm) {
+              e.preventDefault();
+              setShowCreateForm(false);
+              setEditingPost(null);
+            }
+            break;
+        }
+      }
+      
+      // Escape key to close forms/modals
+      if (e.key === 'Escape') {
+        if (showCreateForm) {
+          e.preventDefault();
+          setShowCreateForm(false);
+          setEditingPost(null);
+        }
+        if (showMediaLibrary) {
+          e.preventDefault();
+          setShowMediaLibrary(false);
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeTab]);
+  }, [activeTab, showCreateForm, showMediaLibrary, setEditingPost, setFormData, setShowCreateForm, setShowMediaLibrary]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -572,12 +622,23 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                 </div>
 
                 <div className="flex items-center gap-3">
+                  {/* Keyboard Shortcuts Help */}
+                  <div className="hidden lg:flex items-center space-x-1 px-3 py-2 bg-gray-100 rounded-lg text-xs text-gray-600">
+                    <kbd className="px-2 py-1 bg-white rounded border">Ctrl+S</kbd>
+                    <span>Save</span>
+                    <kbd className="px-2 py-1 bg-white rounded border">Ctrl+W</kbd>
+                    <span>Close</span>
+                    <kbd className="px-2 py-1 bg-white rounded border">Esc</kbd>
+                    <span>Cancel</span>
+                  </div>
+                  
                   <button
                     onClick={() => {
                       setShowCreateForm(false);
                       setEditingPost(null);
                     }}
                     className="px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+                    title="Cancel (Ctrl+W or Esc)"
                   >
                     Cancel
                   </button>
@@ -585,6 +646,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                     type="submit"
                     form="post-form"
                     className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm whitespace-nowrap"
+                    title={editingPost ? "Update Post (Ctrl+S)" : "Create Post (Ctrl+S)"}
                   >
                     {editingPost ? (
                       <>
@@ -1092,6 +1154,16 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* Keyboard Shortcuts Help */}
+              <div className="hidden md:flex items-center space-x-1 px-3 py-2 bg-gray-100 rounded-lg text-xs text-gray-600">
+                <kbd className="px-2 py-1 bg-white rounded border">Ctrl+N</kbd>
+                <span>New</span>
+                <kbd className="px-2 py-1 bg-white rounded border">Ctrl+F</kbd>
+                <span>Search</span>
+                <kbd className="px-2 py-1 bg-white rounded border">Ctrl+A</kbd>
+                <span>Select All</span>
+              </div>
+              
               {/* User Info */}
               <div className="flex items-center space-x-3 px-3 py-2 bg-gray-50 rounded-lg">
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
