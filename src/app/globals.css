@@ -57,12 +57,24 @@
   @apply flex flex-wrap -mx-2.5;
 }
 /* Blog Post Styling - Converted to Tailwind */
+/* Mobile-first blog container */
 .blog-container {
-  @apply max-w-7xl mx-auto px-5 py-10;
+  @apply max-w-full mx-auto px-4 py-6;
 }
 
 .blog-main-content {
-  @apply max-w-3xl mx-auto;
+  @apply max-w-full mx-auto;
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .blog-container {
+    @apply max-w-7xl mx-auto px-5 py-10;
+  }
+
+  .blog-main-content {
+    @apply max-w-3xl mx-auto;
+  }
 }
 .blog-content-wrapper {
   background: transparent;
@@ -89,9 +101,22 @@
 .blog-featured-image img {
   @apply w-full h-auto block;
 }
+/* Mobile-first title sizing */
 .blog-main-title {
-  @apply text-4xl font-bold leading-tight mb-6 font-sans text-center select-text;
+  @apply text-2xl font-bold leading-tight mb-4 font-sans text-center select-text;
   color: var(--black-olive);
+}
+
+@media (min-width: 768px) {
+  .blog-main-title {
+    @apply text-3xl leading-tight mb-5;
+  }
+}
+
+@media (min-width: 1024px) {
+  .blog-main-title {
+    @apply text-4xl leading-tight mb-6;
+  }
 }
 .blog-author-section {
   @apply flex items-center justify-center gap-2 mb-8 pb-6 text-sm text-gray-500 select-text;
@@ -117,10 +142,16 @@
 .blog-meta-divider {
   @apply text-gray-300;
 }
-/* Blog content styles - Simplified using Tailwind Typography approach */
+/* Mobile-first blog content styles */
 .blog-content {
-  @apply text-lg leading-relaxed font-sans text-left max-w-none select-text cursor-text;
+  @apply text-base leading-normal font-sans text-left max-w-none select-text cursor-text;
   color: var(--text-secondary);
+}
+
+@media (min-width: 768px) {
+  .blog-content {
+    @apply text-lg leading-relaxed;
+  }
 }
 .blog-content h1 {
   @apply text-4xl font-extrabold mt-14 mb-7 leading-tight pb-4;
@@ -295,16 +326,36 @@
   color: var(--black-olive);
 }
 
-/* Mobile responsive games */
-@media (max-width: 768px) {
+/* Mobile-first responsive games */
+.blog-content .game-container {
+  @apply p-4 my-6;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.blog-content .game-container canvas,
+.blog-content .game-container svg {
+  max-width: 100%;
+  height: auto;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Prevent dragging on mobile game elements */
+.blog-content .game-container * {
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+@media (min-width: 769px) {
   .blog-content .game-container {
-    @apply p-4 my-6;
-  }
-  
-  .blog-content .game-container canvas,
-  .blog-content .game-container svg {
-    max-width: 100%;
-    height: auto;
+    @apply p-6 my-8;
   }
 }
 .blog-content .interactive-button {
@@ -477,70 +528,137 @@
   -webkit-user-select: none;
   -moz-user-select: none;
 }
-/* Mobile blog adjustments */
-@media (max-width: 768px) {
-  .blog-container {
-    @apply py-5 px-4;
-  }
-  
-  .blog-main-title {
-    @apply text-3xl leading-snug mb-5;
-  }
-  
-  .blog-content {
-    @apply text-base leading-normal tracking-wide;
-  }
-  
+/* Mobile-first responsive adjustments for all content */
+.blog-content h1 {
+  @apply text-2xl font-extrabold mt-8 mb-4 leading-snug pb-3;
+  color: var(--black-olive);
+  border-bottom: 2px solid var(--buff);
+}
+
+.blog-content h2 {
+  @apply text-xl font-bold mt-7 mb-4 leading-normal pb-2;
+  color: var(--black-olive);
+  border-bottom: 1px solid var(--coral-pink);
+}
+
+.blog-content h3 {
+  @apply text-lg font-semibold text-gray-700 mt-6 mb-3 leading-normal;
+}
+
+.blog-content h4 {
+  @apply text-base font-semibold text-gray-600 mt-5 mb-3 leading-normal;
+}
+
+.blog-content h5 {
+  @apply text-base font-medium text-gray-500 mt-4 mb-2 leading-normal;
+}
+
+.blog-content h6 {
+  @apply text-sm font-medium text-gray-400 mt-3 mb-2 leading-normal uppercase tracking-wide;
+}
+
+.blog-content p {
+  @apply text-base mb-4 leading-normal;
+}
+
+.blog-content li {
+  @apply text-sm leading-relaxed;
+}
+
+.blog-content blockquote {
+  @apply my-6 px-6 py-5 text-base;
+}
+
+.blog-content pre {
+  @apply p-4 my-6 text-sm;
+}
+
+.blog-content code {
+  @apply text-sm px-1.5 py-0.5;
+}
+
+.blog-content ul, .blog-content ol {
+  @apply pl-6;
+}
+
+.blog-author-section {
+  @apply flex-wrap gap-1.5 mb-6 pb-4 text-xs;
+}
+
+/* Desktop styles for content */
+@media (min-width: 768px) {
   .blog-content h1 {
-    @apply text-2xl mt-8 mb-4 leading-snug;
+    @apply text-3xl font-extrabold mt-10 mb-5 leading-tight pb-3;
   }
   
   .blog-content h2 {
-    @apply text-xl mt-7 mb-4 leading-normal;
+    @apply text-2xl font-bold mt-8 mb-5 leading-snug pb-2;
   }
   
   .blog-content h3 {
-    @apply text-xl mt-6 mb-3 leading-normal;
+    @apply text-xl font-semibold mt-7 mb-4 leading-snug;
   }
   
   .blog-content h4 {
-    @apply text-lg mt-5 mb-3;
+    @apply text-lg font-semibold mt-6 mb-3 leading-normal;
   }
   
   .blog-content h5 {
-    @apply text-base mt-5 mb-3;
+    @apply text-base font-medium mt-5 mb-3 leading-normal;
   }
   
   .blog-content h6 {
-    @apply text-sm mt-4 mb-2;
+    @apply text-sm font-medium mt-4 mb-2 leading-normal uppercase tracking-wide;
   }
   
   .blog-content p {
-    @apply text-base mb-4 leading-normal;
+    @apply text-lg mb-6 leading-relaxed;
   }
   
   .blog-content li {
-    @apply text-sm;
+    @apply text-base leading-relaxed;
   }
   
   .blog-content blockquote {
-    @apply my-6 px-6 py-5 text-base;
+    @apply my-8 px-8 py-6 text-lg;
   }
   
   .blog-content pre {
-    @apply p-4 my-6 text-sm;
+    @apply p-6 my-8 text-base;
   }
   
   .blog-content code {
-    @apply text-sm px-1.5 py-0.5;
+    @apply text-base px-2 py-1;
   }
   
   .blog-content ul, .blog-content ol {
-    @apply pl-6;
+    @apply pl-8;
   }
   
   .blog-author-section {
-    @apply flex-wrap gap-1.5 mb-6 pb-4 text-xs;
+    @apply flex items-center justify-center gap-2 mb-8 pb-6 text-sm;
+  }
+}
+
+@media (min-width: 1024px) {
+  .blog-content h1 {
+    @apply text-4xl font-extrabold mt-14 mb-7 leading-tight pb-4;
+  }
+  
+  .blog-content h2 {
+    @apply text-3xl font-bold mt-12 mb-6 leading-snug pb-3;
+  }
+  
+  .blog-content h3 {
+    @apply text-2xl font-semibold text-gray-700 mt-10 mb-5 leading-snug;
+  }
+  
+  .blog-content h4 {
+    @apply text-xl font-semibold text-gray-600 mt-8 mb-4 leading-normal;
+  }
+  
+  .blog-content h5 {
+    @apply text-lg font-medium text-gray-500 mt-7 mb-3 leading-normal;
   }
 }
 .col {

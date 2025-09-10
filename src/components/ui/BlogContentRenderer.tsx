@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useCallback } from 'react';
 import CodeBlock from './CodeBlock';
+import GameContainer from './GameContainer';
 
 // Chart.js type definitions
 interface ChartDataset {
@@ -306,27 +307,40 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     };
   }, [processInlineScripts]);
 
+  // Component-level game detection
+  const hasCharts = content.includes('chart-container') || 
+                    content.includes('canvas') || 
+                    content.includes('Chart.js');
+  
+  const hasInteractiveElements = content.includes('interactive-button') || 
+                              content.includes('tab-button');
+  
+  const hasInlineScripts = content.includes('<script>') || 
+                         content.includes('function ') ||
+                         content.includes('onclick=') ||
+                         content.includes('addEventListener') ||
+                         content.includes('selectNumber') ||
+                         content.includes('resetTable') ||
+                         content.includes('checkAnswer') ||
+                         content.includes('nextWord');
+                          
+  // Detect if content contains games - component level
+  const hasGames = content.includes('<script>') && 
+                  (content.includes('onclick=') || 
+                   content.includes('canvas') || 
+                   content.includes('game') || 
+                   content.includes('selectNumber') ||
+                   content.includes('checkAnswer') ||
+                   content.includes('resetTable') ||
+                   content.includes('Phaser') ||
+                   content.includes('THREE.') ||
+                   content.includes('p5.') ||
+                   content.includes('Matter.'));
+
   // Optimized effect with proper cleanup - only run on client
   useEffect(() => {
     if (typeof window === 'undefined' || hasInitialized.current) return;
     hasInitialized.current = true;
-
-    // Only load Chart.js if actually needed
-    const hasCharts = content.includes('chart-container') || 
-                      content.includes('canvas') || 
-                      content.includes('Chart.js');
-    
-    const hasInteractiveElements = content.includes('interactive-button') || 
-                                content.includes('tab-button');
-    
-    const hasInlineScripts = content.includes('<script>') || 
-                           content.includes('function ') ||
-                           content.includes('onclick=') ||
-                           content.includes('addEventListener') ||
-                           content.includes('selectNumber') ||
-                           content.includes('resetTable') ||
-                           content.includes('checkAnswer') ||
-                           content.includes('nextWord');
 
     if (hasCharts) {
       loadChartJS();
@@ -341,7 +355,22 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
       
       return () => clearTimeout(timer);
     }
-  }, [content, loadChartJS, processInteractiveElements]);
+  }, [content, loadChartJS, processInteractiveElements, hasCharts, hasInteractiveElements, hasInlineScripts, hasGames]);
+
+  // Check if content contains games
+  const isGameContent = (htmlContent: string): boolean => {
+    return htmlContent.includes('<script>') && 
+           (htmlContent.includes('onclick=') || 
+            htmlContent.includes('canvas') || 
+            htmlContent.includes('game') || 
+            htmlContent.includes('selectNumber') ||
+            htmlContent.includes('checkAnswer') ||
+            htmlContent.includes('resetTable') ||
+            htmlContent.includes('Phaser') ||
+            htmlContent.includes('THREE.') ||
+            htmlContent.includes('p5.') ||
+            htmlContent.includes('Matter.'));
+  };
 
   // Parse the HTML content and replace code blocks
   const processContent = (htmlContent: string) => {
@@ -384,8 +413,19 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
         );
       }
       
-      // For non-code parts, render as HTML
+      // For non-code parts, check if it's game content
       if (part.trim()) {
+        if (isGameContent(part)) {
+          return (
+            <GameContainer
+              key={index}
+              htmlContent={part}
+              className="my-4"
+            />
+          );
+        }
+        
+        // Regular HTML content
         return (
           <div
             key={index}
@@ -398,16 +438,16 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     }).filter(Boolean);
   };
 
-  // Effect to handle scripts after content is rendered - client only
+  // Effect to handle scripts after content is rendered - client only (skip for game content)
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || hasGames) return;
     
     const timer = setTimeout(() => {
       processInlineScripts();
     }, 150);
     
     return () => clearTimeout(timer);
-  }, [content, processInlineScripts]);
+  }, [content, processInlineScripts, hasGames]);
 
   // Process content once and memoize to prevent hydration issues
   const processedContent = React.useMemo(() => {
@@ -420,7 +460,7 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     }
 
     return <>{processContent(cleanedContent)}</>;
-  }, [content]);
+  }, [content, processContent]);
 
   // Show H1 warnings only on client side to avoid hydration issues
   useEffect(() => {
