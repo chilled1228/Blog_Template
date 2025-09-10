@@ -102,6 +102,21 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   }, [fetchPosts]);
 
   useEffect(() => {
+    // Ensure behind_brain folder exists when dashboard loads
+    const ensureFolder = async () => {
+      try {
+        await fetch('/api/admin/ensure-folder', {
+          method: 'POST',
+        });
+      } catch (error) {
+        console.error('Failed to ensure behind_brain folder:', error);
+      }
+    };
+    
+    ensureFolder();
+  }, []);
+
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {

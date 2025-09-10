@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
+    const folder = formData.get('folder') as string || '';
 
     if (!file) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
@@ -47,12 +48,16 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const fileExtension = file.name.split('.').pop();
     const uniqueFileName = `${Date.now()}-${uuidv4()}.${fileExtension}`;
+    
+    // Create folder path if provided
+    const folderPath = folder ? `${folder}/` : '';
+    const fullKey = `${folderPath}${uniqueFileName}`;
 
     // Upload to R2
     const buffer = await file.arrayBuffer();
     const uploadCommand = new PutObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME!,
-      Key: uniqueFileName,
+      Key: fullKey,
       Body: new Uint8Array(buffer),
       ContentType: file.type,
     });
@@ -60,7 +65,7 @@ export async function POST(request: NextRequest) {
     await s3Client.send(uploadCommand);
 
     // Return the public URL
-    const publicUrl = `${process.env.R2_PUBLIC_URL}/${uniqueFileName}`;
+    const publicUrl = `${process.env.R2_PUBLIC_URL}/${fullKey}`;
 
     return NextResponse.json({
       success: true,
@@ -68,7 +73,8 @@ export async function POST(request: NextRequest) {
       filename: uniqueFileName,
       originalName: file.name,
       size: file.size,
-      type: file.type
+      type: file.type,
+      folder: folder
     });
 
   } catch (error) {

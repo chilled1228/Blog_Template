@@ -226,12 +226,19 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
               globalFunctions.push(match[1]);
             }
             
-            // If we found global functions, execute in global scope
-            if (globalFunctions.length > 0 || scriptContent.includes('onclick=') || scriptContent.includes('resetGame')) {
-              // Use eval for scripts that need global access (safer than direct eval due to our validation)
-              (function() {
-                eval(scriptContent);
-              })();
+            // Also check for onclick handlers and other game-related functions
+            const hasGameFunctions = scriptContent.includes('onclick=') || 
+                                   scriptContent.includes('resetGame') || 
+                                   scriptContent.includes('selectNumber') ||
+                                   scriptContent.includes('checkAnswer') ||
+                                   scriptContent.includes('nextWord') ||
+                                   scriptContent.includes('updateTimer') ||
+                                   scriptContent.includes('generateStroopWord');
+            
+            // If we found global functions or game functions, execute in global scope
+            if (globalFunctions.length > 0 || hasGameFunctions) {
+              // Execute in global scope using eval for games that need global function access
+              window.eval(scriptContent);
             } else {
               // Use Function constructor for isolated execution
               const executeScript = new Function(scriptContent);
@@ -297,7 +304,7 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
       document.removeEventListener('click', handleButtonClick);
       document.removeEventListener('click', handleTabClick);
     };
-  }, []);
+  }, [processInlineScripts]);
 
   // Optimized effect with proper cleanup - only run on client
   useEffect(() => {
@@ -315,7 +322,11 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     const hasInlineScripts = content.includes('<script>') || 
                            content.includes('function ') ||
                            content.includes('onclick=') ||
-                           content.includes('addEventListener');
+                           content.includes('addEventListener') ||
+                           content.includes('selectNumber') ||
+                           content.includes('resetTable') ||
+                           content.includes('checkAnswer') ||
+                           content.includes('nextWord');
 
     if (hasCharts) {
       loadChartJS();
@@ -400,14 +411,7 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
 
   // Process content once and memoize to prevent hydration issues
   const processedContent = React.useMemo(() => {
-    // Check for H1 conflicts and warn
-    const h1Count = (content.match(/<h1[^>]*>/gi) || []).length;
-    if (h1Count > 0) {
-      console.warn(`⚠️ H1 Conflict Detected: Found ${h1Count} H1 tag(s) in content. Converting to H2 for proper SEO structure.`);
-      console.warn('💡 Best Practice: Use only <h2>, <h3>, etc. in blog content. The page title is already an H1.');
-    }
-    
-    // Convert H1 to H2 to maintain proper heading hierarchy
+    // Convert H1 to H2 to maintain proper heading hierarchy (silent conversion)
     const cleanedContent = content.replace(/<h1([^>]*)>/gi, '<h2$1>').replace(/<\/h1>/gi, '</h2>');
     
     // If no code blocks found, return cleaned content
@@ -416,6 +420,17 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
     }
 
     return <>{processContent(cleanedContent)}</>;
+  }, [content]);
+
+  // Show H1 warnings only on client side to avoid hydration issues
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const h1Count = (content.match(/<h1[^>]*>/gi) || []).length;
+    if (h1Count > 0) {
+      console.warn(`⚠️ H1 Conflict Detected: Found ${h1Count} H1 tag(s) in content. Converting to H2 for proper SEO structure.`);
+      console.warn('💡 Best Practice: Use only <h2>, <h3>, etc. in blog content. The page title is already an H1.');
+    }
   }, [content]);
 
   return processedContent;

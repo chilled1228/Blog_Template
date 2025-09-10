@@ -41,6 +41,7 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('folder', 'behind_brain');
 
     try {
       const response = await fetch('/api/admin/upload', {
@@ -261,6 +262,7 @@ console.log("Hello World!");
           onClose={() => setShowMediaLibrary(false)}
           onSelect={handleMediaSelect}
           type="image"
+          defaultFolder="behind_brain"
         />
       )}
     </div>
