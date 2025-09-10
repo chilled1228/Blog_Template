@@ -4,31 +4,45 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminAuth from '@/components/admin/AdminAuth';
 import AdminDashboard from '@/components/admin/AdminDashboard';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function AdminPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = () => {
-      const auth = localStorage.getItem('adminAuthenticated');
-      if (auth === 'true') {
-        setIsAuthenticated(true);
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUser(session.user);
       }
       setIsLoading(false);
     };
 
     checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const handleAuth = () => {
-    setIsAuthenticated(true);
+  const handleAuth = (authenticatedUser: any) => {
+    setUser(authenticatedUser);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('adminAuthenticated');
-    setIsAuthenticated(false);
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
     router.push('/');
   };
 
@@ -40,9 +54,9 @@ export default function AdminPage() {
     );
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return <AdminAuth onAuth={handleAuth} />;
   }
 
-  return <AdminDashboard onLogout={handleLogout} />;
+  return <AdminDashboard user={user} onLogout={handleLogout} />;
 }
