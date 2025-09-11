@@ -25,9 +25,10 @@ interface MediaLibraryProps {
   onSelect: (media: MediaFile) => void;
   type?: 'image' | 'all';
   defaultFolder?: string;
+  isEmbedded?: boolean;
 }
 
-export default function MediaLibrary({ isOpen, onClose, onSelect, type = 'image', defaultFolder }: MediaLibraryProps) {
+export default function MediaLibrary({ isOpen, onClose, onSelect, type = 'image', defaultFolder, isEmbedded = false }: MediaLibraryProps) {
   const [files, setFiles] = useState<MediaFile[]>([]);
   const [folders, setFolders] = useState<MediaFolder[]>([]);
   const [loading, setLoading] = useState(false);
@@ -162,11 +163,15 @@ export default function MediaLibrary({ isOpen, onClose, onSelect, type = 'image'
     file.key.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const containerClasses = isEmbedded
+    ? "relative bg-white w-full h-full flex flex-col"
+    : "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4";
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col">
+    <div className={containerClasses}>
+      <div className={isEmbedded ? "w-full h-full flex flex-col" : "bg-white rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col"}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center space-x-2">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Funnel_Sans } from "next/font/google";
-import "./globals.css";
+import './globals.css';
+import './quill-styles.css';
 import { createMetadata, generateWebsiteJsonLd } from "@/lib/seo";
 
 const funnelSans = Funnel_Sans({
