@@ -2,11 +2,12 @@
 
 import React, { useState, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
+import ReactQuill from 'react-quill-new';
 import MediaLibrary, { MediaFile } from './MediaLibrary';
 import 'react-quill-new/dist/quill.snow.css';
 
 // Dynamically import ReactQuill to avoid SSR issues
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+const DynamicReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 interface SimpleEditorProps {
   value: string;
@@ -21,7 +22,7 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
 }) => {
   const [showMediaLibrary, setShowMediaLibrary] = useState(false);
   const [viewMode, setViewMode] = useState('visual'); // 'visual' or 'html'
-  const quillRef = useRef<any>(null);
+  const quillRef = useRef<ReactQuill>(null);
 
   const handleMediaSelect = (media: MediaFile) => {
     const editor = quillRef.current?.getEditor();
@@ -91,7 +92,7 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
       </div>
 
       {viewMode === 'visual' ? (
-        <ReactQuill
+        <DynamicReactQuill
           ref={quillRef}
           theme="snow"
           value={value}
