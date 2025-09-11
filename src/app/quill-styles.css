@@ -1,14 +1,10 @@
-/* src/app/quill-styles.css */
-@import 'react-quill-new/dist/quill.snow.css';
-
-/* Custom styles for the editor container */
-.quill-editor-container {
-    height: 500px; /* Or any height you prefer */
+.ql-container {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.quill-editor-container .ql-container {
+.ql-editor {
     flex-grow: 1;
-    overflow-y: auto;
+    height: 100%;
 }

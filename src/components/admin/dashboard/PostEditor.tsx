@@ -69,8 +69,8 @@ const PostEditor = ({ post, onSave, onCancel, user }) => {
   ];
 
   return (
-    <div className="flex flex-col">
-      <div className="border-b flex justify-between items-center">
+    <div className="flex flex-col h-full">
+      <div className="border-b flex justify-between items-center p-4">
         <h1 className="text-2xl font-bold text-gray-900">{post ? 'Edit Post' : 'Create New Post'}</h1>
         <div className="flex items-center space-x-4">
           <button type="button" onClick={onCancel} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50">
@@ -82,7 +82,7 @@ const PostEditor = ({ post, onSave, onCancel, user }) => {
         </div>
       </div>
       <div className="border-b">
-        <nav className="-mb-px flex space-x-8 px-8" aria-label="Tabs">
+        <nav className="-mb-px flex space-x-8 px-4" aria-label="Tabs">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -99,7 +99,7 @@ const PostEditor = ({ post, onSave, onCancel, user }) => {
         </nav>
       </div>
       <div className="flex-1 overflow-y-auto">
-        <div>
+        <div className="h-full">
           {activeTab === 'write' && (
             <SimpleEditor
               value={formData.content}

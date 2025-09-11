@@ -3,6 +3,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import MediaLibrary, { MediaFile } from './MediaLibrary';
+import 'react-quill-new/dist/quill.snow.css';
 
 // Dynamically import ReactQuill to avoid SSR issues
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
@@ -56,12 +57,12 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
   const formats = [
     'header',
     'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet',
+    'list',
     'link', 'image', 'code-block'
   ];
 
   return (
-    <div className="simple-editor">
+    <div className="simple-editor flex flex-col h-full">
       <div className="p-2 border-b border-gray-200 bg-gray-50 flex justify-end">
         <div className="flex rounded-md shadow-sm">
           <button
@@ -98,14 +99,14 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
           modules={modules}
           formats={formats}
           placeholder={placeholder}
-          style={{ height: '500px', display: 'flex', flexDirection: 'column' }}
+          className="flex-grow"
         />
       ) : (
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Enter HTML content..."
-          className="w-full h-[500px] p-4 border-t-0 font-mono text-sm leading-relaxed focus:outline-none"
+          className="w-full flex-grow p-4 font-mono text-sm leading-relaxed focus:outline-none"
         />
       )}
 
