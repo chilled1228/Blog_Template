@@ -4,17 +4,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
   
   return {
-    title: "Latest Blog Posts | Freepik Blog",
-    description: "Discover the latest design trends, tips, and inspiration from the Freepik team. Stay updated with our newest articles and tutorials.",
+    title: "Latest Blog Posts | behindyourbrain Blog",
+    description: "Discover the latest design trends, tips, and inspiration from the behindyourbrain team. Stay updated with our newest articles and tutorials.",
     openGraph: {
-      title: "Latest Blog Posts | Freepik Blog",
-      description: "Discover the latest design trends, tips, and inspiration from the Freepik team.",
+      title: "Latest Blog Posts | behindyourbrain Blog",
+      description: "Discover the latest design trends, tips, and inspiration from the behindyourbrain team.",
       url: `${siteUrl}/`,
       type: "website",
     },
     twitter: {
-      title: "Latest Blog Posts | Freepik Blog",
-      description: "Discover the latest design trends, tips, and inspiration from the Freepik team.",
+      title: "Latest Blog Posts | behindyourbrain Blog",
+      description: "Discover the latest design trends, tips, and inspiration from the behindyourbrain team.",
     },
   };
 }

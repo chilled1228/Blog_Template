@@ -20,7 +20,8 @@ interface BlogPostPageProps {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  // Include unpublished posts to handle drafts properly
+  const post = await getBlogPostBySlug(slug, true);
 
   if (!post) {
     return createMetadata({
@@ -32,6 +33,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   const publishedDate = post.published_at || post.created_at || new Date().toISOString();
   const modifiedDate = post.updated_at || publishedDate;
+  
+  // If post is draft, set noIndex to prevent search engine indexing
+  const isDraft = post.status === 'draft';
 
   return createMetadata({
     title: post.title,
@@ -43,15 +47,26 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
     publishedTime: publishedDate,
     modifiedTime: modifiedDate,
     type: 'article',
+    noIndex: isDraft, // Prevent indexing of draft posts
   });
 }
 
 const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
   const { slug } = await params;
-  const post = await getBlogPostBySlug(slug);
+  // Include unpublished posts to handle drafts properly
+  const post = await getBlogPostBySlug(slug, true);
 
   if (!post) {
     notFound();
+  }
+  
+  // Check if post is draft and user is not authorized to view drafts
+  // In production, you might want to add authentication check here
+  const isDraft = post.status === 'draft';
+  if (isDraft) {
+    // For now, we'll allow draft viewing but with noindex
+    // You can add authentication logic here if needed
+    console.warn(`Viewing draft post: ${post.title}`);
   }
 
   const publishedDate = post.published_at || post.created_at || new Date().toISOString();
@@ -59,7 +74,8 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
   const postUrl = `${siteUrl}/${slug}`;
 
-  const articleJsonLd = generateArticleJsonLd({
+  // Only generate structured data for published posts
+  const articleJsonLd = !isDraft ? generateArticleJsonLd({
     title: post.title,
     description: post.meta_description || post.excerpt || `Read about ${post.title} on our blog`,
     author: post.author,
@@ -68,14 +84,21 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
     image: post.image,
     url: postUrl,
     category: post.category,
-  });
+  }) : null;
 
   return (
     <Layout>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
-      />
+      {/* Additional noindex for draft posts */}
+      {isDraft && (
+        <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+      )}
+      {/* Only include structured data for published posts */}
+      {articleJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        />
+      )}
       <ScrollToTop />
       <StructuredData slug={slug} />
       <MobileTableOfContents />
@@ -99,7 +122,14 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
               </div>
 
               {/* Title */}
-              <h1 className="blog-main-title">{post.title}</h1>
+              <h1 className="blog-main-title">
+                {post.title}
+                {isDraft && (
+                  <span className="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    Draft
+                  </span>
+                )}
+              </h1>
 
               {/* Author Section */}
               <div className="blog-author-section">

@@ -63,7 +63,16 @@
         { "fieldPath": "category", "mode": "ASCENDING" },
         { "fieldPath": "status", "mode": "ASCENDING" },
         { "fieldPath": "published_at", "mode": "DESCENDING" },
-        { "fieldPath": "slug", "mode": "DESCENDING" },
+        { "fieldPath": "__name__", "mode": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "blog_posts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "author", "mode": "ASCENDING" },
+        { "fieldPath": "status", "mode": "ASCENDING" },
+        { "fieldPath": "published_at", "mode": "DESCENDING" },
         { "fieldPath": "__name__", "mode": "DESCENDING" }
       ]
     }

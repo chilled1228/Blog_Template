@@ -41,4 +41,4 @@ export interface AdminDashboardProps {
   onLogout: () => void;
 }
 
-export type PageType = 'dashboard' | 'posts' | 'media' | 'users' | 'admins' | 'stats' | 'settings';
+export type PageType = 'dashboard' | 'posts' | 'categories' | 'media' | 'users' | 'admins' | 'stats' | 'settings';

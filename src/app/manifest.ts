@@ -3,9 +3,9 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   
   return {
-    name: 'Freepik Blog - Learn, Get Inspired, Create!',
-    short_name: 'Freepik Blog',
-    description: 'The official Freepik blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources.',
+    name: 'behindyourbrain Blog - Learn, Get Inspired, Create!',
+    short_name: 'behindyourbrain Blog',
+    description: 'The official behindyourbrain blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

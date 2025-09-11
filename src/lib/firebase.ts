@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { getFirestore, Timestamp, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, getDocs, query, where } from 'firebase/firestore';
+import { getFirestore, Timestamp, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, getDocs, query, where, addDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -26,6 +26,7 @@ export const googleProvider = new GoogleAuthProvider();
 // Collections
 export const adminUsersCollection = collection(db, 'admin_users');
 export const userProfilesCollection = collection(db, 'user_profiles');
+export const categoriesCollection = collection(db, 'categories');
 
 // Admin user management functions
 export const checkIfUserIsAdmin = async (email: string): Promise<boolean> => {
@@ -190,6 +191,95 @@ export const updateUserProfile = async (uid: string, updates: Record<string, unk
     return true;
   } catch (error) {
     console.error('Error updating user profile:', error);
+    return false;
+  }
+};
+
+// Category interface
+export interface Category {
+  id?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  postCount?: number;
+}
+
+// Category management functions
+export const createCategory = async (category: Omit<Category, 'id' | 'createdAt' | 'updatedAt' | 'postCount'>): Promise<boolean> => {
+  try {
+    await addDoc(categoriesCollection, {
+      ...category,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      postCount: 0
+    });
+    return true;
+  } catch (error) {
+    console.error('Error creating category:', error);
+    return false;
+  }
+};
+
+export const getAllCategories = async (): Promise<Category[]> => {
+  try {
+    const querySnapshot = await getDocs(categoriesCollection);
+    return querySnapshot.docs.map(doc => {
+      const data = convertTimestamps(doc.data()) as Record<string, unknown>;
+      return {
+        id: doc.id,
+        ...data
+      } as Category;
+    });
+  } catch (error) {
+    console.error('Error getting categories:', error);
+    return [];
+  }
+};
+
+export const getCategoryBySlug = async (slug: string): Promise<Category | null> => {
+  try {
+    const q = query(categoriesCollection, where('slug', '==', slug));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+      const data = convertTimestamps(doc.data()) as Record<string, unknown>;
+      return {
+        id: doc.id,
+        ...data
+      } as Category;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting category by slug:', error);
+    return null;
+  }
+};
+
+export const updateCategory = async (id: string, updates: Partial<Category>): Promise<boolean> => {
+  try {
+    const categoryDoc = doc(categoriesCollection, id);
+    await updateDoc(categoryDoc, {
+      ...updates,
+      updatedAt: serverTimestamp()
+    });
+    return true;
+  } catch (error) {
+    console.error('Error updating category:', error);
+    return false;
+  }
+};
+
+export const deleteCategory = async (id: string): Promise<boolean> => {
+  try {
+    const categoryDoc = doc(categoriesCollection, id);
+    await deleteDoc(categoryDoc);
+    return true;
+  } catch (error) {
+    console.error('Error deleting category:', error);
     return false;
   }
 };

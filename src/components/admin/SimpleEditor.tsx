@@ -73,21 +73,14 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
     },
     clipboard: {
       matchVisual: false,
-      matchers: [],
-      // Allow pasting of HTML content without sanitization
-      dangerouslyPasteHTML: true,
     },
   }), []);
 
   const formats = [
     'header',
     'bold', 'italic', 'underline', 'strike',
-    'list',
-    'link', 'image', 'code-block',
-    // Allow additional HTML elements
-    'script', 'div', 'span', 'p', 'br', 'hr',
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    'style', 'class', 'id', 'onclick', 'onload'
+    'list', 'bullet',
+    'link', 'image', 'code-block'
   ];
 
   return (

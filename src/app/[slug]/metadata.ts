@@ -22,17 +22,17 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const imageUrl = post.image || `${siteUrl}/default-og-image.jpg`;
 
   return {
-    title: `${post.title} | Freepik Blog`,
-    description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post on Freepik Blog',
+    title: `${post.title} | behindyourbrain Blog`,
+    description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post on behindyourbrain Blog',
     keywords: post.category ? [post.category, 'freepik blog', 'design', 'creative resources'] : ['freepik blog', 'design', 'creative resources'],
     authors: [{ name: post.author, url: post.author_url }],
-    creator: "Freepik",
-    publisher: "Freepik",
+    creator: "behindyourbrain",
+    publisher: "behindyourbrain",
     openGraph: {
       title: post.title,
       description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post',
       url: `${siteUrl}/${slug}`,
-      siteName: 'Freepik Blog',
+      siteName: 'behindyourbrain Blog',
       images: [
         {
           url: imageUrl,
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: post.title,
       description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post',
       images: [imageUrl],
-      creator: '@freepik',
+      creator: '@behindyourbrain',
     },
     alternates: {
       canonical: `${siteUrl}/${slug}`,

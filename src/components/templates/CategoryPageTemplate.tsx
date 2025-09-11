@@ -1,4 +1,5 @@
 import { getBlogPostsByCategory } from '@/lib/blogService';
+import { getCategoryBySlug } from '@/lib/firebase';
 import React from 'react';
 import { Layout } from '@/components/layout';
 import HeroSlider from '@/components/ui/HeroSlider';
@@ -16,48 +17,20 @@ interface CategoryPageProps {
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   const { category } = await params;
   const posts = await getBlogPostsByCategory(category);
-  const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+  const categoryData = await getCategoryBySlug(category);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
-  // Category-specific content
-  const categoryContent = {
-    backend: {
-      title: 'Backend Development',
-      description: 'Explore comprehensive tutorials, best practices, and cutting-edge techniques in backend development. From server architecture to database optimization.',
-      image: '/api/placeholder/1200/400'
-    },
-    frontend: {
-      title: 'Frontend Development',
-      description: 'Master modern frontend technologies, responsive design, and user experience principles. Create stunning, performant web applications.',
-      image: '/api/placeholder/1200/400'
-    },
-    css: {
-      title: 'CSS & Styling',
-      description: 'Dive deep into CSS mastery, from fundamental concepts to advanced animations and modern layout techniques.',
-      image: '/api/placeholder/1200/400'
-    },
-    technology: {
-      title: 'Technology',
-      description: 'Stay updated with the latest technology trends, programming languages, and development tools shaping the future.',
-      image: '/api/placeholder/1200/400'
-    },
-    general: {
-      title: 'General Programming',
-      description: 'Broad programming concepts, career advice, and general development practices for developers of all levels.',
-      image: '/api/placeholder/1200/400'
-    }
-  };
-
-  const content = categoryContent[category as keyof typeof categoryContent] || {
-    title: formattedCategory,
-    description: `Discover insightful articles and tutorials about ${category.toLowerCase()}.`,
+  // Use database category data if available, otherwise fallback
+  const content = {
+    title: categoryData?.name || category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' '),
+    description: categoryData?.description || `Discover insightful articles and tutorials about ${categoryData?.name || category.toLowerCase()}.`,
     image: '/api/placeholder/1200/400'
   };
 
   return (
     <Layout>
       <CategoryStructuredData 
-        category={formattedCategory} 
+        category={content.title} 
         url={`${siteUrl}/category/${category}`}
         posts={posts}
       />

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminAuth from '@/components/admin/AdminAuth';
-import NewAdminDashboard from '@/components/admin/NewAdminDashboard';
+import AdminDashboard from '@/components/admin/AdminDashboard';
 import { auth, checkIfUserIsAdmin } from '@/lib/firebase';
 import { 
   onAuthStateChanged,
@@ -72,5 +72,5 @@ export default function AdminPage() {
     return <AdminAuth onAuth={handleAuth} />;
   }
 
-  return <NewAdminDashboard user={user} onLogout={handleLogout} />;
+  return <AdminDashboard user={user} onLogout={handleLogout} />;
 }

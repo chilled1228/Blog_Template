@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Layout } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'Contact Us',
-  description: 'Get in touch with us for questions, feedback, or collaboration opportunities',
+  title: 'Contact Us - behindyourbrain Blog',
+  description: 'Get in touch with the behindyourbrain Blog team for questions, feedback, collaboration opportunities, or technical support. We respond within 24-48 hours.',
 }
 
 export default function Contact() {

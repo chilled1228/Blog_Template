@@ -1,7 +1,7 @@
 {
-  "name": "Freepik Blog",
-  "short_name": "Freepik Blog",
-  "description": "The official Freepik blog for design inspiration and tutorials",
+  "name": "behindyourbrain Blog",
+  "short_name": "behindyourbrain Blog",
+  "description": "The official behindyourbrain blog for design inspiration and tutorials",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

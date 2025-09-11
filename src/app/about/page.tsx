@@ -4,8 +4,8 @@ import { Layout } from '@/components/layout'
 import { typography, textSpacing, textColors } from '@/lib/typography'
 
 export const metadata: Metadata = {
-  title: 'About Us',
-  description: 'Learn more about our blog and our mission to share knowledge',
+  title: 'About Us - behindyourbrain Blog',
+  description: 'Learn about behindyourbrain Blog, our mission to share design knowledge, our expert team of designers and developers, and our commitment to quality content.',
 }
 
 export default function About() {
@@ -16,11 +16,11 @@ export default function About() {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className={`${typography.h1} ${textSpacing.heading} ${textColors.heading}`}>
-              About Us
+              About behindyourbrain Blog
             </h1>
             <p className={`${typography.bodyLarge} ${textColors.secondary} max-w-2xl mx-auto`}>
-              We&apos;re passionate about sharing knowledge and helping developers grow in their careers through 
-              high-quality content and expert insights.
+              We&apos;re passionate about sharing design knowledge and helping creators, designers, and developers 
+              grow in their careers through high-quality content, expert insights, and practical resources.
             </p>
           </div>
 
@@ -29,9 +29,10 @@ export default function About() {
             <div className="bg-gray-50 p-8 rounded-lg">
               <h2 className={`${typography.h2} ${textSpacing.subheading} ${textColors.heading}`}>Our Mission</h2>
               <p className={`${typography.body} ${textColors.body} leading-relaxed`}>
-                We are passionate about sharing knowledge and helping developers grow in their careers. 
-                Our blog focuses on providing high-quality content about web development, programming, 
-                and technology trends.
+                behindyourbrain Blog is dedicated to empowering the global creative community with comprehensive 
+                resources, tutorials, and insights about design, graphic design tools, creative workflows, 
+                and industry trends. We believe in making design knowledge accessible to everyone, from 
+                beginners taking their first steps to seasoned professionals looking to stay ahead of the curve.
               </p>
             </div>
           </section>

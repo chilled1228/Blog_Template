@@ -1,7 +1,9 @@
 import CategoryPageTemplate from '@/components/templates/CategoryPageTemplate';
 import { getBlogPostsByCategory } from '@/lib/blogService';
+import { getCategoryBySlug, getAllCategories } from '@/lib/firebase';
 import { createMetadata } from '@/lib/seo';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 interface CategoryPageProps {
   params: Promise<{
@@ -11,46 +13,49 @@ interface CategoryPageProps {
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { category } = await params;
-  const posts = await getBlogPostsByCategory(category);
-  const formattedCategory = category.charAt(0).toUpperCase() + category.slice(1);
   
-  const categoryContent = {
-    backend: {
-      title: 'Backend Development',
-      description: 'Explore comprehensive tutorials, best practices, and cutting-edge techniques in backend development. From server architecture to database optimization.',
-    },
-    frontend: {
-      title: 'Frontend Development',
-      description: 'Master modern frontend technologies, responsive design, and user experience principles. Create stunning, performant web applications.',
-    },
-    css: {
-      title: 'CSS & Styling',
-      description: 'Dive deep into CSS mastery, from fundamental concepts to advanced animations and modern layout techniques.',
-    },
-    technology: {
-      title: 'Technology',
-      description: 'Stay updated with the latest technology trends, programming languages, and development tools shaping the future.',
-    },
-    general: {
-      title: 'General Programming',
-      description: 'Broad programming concepts, career advice, and general development practices for developers of all levels.',
-    }
-  };
+  // Get category info from database
+  const categoryData = await getCategoryBySlug(category);
+  if (!categoryData) {
+    return createMetadata({
+      title: 'Category Not Found',
+      description: 'The requested category could not be found.',
+      path: `/category/${category}`,
+    });
+  }
 
-  const content = categoryContent[category as keyof typeof categoryContent] || {
-    title: formattedCategory,
-    description: `Discover insightful articles and tutorials about ${category.toLowerCase()}.`,
-  };
-
+  const posts = await getBlogPostsByCategory(category);
+  
   return createMetadata({
-    title: `${content.title} - ${posts.length} Articles`,
-    description: `${content.description} Browse ${posts.length} articles in our ${content.title.toLowerCase()} category.`,
+    title: `${categoryData.name} - ${posts.length} Articles`,
+    description: categoryData.description || `Discover insightful articles and tutorials about ${categoryData.name.toLowerCase()}.`,
     path: `/category/${category}`,
-    keywords: [category, content.title.toLowerCase(), 'blog', 'articles', 'tutorials'],
+    keywords: [category, categoryData.name.toLowerCase(), 'blog', 'articles', 'tutorials'],
   });
 }
 
+// Generate static paths for all categories
+export async function generateStaticParams() {
+  try {
+    const categories = await getAllCategories();
+    return categories.map((category) => ({
+      category: category.slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params for categories:', error);
+    return [];
+  }
+}
+
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
+  const { category } = await params;
+  
+  // Validate category exists in database
+  const categoryData = await getCategoryBySlug(category);
+  if (!categoryData) {
+    notFound();
+  }
+
   return <CategoryPageTemplate params={params} />;
 };
 

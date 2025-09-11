@@ -1,4 +1,5 @@
-import { db, convertTimestamps } from './firebase';
+import { db, convertTimestamps, getCategoryBySlug } from './firebase';
+import { generateCategoryUrl } from './categoryUtils';
 import { 
   collection, 
   doc, 
@@ -44,6 +45,24 @@ export interface BlogPost {
 
 const BLOG_POSTS_COLLECTION = 'blog_posts';
 
+// Helper function to update category URLs for blog posts
+async function updatePostCategoryUrl(post: BlogPost): Promise<BlogPost> {
+  if (post.category) {
+    try {
+      const categoryUrl = await generateCategoryUrl(post.category);
+      return { ...post, category_url: categoryUrl };
+    } catch (error) {
+      console.error('Error generating category URL for post:', error);
+    }
+  }
+  return post;
+}
+
+// Helper function to process multiple posts
+async function updatePostsCategoryUrls(posts: BlogPost[]): Promise<BlogPost[]> {
+  return Promise.all(posts.map(updatePostCategoryUrl));
+}
+
 export const getBlogPosts = async (includeUnpublished = false): Promise<BlogPost[]> => {
   try {
     let q = query(collection(db, BLOG_POSTS_COLLECTION));
@@ -55,12 +74,15 @@ export const getBlogPosts = async (includeUnpublished = false): Promise<BlogPost
     q = query(q, orderBy('published_at', 'desc'), orderBy('created_at', 'desc'));
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => 
+    const posts = querySnapshot.docs.map(doc => 
       convertTimestamps({
         id: doc.id,
         ...doc.data()
       }) as BlogPost
     );
+    
+    // Update category URLs dynamically
+    return await updatePostsCategoryUrls(posts);
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
@@ -82,10 +104,13 @@ export const getBlogPostBySlug = async (slug: string, includeUnpublished = false
     }
     
     const doc = querySnapshot.docs[0];
-    return convertTimestamps({
+    const post = convertTimestamps({
       id: doc.id,
       ...doc.data()
     }) as BlogPost;
+    
+    // Update category URL dynamically
+    return await updatePostCategoryUrl(post);
   } catch (error) {
     console.error('Error fetching blog post:', error);
     return null;
@@ -103,12 +128,15 @@ export const getFeaturedPosts = async (limitNum: number = 5, includeUnpublished 
     q = query(q, orderBy('published_at', 'desc'), limit(limitNum));
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => 
+    const posts = querySnapshot.docs.map(doc => 
       convertTimestamps({
         id: doc.id,
         ...doc.data()
       }) as BlogPost
     );
+    
+    // Update category URLs dynamically
+    return await updatePostsCategoryUrls(posts);
   } catch (error) {
     console.error('Error fetching featured posts:', error);
     return [];
@@ -117,9 +145,14 @@ export const getFeaturedPosts = async (limitNum: number = 5, includeUnpublished 
 
 export const getBlogPostsByCategory = async (categorySlug: string, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    const categoryName = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
+    // Get the actual category by slug to find its real name
+    const category = await getCategoryBySlug(categorySlug);
+    if (!category) {
+      console.warn(`Category not found for slug: ${categorySlug}`);
+      return [];
+    }
     
-    let q = query(collection(db, BLOG_POSTS_COLLECTION), where('category', '==', categoryName));
+    let q = query(collection(db, BLOG_POSTS_COLLECTION), where('category', '==', category.name));
     
     if (!includeUnpublished) {
       q = query(q, where('status', '==', 'published'));
@@ -128,12 +161,15 @@ export const getBlogPostsByCategory = async (categorySlug: string, includeUnpubl
     q = query(q, orderBy('published_at', 'desc'));
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => 
+    const posts = querySnapshot.docs.map(doc => 
       convertTimestamps({
         id: doc.id,
         ...doc.data()
       }) as BlogPost
     );
+    
+    // Update category URLs dynamically
+    return await updatePostsCategoryUrls(posts);
   } catch (error) {
     console.error('Error fetching blog posts by category:', error);
     return [];
@@ -155,12 +191,15 @@ export const getBlogPostsByAuthor = async (authorSlug: string, includeUnpublishe
     q = query(q, orderBy('published_at', 'desc'));
     
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => 
+    const posts = querySnapshot.docs.map(doc => 
       convertTimestamps({
         id: doc.id,
         ...doc.data()
       }) as BlogPost
     );
+    
+    // Update category URLs dynamically
+    return await updatePostsCategoryUrls(posts);
   } catch (error) {
     console.error('Error fetching blog posts by author:', error);
     return [];
@@ -265,7 +304,9 @@ export const getRelatedPosts = async (postSlug: string, category: string, limitN
       posts = posts.filter(post => post.status === 'published');
     }
     
-    return posts.slice(0, limitNum);
+    const limitedPosts = posts.slice(0, limitNum);
+    // Update category URLs dynamically
+    return await updatePostsCategoryUrls(limitedPosts);
   } catch (error) {
     console.error('Error fetching related posts:', error);
     return [];

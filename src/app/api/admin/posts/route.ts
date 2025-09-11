@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       content: postData.content || '',
       excerpt: postData.excerpt || '',
       image: postData.image || '',
-      author: postData.author || 'Freepik Team',
+      author: postData.author || 'behindyourbrain Team',
       author_url: postData.author_url || '',
       category: postData.category || 'Technology',
       category_url: categoryUrl,

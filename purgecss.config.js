@@ -5,7 +5,7 @@ module.exports = {
     './src/app/**/*.{js,jsx,ts,tsx}',
   ],
   safelist: [
-    // Freepik Brand Colors
+    // behindyourbrain Brand Colors
     'text-client-clr',
     'text-client-clr--hover',
     'text-client-btn',

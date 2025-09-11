@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import SimpleEditor from '../SimpleEditor';
 import { UserProfile, AdminBlogPost, User } from './types';
+import { getAllCategories, Category } from '@/lib/firebase';
 
 const PostEditor = ({ post, onSave, onCancel, user }: {
   post?: Partial<AdminBlogPost>;
@@ -25,13 +26,7 @@ const PostEditor = ({ post, onSave, onCancel, user }: {
   });
   const [activeTab, setActiveTab] = useState('write');
   const [authors, setAuthors] = useState<UserProfile[]>([]);
-  const [categories] = useState([
-    { name: 'Technology' },
-    { name: 'Frontend' },
-    { name: 'Backend' },
-    { name: 'CSS' },
-    { name: 'Design' },
-  ]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const fetchAuthors = async () => {
@@ -43,7 +38,25 @@ const PostEditor = ({ post, onSave, onCancel, user }: {
         setAuthors(data.users || []);
       }
     };
+
+    const fetchCategories = async () => {
+      try {
+        const fetchedCategories = await getAllCategories();
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        // Fallback to default categories if fetch fails
+        setCategories([
+          { name: 'Technology', slug: 'technology' } as Category,
+          { name: 'Frontend', slug: 'frontend' } as Category,
+          { name: 'Backend', slug: 'backend' } as Category,
+          { name: 'CSS', slug: 'css' } as Category,
+        ]);
+      }
+    };
+
     fetchAuthors();
+    fetchCategories();
   }, [user.email]);
 
   const generateSlug = (title: string) => {

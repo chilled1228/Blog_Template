@@ -40,7 +40,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Freepik Blog",
+      "name": "behindyourbrain Blog",
       "url": siteUrl,
       "logo": {
         "@type": "ImageObject",
@@ -68,7 +68,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     "isFamilyFriendly": true,
     "copyrightHolder": {
       "@type": "Organization",
-      "name": "Freepik"
+      "name": "behindyourbrain"
     },
     "copyrightYear": new Date(post.published_at || post.datetime).getFullYear(),
     "creativeWorkStatus": "Published",
@@ -114,12 +114,12 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
   const websiteStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Freepik Blog",
+    "name": "behindyourbrain Blog",
     "url": siteUrl,
-    "description": "The official Freepik blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources.",
+    "description": "The official behindyourbrain blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources.",
     "publisher": {
       "@type": "Organization",
-      "name": "Freepik"
+      "name": "behindyourbrain"
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -135,7 +135,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
   const organizationStructuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Freepik",
+    "name": "behindyourbrain",
     "url": "https://freepik.com",
     "logo": `${siteUrl}/logo.png`,
     "sameAs": [

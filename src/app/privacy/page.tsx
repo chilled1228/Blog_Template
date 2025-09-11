@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { Layout } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
-  description: 'Privacy policy for our blog website',
+  title: 'Privacy Policy - behindyourbrain Blog',
+  description: 'Comprehensive privacy policy for behindyourbrain Blog explaining how we collect, use, and protect your personal information and data.',
 }
 
 export default function Privacy() {
@@ -76,13 +76,52 @@ export default function Privacy() {
               </p>
             </section>
 
-            <section className="bg-gray-50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4 text-gray-900">5. Third-Party Services</h2>
-              <p className="text-gray-700">
-                Our site may contain links to third-party websites and may use third-party services 
-                such as Google Analytics and advertising networks. These services have their own 
-                privacy policies.
-              </p>
+            <section className="bg-white border border-gray-200 p-6 rounded-lg">
+              <h2 className="text-xl font-semibold mb-4 text-gray-900">5. Third-Party Services & Advertising</h2>
+              <div className="space-y-4 text-gray-700">
+                <p>
+                  Our website uses third-party services to enhance user experience and support our operations:
+                </p>
+                
+                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-2">Google AdSense</h3>
+                  <p className="text-sm">
+                    We use Google AdSense to display advertisements. Google AdSense uses cookies and web beacons 
+                    to serve ads based on your previous visits to our website and other websites. You may opt out 
+                    of personalized advertising by visiting 
+                    <a href="https://www.google.com/settings/ads" className="text-blue-600 hover:underline" target="_blank" rel="noopener"> 
+                      Google Ads Settings
+                    </a>.
+                  </p>
+                </div>
+                
+                <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-2">Google Analytics</h3>
+                  <p className="text-sm">
+                    We use Google Analytics to analyze website traffic and user behavior. This service may track 
+                    your IP address and browser information. You can opt out by installing the 
+                    <a href="https://tools.google.com/dlpage/gaoptout" className="text-blue-600 hover:underline" target="_blank" rel="noopener">
+                      Google Analytics Opt-out Browser Add-on
+                    </a>.
+                  </p>
+                </div>
+                
+                <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-2">Firebase Services</h3>
+                  <p className="text-sm">
+                    We use Firebase for website functionality, which may collect usage data and analytics. 
+                    Firebase is operated by Google and follows Google&apos;s privacy policies.
+                  </p>
+                </div>
+                
+                <p className="text-sm">
+                  These third-party services have their own privacy policies. We encourage you to review them:
+                </p>
+                <ul className="list-disc pl-6 text-sm space-y-1">
+                  <li><a href="https://policies.google.com/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+                  <li><a href="https://firebase.google.com/support/privacy" className="text-blue-600 hover:underline" target="_blank" rel="noopener">Firebase Privacy Information</a></li>
+                </ul>
+              </div>
             </section>
 
             <section className="bg-gray-50 p-6 rounded-lg">
