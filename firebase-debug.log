@@ -1,0 +1,94 @@
+[debug] [2025-09-11T07:34:02.198Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.199Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.199Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.199Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.199Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.199Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.199Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.199Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.200Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.200Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.200Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ [none]
+[debug] [2025-09-11T07:34:02.200Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.216Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.216Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.217Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.217Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.217Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.217Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.217Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com [none]
+[debug] [2025-09-11T07:34:02.217Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] Checked if tokens are valid: true, expires at: 1757578140147
+[debug] [2025-09-11T07:34:02.231Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ [none]
+[debug] [2025-09-11T07:34:02.231Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.232Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.232Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.233Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.233Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.233Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.233Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.234Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com [none]
+[debug] [2025-09-11T07:34:02.234Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.234Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ [none]
+[debug] [2025-09-11T07:34:02.234Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.234Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.234Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.235Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.235Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.235Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-09-11T07:34:02.235Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.235Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com [none]
+[debug] [2025-09-11T07:34:02.235Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com x-goog-quota-user=projects/blog-template-firebase
+[debug] [2025-09-11T07:34:02.661Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-11T07:34:02.661Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:03.905Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com 403
+[debug] [2025-09-11T07:34:03.905Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com [omitted]
+[debug] [2025-09-11T07:34:03.906Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com 403
+[debug] [2025-09-11T07:34:03.906Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com [omitted]
+[debug] [2025-09-11T07:34:03.910Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com 403
+[debug] [2025-09-11T07:34:03.910Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseio.com [omitted]
+[debug] [2025-09-11T07:34:03.997Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ 200
+[debug] [2025-09-11T07:34:03.998Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ [omitted]
+[debug] [2025-09-11T07:34:04.134Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-11T07:34:04.134Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.138Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-11T07:34:04.138Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.138Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com 200
+[debug] [2025-09-11T07:34:04.138Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasecrashlytics.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.140Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-11T07:34:04.140Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.143Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-11T07:34:04.143Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.146Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-09-11T07:34:04.146Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.147Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-11T07:34:04.147Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.158Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-11T07:34:04.158Z] > authorizing via signed-in user (behindthebrainblog@gmail.com)
+[debug] [2025-09-11T07:34:04.159Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-09-11T07:34:04.159Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-09-11T07:34:04.228Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ 200
+[debug] [2025-09-11T07:34:04.228Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ [omitted]
+[debug] [2025-09-11T07:34:04.229Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-11T07:34:04.229Z] > authorizing via signed-in user (behindthebrainblog@gmail.com)
+[debug] [2025-09-11T07:34:04.348Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ 200
+[debug] [2025-09-11T07:34:04.348Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/blog-template-firebase/services/ [omitted]

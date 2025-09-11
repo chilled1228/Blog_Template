@@ -8,9 +8,9 @@ import CategoryStructuredData from '@/components/ui/CategoryStructuredData';
 import CategoryBanner from '@/components/ui/CategoryBanner';
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     category: string;
-  };
+  }>;
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {

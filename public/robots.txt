@@ -6,12 +6,15 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /_next/
 Disallow: /draft/
+Disallow: /*?*utm_*
+Disallow: /*?*ref=*
+Disallow: /*?*fbclid=*
 
 # Allow all other pages
 Allow: /
 
 # Sitemap location
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: NEXT_PUBLIC_SITE_URL/sitemap.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1

@@ -6,9 +6,9 @@ import BlogPostsGrid from '@/components/ui/BlogPostsGrid';
 import StructuredData from '@/components/ui/StructuredData';
 
 interface AuthorPageProps {
-  params: {
+  params: Promise<{
     author: string;
-  };
+  }>;
 }
 
 const AuthorPage: React.FC<AuthorPageProps> = async ({ params }) => {
@@ -20,7 +20,6 @@ const AuthorPage: React.FC<AuthorPageProps> = async ({ params }) => {
   }
 
   const formattedAuthor = author.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
   return (
     <Layout>

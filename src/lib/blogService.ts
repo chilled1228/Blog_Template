@@ -2,16 +2,12 @@ import { db, convertTimestamps } from './firebase';
 import { 
   collection, 
   doc, 
-  getDoc, 
   getDocs, 
   addDoc, 
-  updateDoc, 
-  deleteDoc, 
   query, 
   where, 
   orderBy, 
   limit, 
-  arrayUnion,
   increment,
   serverTimestamp 
 } from 'firebase/firestore';
@@ -31,12 +27,14 @@ export interface BlogPost {
   content?: string;
   excerpt?: string;
   created_at?: string;
+  updated_at?: string;
   status: 'draft' | 'published';
   published_at?: string;
   meta_title?: string;
   meta_description?: string;
   meta_keywords?: string;
   canonical_url?: string;
+  tags?: string;
   featured: boolean;
   view_count: number;
   reading_time?: number;
@@ -245,7 +243,7 @@ export const incrementViewCount = async (id: string): Promise<void> => {
 export const getRelatedPosts = async (postSlug: string, category: string, limitNum: number = 3, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
     // Simplified query to avoid composite index requirement while index is building
-    let q = query(
+    const q = query(
       collection(db, BLOG_POSTS_COLLECTION),
       where('category', '==', category),
       orderBy('published_at', 'desc')

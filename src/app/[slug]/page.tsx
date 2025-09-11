@@ -9,11 +9,41 @@ import RelatedPosts from '@/components/ui/RelatedPosts';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import TableOfContents from '@/components/ui/TableOfContents';
 import MobileTableOfContents from '@/components/ui/MobileTableOfContents';
+import { createMetadata, generateArticleJsonLd } from '@/lib/seo';
+import { Metadata } from 'next';
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
+}
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getBlogPostBySlug(slug);
+
+  if (!post) {
+    return createMetadata({
+      title: 'Post Not Found',
+      description: 'The requested blog post could not be found.',
+      noIndex: true,
+    });
+  }
+
+  const publishedDate = post.published_at || post.created_at || new Date().toISOString();
+  const modifiedDate = post.updated_at || publishedDate;
+
+  return createMetadata({
+    title: post.title,
+    description: post.meta_description || post.excerpt || `Read about ${post.title} on our blog`,
+    path: `/${slug}`,
+    image: post.image,
+    keywords: post.tags ? post.tags.split(',').map(tag => tag.trim()) : undefined,
+    author: post.author,
+    publishedTime: publishedDate,
+    modifiedTime: modifiedDate,
+    type: 'article',
+  });
 }
 
 const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
@@ -24,8 +54,28 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
     notFound();
   }
 
+  const publishedDate = post.published_at || post.created_at || new Date().toISOString();
+  const modifiedDate = post.updated_at || publishedDate;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const postUrl = `${siteUrl}/${slug}`;
+
+  const articleJsonLd = generateArticleJsonLd({
+    title: post.title,
+    description: post.meta_description || post.excerpt || `Read about ${post.title} on our blog`,
+    author: post.author,
+    publishedDate,
+    modifiedDate,
+    image: post.image,
+    url: postUrl,
+    category: post.category,
+  });
+
   return (
     <Layout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <ScrollToTop />
       <StructuredData slug={slug} />
       <MobileTableOfContents />

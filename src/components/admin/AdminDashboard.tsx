@@ -61,7 +61,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     pages: 0
   });
   const [activeTab, setActiveTab] = useState<TabType>('posts');
-  const [selectedPosts, setSelectedPosts] = useState<Set<number>>(new Set());
+  const [selectedPosts, setSelectedPosts] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     basic: true,
@@ -287,7 +287,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     }
   }, [statusFilter, searchQuery]);
 
-  const handlePublish = async (postId: number) => {
+  const handlePublish = async (postId: string) => {
     try {
       const success = await publishPost(postId);
       if (success) {
@@ -298,7 +298,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     }
   };
 
-  const handleUnpublish = async (postId: number) => {
+  const handleUnpublish = async (postId: string) => {
     try {
       const success = await unpublishPost(postId);
       if (success) {
