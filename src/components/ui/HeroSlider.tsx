@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Route } from 'next';
 import { BlogPost, getBlogPosts } from '@/lib/blogService';
 import HeroSliderSkeleton from './HeroSliderSkeleton';
 import { typography, textColors, textSpacing } from '@/lib/typography';
@@ -13,7 +14,7 @@ interface HeroSliderProps {
 }
 
 const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
-  const [activeSlide, setActiveSlide] = useState(1);
+  const [activeSlide, setActiveSlide] = useState(0);
   const [slides, setSlides] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -30,7 +31,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
         const slidePosts = posts || await getBlogPosts();
         setSlides(slidePosts);
         if (slidePosts.length > 0) {
-          setActiveSlide(slidePosts[0].id || 1);
+          setActiveSlide(0);
         }
       } catch (error) {
         console.error('Error fetching hero slider slides:', error);
@@ -51,9 +52,8 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
     autoSlideInterval.current = setInterval(() => {
       if (!isPaused && slides.length > 0) {
         setActiveSlide(prev => {
-          const currentIndex = slides.findIndex(slide => slide.id === prev);
-          const nextIndex = currentIndex < slides.length - 1 ? currentIndex + 1 : 0;
-          return slides[nextIndex].id || 1;
+          const nextIndex = prev < slides.length - 1 ? prev + 1 : 0;
+          return nextIndex;
         });
       }
     }, 4000); // Change slide every 4 seconds
@@ -96,15 +96,15 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
     const isRightSwipe = distance < -minSwipeDistance;
 
     if (isLeftSwipe || isRightSwipe) {
-      const currentIndex = slides.findIndex(slide => slide.id === activeSlide);
+      const currentIndex = activeSlide;
       if (isLeftSwipe && currentIndex < slides.length - 1) {
-        setActiveSlide(slides[currentIndex + 1].id || 1);
+        setActiveSlide(currentIndex + 1);
       } else if (isRightSwipe && currentIndex > 0) {
-        setActiveSlide(slides[currentIndex - 1].id || 1);
+        setActiveSlide(currentIndex - 1);
       } else if (isLeftSwipe && currentIndex === slides.length - 1) {
-        setActiveSlide(slides[0].id || 1); // Loop to first
+        setActiveSlide(0); // Loop to first
       } else if (isRightSwipe && currentIndex === 0) {
-        setActiveSlide(slides[slides.length - 1].id || 1); // Loop to last
+        setActiveSlide(slides.length - 1); // Loop to last
       }
     }
     
@@ -115,8 +115,8 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
   };
 
   // Handle manual slide change
-  const handleSlideChange = (slideId: number) => {
-    setActiveSlide(slideId);
+  const handleSlideChange = (slideIndex: number) => {
+    setActiveSlide(slideIndex);
     setIsPaused(true);
     
     // Resume auto-slide after 3 seconds of inactivity
@@ -151,11 +151,11 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
         <div className="relative overflow-hidden">
           {/* Slides Container - Fixed height to prevent UI shift */}
           <div className="relative h-[400px] sm:h-[450px] lg:h-[500px]">
-            {slides.map((slide) => (
+            {slides.map((slide, index) => (
               <div 
                 key={slide.id}
                 className={`absolute inset-0 grid grid-cols-1 lg:grid-cols-2 w-full transition-all duration-700 ${
-                  activeSlide === slide.id 
+                  activeSlide === index 
                     ? 'opacity-100 translate-x-0 scale-100 z-10' 
                     : 'opacity-0 translate-x-4 scale-95 z-0'
                 }`} 
@@ -166,7 +166,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
               >
               <div className="flex items-center p-4 sm:p-6 lg:p-8 xl:p-12 order-2 lg:order-1 pb-16 sm:pb-6 lg:pb-8">
                 <div className={`w-full max-w-2xl transition-all duration-700 delay-100 ${
-                  activeSlide === slide.id 
+                  activeSlide === index 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-4'
                 }`}>
@@ -174,7 +174,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                     <ul className="mb-3 sm:mb-4">
                       <li>
                         <Link 
-                          href={slide.category_url || '#'}
+                          href={(slide.category_url || '#') as Route}
                           className={`${typography.badge} inline-block transition-colors duration-200`}
                           style={{ color: '#4CA4A8' }}
                           onMouseEnter={(e) => e.currentTarget.style.color = '#3d8a8e'}
@@ -188,7 +188,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                   
                   <h1 className={`${typography.heroTitle} ${textSpacing.heading} line-clamp-2 sm:line-clamp-3`} style={{ color: '#44403D' }}>
                     <Link 
-                      href={`/${slide.slug}`}
+                      href={`/${slide.slug}` as Route}
                       className={`${typography.link} transition-colors duration-200`}
                       style={{ color: 'inherit' }}
                       onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
@@ -205,7 +205,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                   <div className={`flex flex-wrap items-center gap-1 sm:gap-2 ${typography.metaSmall} ${textColors.muted}`}>
                     <span>By</span>
                     <Link 
-                      href={slide.author_url || '#'}
+                      href={(slide.author_url || '#') as Route}
                       className={`${typography.link} truncate`}
                       style={{ color: '#4B5D58' }}
                       onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
@@ -222,9 +222,9 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
               </div>
 
               <div className="relative overflow-hidden p-2 sm:p-3 lg:p-4 order-1 lg:order-2">
-                <Link href={`/${slide.slug}`} className="block h-full group">
+                <Link href={`/${slide.slug}` as Route} className="block h-full group">
                   <div className={`relative w-full rounded-lg sm:rounded-xl overflow-hidden transition-all duration-700 delay-200 ${
-                    activeSlide === slide.id 
+                    activeSlide === index 
                       ? 'opacity-100 scale-100' 
                       : 'opacity-0 scale-105'
                   }`}>
@@ -235,7 +235,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                         fill
                         className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 40vw"
-                        priority={activeSlide === slide.id}
+                        priority={activeSlide === index}
                       />
                     </div>
                   </div>
@@ -248,28 +248,28 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
           {/* Slider Controls - Positioned to avoid overlap */}
           <div className="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 lg:bottom-6 lg:left-1/2 lg:-translate-x-1/2 z-20">
             <ul className="flex gap-2 sm:gap-3 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2 lg:backdrop-blur-sm lg:shadow-md lg:px-4 lg:py-2" style={{ background: 'rgba(254, 249, 248, 0.9)' }}>
-              {slides.map((slide) => (
+              {slides.map((slide, index) => (
                 <li key={slide.id}>
                   <button 
                     className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                      activeSlide === slide.id 
+                      activeSlide === index 
                         ? 'shadow-lg' 
                         : 'hover:bg-gray-600'
-                    } ${activeSlide === slide.id ? '' : 'bg-gray-400'}`}
+                    } ${activeSlide === index ? '' : 'bg-gray-400'}`}
                     style={{
-                      backgroundColor: activeSlide === slide.id ? '#4CA4A8' : undefined
+                      backgroundColor: activeSlide === index ? '#4CA4A8' : undefined
                     }}
                     onMouseEnter={(e) => {
-                      if (activeSlide !== slide.id) {
+                      if (activeSlide !== index) {
                         e.currentTarget.style.backgroundColor = '#3d8a8e';
                       }
                     }}
                     onMouseLeave={(e) => {
-                      if (activeSlide !== slide.id) {
+                      if (activeSlide !== index) {
                         e.currentTarget.style.backgroundColor = '#9ca3af';
                       }
                     }}
-                    onClick={() => handleSlideChange(slide.id || 1)}
+                    onClick={() => handleSlideChange(index)}
                     data-index={slide.id}
                     aria-label={`Go to slide ${slide.id}`}
                   />

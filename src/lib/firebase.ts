@@ -198,14 +198,14 @@ export const updateUserProfile = async (uid: string, updates: Record<string, unk
 const serverTimestamp = () => Timestamp.now();
 
 // Utility function to convert Firestore Timestamp objects to ISO strings
-export const convertTimestamps = (obj: Record<string, unknown>): unknown => {
+export const convertTimestamps = (obj: unknown): unknown => {
   if (obj === null || obj === undefined) {
     return obj;
   }
   
   // If it's a Timestamp object, convert to ISO string
-  if (obj && typeof obj.toDate === 'function') {
-    return obj.toDate().toISOString();
+  if (obj && typeof obj === 'object' && 'toDate' in obj && typeof (obj as { toDate?: unknown }).toDate === 'function') {
+    return ((obj as { toDate: () => Date }).toDate()).toISOString();
   }
   
   // If it's an array, recursively convert all elements
@@ -216,8 +216,9 @@ export const convertTimestamps = (obj: Record<string, unknown>): unknown => {
   // If it's an object, recursively convert all properties
   if (typeof obj === 'object' && obj !== null && obj.constructor === Object) {
     const converted: Record<string, unknown> = {};
-    for (const key in obj) {
-      converted[key] = convertTimestamps(obj[key]);
+    const objRecord = obj as Record<string, unknown>;
+    for (const key in objRecord) {
+      converted[key] = convertTimestamps(objRecord[key]);
     }
     return converted;
   }

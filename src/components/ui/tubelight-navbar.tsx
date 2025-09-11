@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import type { Route } from 'next'
 import { usePathname } from "next/navigation"
 import { Home, Lightbulb, TrendingUp, Sparkles, Newspaper } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -73,7 +74,7 @@ export function NavBar({ items, className }: NavBarProps) {
           return (
             <Link
               key={item.name}
-              href={item.url}
+              href={item.url as Route}
               onClick={() => setClickedTab(item.name)}
               className={cn(
                 `${typography.nav} relative cursor-pointer px-6 py-2 rounded-full transition-colors`,
