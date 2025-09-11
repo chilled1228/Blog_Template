@@ -508,7 +508,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     setShowCreateForm(true);
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this post?')) {
       return;
     }
@@ -799,12 +799,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                         ))}
                         {admins.map((adminUser) => (
                           <option key={adminUser.email} value={`${adminUser.email}|`}>
-                            {adminUser.displayName}
-                          </option>
-                        ))}
-                        {admins.filter(admin => admin.is_active).map((admin) => (
-                          <option key={admin.id} value={`${admin.name || admin.email}|${admin.author_url || ''}`}>
-                            {admin.name || admin.email}
+                            {adminUser.email}
                           </option>
                         ))}
                       </select>
