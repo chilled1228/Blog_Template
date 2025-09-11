@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BlogPost } from '@/lib/blogService';
 import { typography, textColors, textSpacing } from '@/lib/typography';
+import type { Route } from 'next';
 
 interface BlogPostCardProps {
   post: BlogPost;
@@ -10,7 +11,7 @@ interface BlogPostCardProps {
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   // Use the slug for better SEO instead of the ID
-  const postUrl = `/${post.slug}`;
+  const postUrl = `/${post.slug || post.id || ''}` as Route;
 
   return (
     <article 
@@ -39,7 +40,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       <div className="p-4 sm:p-5 flex-grow flex flex-col">
         <div className={textSpacing.tight}>
           <Link 
-            href={post.category_url} 
+            href={post.category_url as Route} 
             className={`${typography.badge} inline-block px-3 py-1 rounded-full transition-colors duration-200`}
             style={{ backgroundColor: 'rgba(76, 164, 168, 0.1)', color: '#4CA4A8' }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(76, 164, 168, 0.2)'}
@@ -64,7 +65,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         <div className={`flex items-center ${typography.meta} mt-auto`}>
           <span className="mr-1">By</span>
           <Link 
-            href={post.author_url} 
+            href={post.author_url as Route} 
             className={`${typography.link} mr-2`}
             style={{ color: '#4B5D58' }}
             onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
