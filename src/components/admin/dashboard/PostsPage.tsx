@@ -4,7 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { AdminBlogPost } from './types';
 
-const PostsPage = ({ onEditPost, onAddNewPost }) => {
+const PostsPage = ({ onEditPost, onAddNewPost }: {
+  onEditPost: (post: AdminBlogPost) => void;
+  onAddNewPost: () => void;
+}) => {
   const [posts, setPosts] = useState<AdminBlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published'>('all');

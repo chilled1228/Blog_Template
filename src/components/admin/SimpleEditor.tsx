@@ -52,6 +52,9 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
     },
     clipboard: {
       matchVisual: false,
+      matchers: [],
+      // Allow pasting of HTML content without sanitization
+      dangerouslyPasteHTML: true,
     },
   }), []);
 
@@ -59,7 +62,11 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
     'header',
     'bold', 'italic', 'underline', 'strike',
     'list',
-    'link', 'image', 'code-block'
+    'link', 'image', 'code-block',
+    // Allow additional HTML elements
+    'script', 'div', 'span', 'p', 'br', 'hr',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'style', 'class', 'id', 'onclick', 'onload'
   ];
 
   return (
@@ -93,7 +100,6 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
 
       {viewMode === 'visual' ? (
         <DynamicReactQuill
-          ref={quillRef}
           theme="snow"
           value={value}
           onChange={onChange}
@@ -101,6 +107,8 @@ const SimpleEditor: React.FC<SimpleEditorProps> = ({
           formats={formats}
           placeholder={placeholder}
           className="flex-grow"
+          preserveWhitespace={true}
+          bounds="self"
         />
       ) : (
         <textarea

@@ -2,9 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import SimpleEditor from '../SimpleEditor';
-import { UserProfile } from './types';
+import { UserProfile, AdminBlogPost, User } from './types';
 
-const PostEditor = ({ post, onSave, onCancel, user }) => {
+const PostEditor = ({ post, onSave, onCancel, user }: {
+  post?: Partial<AdminBlogPost>;
+  onSave: (data: Partial<AdminBlogPost>) => void;
+  onCancel: () => void;
+  user: User;
+}) => {
   const [formData, setFormData] = useState(post || {
     title: '',
     slug: '',
@@ -13,7 +18,7 @@ const PostEditor = ({ post, onSave, onCancel, user }) => {
     image: '',
     author: 'Freepik Team',
     category: 'Technology',
-    status: 'draft',
+    status: 'draft' as 'draft' | 'published',
     meta_title: '',
     meta_description: '',
     featured: false,
@@ -57,7 +62,7 @@ const PostEditor = ({ post, onSave, onCancel, user }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(formData);
   };
@@ -102,7 +107,7 @@ const PostEditor = ({ post, onSave, onCancel, user }) => {
         <div className="h-full">
           {activeTab === 'write' && (
             <SimpleEditor
-              value={formData.content}
+              value={formData.content || ''}
               onChange={(content) => setFormData({ ...formData, content })}
             />
           )}
@@ -212,7 +217,7 @@ const PostEditor = ({ post, onSave, onCancel, user }) => {
                 <label className="block text-sm font-medium text-gray-700">Status</label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'draft' | 'published' })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
                   <option value="draft">Draft</option>

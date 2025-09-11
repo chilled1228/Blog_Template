@@ -15,14 +15,14 @@ import MediaPage from './dashboard/MediaPage';
 import UsersPage from './dashboard/UsersPage';
 import AdminsPage from './dashboard/AdminsPage';
 import PlaceholderPage from './dashboard/PlaceholderPage';
-import { AdminDashboardProps, PageType } from './dashboard/types';
+import { AdminDashboardProps, PageType, AdminBlogPost } from './dashboard/types';
 
 export default function NewAdminDashboard({ user, onLogout }: AdminDashboardProps) {
   const [currentPage, setCurrentPage] = useState<PageType>('posts');
-  const [editingPost, setEditingPost] = useState(null);
+  const [editingPost, setEditingPost] = useState<AdminBlogPost | null>(null);
   const [isCreatingPost, setIsCreatingPost] = useState(false);
 
-  const handleSavePost = async (postData) => {
+  const handleSavePost = async (postData: Partial<AdminBlogPost>) => {
     const url = postData.id ? `/api/admin/posts/${postData.id}` : '/api/admin/posts';
     const method = postData.id ? 'PUT' : 'POST';
     
@@ -37,7 +37,7 @@ export default function NewAdminDashboard({ user, onLogout }: AdminDashboardProp
     setCurrentPage('posts');
   };
 
-  const handleEditPost = (post) => {
+  const handleEditPost = (post: AdminBlogPost) => {
     setEditingPost(post);
     setIsCreatingPost(true);
   };
@@ -54,7 +54,7 @@ export default function NewAdminDashboard({ user, onLogout }: AdminDashboardProp
 
   const renderPage = () => {
     if (isCreatingPost || editingPost) {
-      return <PostEditor post={editingPost} onSave={handleSavePost} onCancel={handleCancelEdit} user={user} />;
+      return <PostEditor post={editingPost || undefined} onSave={handleSavePost} onCancel={handleCancelEdit} user={user} />;
     }
 
     switch (currentPage) {

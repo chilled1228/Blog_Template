@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { UserProfile } from './types';
+import { UserProfile, User } from './types';
 
-const UsersPage = ({ user: currentUser }) => {
+const UsersPage = ({ user: currentUser }: { user: User }) => {
     const [users, setUsers] = useState<UserProfile[]>([]);
 
     const fetchUsers = useCallback(async () => {

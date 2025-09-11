@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { UserPlusIcon } from '@heroicons/react/24/outline';
-import { AdminUser } from './types';
+import { AdminUser, User } from './types';
 
-const AdminsPage = ({ user }) => {
+const AdminsPage = ({ user }: { user: User }) => {
     const [admins, setAdmins] = useState<AdminUser[]>([]);
 
     const fetchAdmins = useCallback(async () => {

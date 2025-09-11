@@ -1,6 +1,6 @@
 'use client';
 
-const PlaceholderPage = ({ title }) => (
+const PlaceholderPage = ({ title }: { title: string }) => (
     <div>
         <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
         <p className="mt-4 text-gray-500">This section is under construction.</p>
