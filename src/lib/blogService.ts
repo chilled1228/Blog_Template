@@ -1,7 +1,23 @@
-import { supabase } from './supabaseClient';
+import { db, convertTimestamps } from './firebase';
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  arrayUnion,
+  increment,
+  serverTimestamp 
+} from 'firebase/firestore';
 
 export interface BlogPost {
-  id?: number;
+  id?: string;
   title: string;
   slug: string;
   url: string;
@@ -26,25 +42,25 @@ export interface BlogPost {
   reading_time?: number;
 }
 
+const BLOG_POSTS_COLLECTION = 'blog_posts';
+
 export const getBlogPosts = async (includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    let query = supabase
-      .from('blog_posts')
-      .select('*');
+    let q = query(collection(db, BLOG_POSTS_COLLECTION));
     
-    // Only show published posts for public users
     if (!includeUnpublished) {
-      query = query.eq('status', 'published');
+      q = query(q, where('status', '==', 'published'));
     }
     
-    const { data, error } = await query.order('published_at', { ascending: false, nullsFirst: false });
-
-    if (error) {
-      console.error('Error fetching blog posts:', error);
-      return [];
-    }
-
-    return data || [];
+    q = query(q, orderBy('published_at', 'desc'), orderBy('created_at', 'desc'));
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => 
+      convertTimestamps({
+        id: doc.id,
+        ...doc.data()
+      }) as BlogPost
+    );
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
@@ -53,56 +69,46 @@ export const getBlogPosts = async (includeUnpublished = false): Promise<BlogPost
 
 export const getBlogPostBySlug = async (slug: string, includeUnpublished = false): Promise<BlogPost | null> => {
   try {
-    let query = supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('slug', slug);
+    let q = query(collection(db, BLOG_POSTS_COLLECTION), where('slug', '==', slug));
     
-    // Only show published posts for public users
     if (!includeUnpublished) {
-      query = query.eq('status', 'published');
+      q = query(q, where('status', '==', 'published'));
     }
     
-    const { data, error } = await query.single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // Post not found
-        return null;
-      }
-      console.error('Error fetching blog post:', error);
+    const querySnapshot = await getDocs(q);
+    
+    if (querySnapshot.empty) {
       return null;
     }
-
-    return data;
+    
+    const doc = querySnapshot.docs[0];
+    return convertTimestamps({
+      id: doc.id,
+      ...doc.data()
+    }) as BlogPost;
   } catch (error) {
     console.error('Error fetching blog post:', error);
     return null;
   }
 };
 
-export const getFeaturedPosts = async (limit: number = 5, includeUnpublished = false): Promise<BlogPost[]> => {
+export const getFeaturedPosts = async (limitNum: number = 5, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    let query = supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('featured', true);
+    let q = query(collection(db, BLOG_POSTS_COLLECTION), where('featured', '==', true));
     
-    // Only show published posts for public users
     if (!includeUnpublished) {
-      query = query.eq('status', 'published');
+      q = query(q, where('status', '==', 'published'));
     }
     
-    const { data, error } = await query
-      .order('published_at', { ascending: false, nullsFirst: false })
-      .limit(limit);
-
-    if (error) {
-      console.error('Error fetching featured posts:', error);
-      return [];
-    }
-
-    return data || [];
+    q = query(q, orderBy('published_at', 'desc'), limit(limitNum));
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => 
+      convertTimestamps({
+        id: doc.id,
+        ...doc.data()
+      }) as BlogPost
+    );
   } catch (error) {
     console.error('Error fetching featured posts:', error);
     return [];
@@ -111,27 +117,23 @@ export const getFeaturedPosts = async (limit: number = 5, includeUnpublished = f
 
 export const getBlogPostsByCategory = async (categorySlug: string, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    // Convert slug back to category name
     const categoryName = categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1);
     
-    let query = supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('category', categoryName);
+    let q = query(collection(db, BLOG_POSTS_COLLECTION), where('category', '==', categoryName));
     
-    // Only show published posts for public users
     if (!includeUnpublished) {
-      query = query.eq('status', 'published');
+      q = query(q, where('status', '==', 'published'));
     }
     
-    const { data, error } = await query.order('published_at', { ascending: false, nullsFirst: false });
-
-    if (error) {
-      console.error('Error fetching blog posts by category:', error);
-      return [];
-    }
-
-    return data || [];
+    q = query(q, orderBy('published_at', 'desc'));
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => 
+      convertTimestamps({
+        id: doc.id,
+        ...doc.data()
+      }) as BlogPost
+    );
   } catch (error) {
     console.error('Error fetching blog posts by category:', error);
     return [];
@@ -140,122 +142,149 @@ export const getBlogPostsByCategory = async (categorySlug: string, includeUnpubl
 
 export const getBlogPostsByAuthor = async (authorSlug: string, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    // Convert slug back to author name
     const authorName = authorSlug.split('-').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
     
-    let query = supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('author', authorName);
+    let q = query(collection(db, BLOG_POSTS_COLLECTION), where('author', '==', authorName));
     
-    // Only show published posts for public users
     if (!includeUnpublished) {
-      query = query.eq('status', 'published');
+      q = query(q, where('status', '==', 'published'));
     }
     
-    const { data, error } = await query.order('published_at', { ascending: false, nullsFirst: false });
-
-    if (error) {
-      console.error('Error fetching blog posts by author:', error);
-      return [];
-    }
-
-    return data || [];
+    q = query(q, orderBy('published_at', 'desc'));
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => 
+      convertTimestamps({
+        id: doc.id,
+        ...doc.data()
+      }) as BlogPost
+    );
   } catch (error) {
     console.error('Error fetching blog posts by author:', error);
     return [];
   }
 };
 
-export const publishPost = async (id: number): Promise<boolean> => {
+export const createBlogPost = async (post: Omit<BlogPost, 'id' | 'created_at'>): Promise<string> => {
   try {
-    const { error } = await supabase
-      .from('blog_posts')
-      .update({ 
-        status: 'published',
-        published_at: new Date().toISOString()
-      })
-      .eq('id', id);
-    
-    return !error;
+    const docRef = await addDoc(collection(db, BLOG_POSTS_COLLECTION), {
+      ...post,
+      created_at: serverTimestamp(),
+      view_count: 0
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating blog post:', error);
+    throw error;
+  }
+};
+
+export const updateBlogPost = async (id: string, post: Partial<BlogPost>): Promise<boolean> => {
+  try {
+    const docRef = doc(db, BLOG_POSTS_COLLECTION, id);
+    await updateDoc(docRef, post);
+    return true;
+  } catch (error) {
+    console.error('Error updating blog post:', error);
+    return false;
+  }
+};
+
+export const deleteBlogPost = async (id: string): Promise<boolean> => {
+  try {
+    const docRef = doc(db, BLOG_POSTS_COLLECTION, id);
+    await deleteDoc(docRef);
+    return true;
+  } catch (error) {
+    console.error('Error deleting blog post:', error);
+    return false;
+  }
+};
+
+export const publishPost = async (id: string): Promise<boolean> => {
+  try {
+    const docRef = doc(db, BLOG_POSTS_COLLECTION, id);
+    await updateDoc(docRef, {
+      status: 'published',
+      published_at: serverTimestamp()
+    });
+    return true;
   } catch (error) {
     console.error('Error publishing post:', error);
     return false;
   }
 };
 
-export const unpublishPost = async (id: number): Promise<boolean> => {
+export const unpublishPost = async (id: string): Promise<boolean> => {
   try {
-    const { error } = await supabase
-      .from('blog_posts')
-      .update({ 
-        status: 'draft',
-        published_at: null
-      })
-      .eq('id', id);
-    
-    return !error;
+    const docRef = doc(db, BLOG_POSTS_COLLECTION, id);
+    await updateDoc(docRef, {
+      status: 'draft',
+      published_at: null
+    });
+    return true;
   } catch (error) {
     console.error('Error unpublishing post:', error);
     return false;
   }
 };
 
-export const incrementViewCount = async (id: number): Promise<void> => {
+export const incrementViewCount = async (id: string): Promise<void> => {
   try {
-    await supabase.rpc('increment_view_count', { post_id: id });
+    const docRef = doc(db, BLOG_POSTS_COLLECTION, id);
+    await updateDoc(docRef, {
+      view_count: increment(1)
+    });
   } catch (error) {
     console.error('Error incrementing view count:', error);
   }
 };
 
-// SEO utility functions
-export const calculateReadingTime = (content: string): number => {
-  const wordsPerMinute = 200;
-  const wordCount = content.split(/\s+/).length;
-  return Math.ceil(wordCount / wordsPerMinute);
-};
-
-export const getRelatedPosts = async (postSlug: string, category: string, limit: number = 3, includeUnpublished = false): Promise<BlogPost[]> => {
+export const getRelatedPosts = async (postSlug: string, category: string, limitNum: number = 3, includeUnpublished = false): Promise<BlogPost[]> => {
   try {
-    let query = supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('category', category)
-      .neq('slug', postSlug); // Exclude the current post
+    // Simplified query to avoid composite index requirement while index is building
+    let q = query(
+      collection(db, BLOG_POSTS_COLLECTION),
+      where('category', '==', category),
+      orderBy('published_at', 'desc')
+    );
     
-    // Only show published posts for public users
+    const querySnapshot = await getDocs(q);
+    
+    // Filter out current post and unpublished posts in memory
+    let posts = querySnapshot.docs
+      .map(doc => convertTimestamps({
+        id: doc.id,
+        ...doc.data()
+      }) as BlogPost)
+      .filter(post => post.slug !== postSlug);
+    
     if (!includeUnpublished) {
-      query = query.eq('status', 'published');
+      posts = posts.filter(post => post.status === 'published');
     }
     
-    const { data, error } = await query
-      .order('published_at', { ascending: false, nullsFirst: false })
-      .limit(limit);
-
-    if (error) {
-      console.error('Error fetching related posts:', error);
-      return [];
-    }
-
-    return data || [];
+    return posts.slice(0, limitNum);
   } catch (error) {
     console.error('Error fetching related posts:', error);
     return [];
   }
 };
 
+export const calculateReadingTime = (content: string): number => {
+  const wordsPerMinute = 200;
+  const wordCount = content.split(/\s+/).length;
+  return Math.ceil(wordCount / wordsPerMinute);
+};
+
 export const generateExcerpt = (content: string, maxLength: number = 160): string => {
-  // Remove HTML tags
   const plainText = content.replace(/<[^>]*>/g, '');
   
   if (plainText.length <= maxLength) {
     return plainText;
   }
   
-  // Find the last space within the limit
   const lastSpace = plainText.lastIndexOf(' ', maxLength);
   
   if (lastSpace === -1) {

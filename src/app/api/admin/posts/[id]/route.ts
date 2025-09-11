@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { db, convertTimestamps } from '@/lib/firebase';
+import { 
+  doc, 
+  getDoc, 
+  updateDoc, 
+  deleteDoc, 
+  serverTimestamp 
+} from 'firebase/firestore';
 
 interface UpdatePostData {
   title: string;
@@ -21,29 +28,27 @@ interface UpdatePostData {
   published_at?: string | null;
 }
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const { data: post, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const docRef = doc(db, 'blog_posts', id);
+    const docSnap = await getDoc(docRef);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 404 });
+    if (!docSnap.exists()) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
+
+    const post = convertTimestamps({
+      id: docSnap.id,
+      ...docSnap.data()
+    });
 
     return NextResponse.json({ post });
   } catch (error) {
+    console.error('GET error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch post' },
       { status: 500 }
@@ -60,13 +65,16 @@ export async function PUT(
     const updateData = await request.json() as UpdatePostData;
 
     // Get current post to check if status changed
-    const { data: currentPost } = await supabase
-      .from('blog_posts')
-      .select('status')
-      .eq('id', id)
-      .single();
+    const docRef = doc(db, 'blog_posts', id);
+    const currentDoc = await getDoc(docRef);
 
-    const updatedFields: Partial<UpdatePostData> = {
+    if (!currentDoc.exists()) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    const currentPost = currentDoc.data();
+
+    const updatedFields: Record<string, unknown> = {
       title: updateData.title,
       slug: updateData.slug,
       url: updateData.url || `/${updateData.slug}`,
@@ -88,25 +96,24 @@ export async function PUT(
     // Handle published_at field based on status change
     if (updateData.status === 'published' && currentPost?.status !== 'published') {
       // Publishing for the first time or republishing
-      updatedFields.published_at = new Date().toISOString();
+      updatedFields.published_at = serverTimestamp();
     } else if (updateData.status === 'draft' && currentPost?.status === 'published') {
       // Unpublishing
       updatedFields.published_at = null;
     }
 
-    const { data: post, error } = await supabase
-      .from('blog_posts')
-      .update(updatedFields)
-      .eq('id', id)
-      .select()
-      .single();
+    await updateDoc(docRef, updatedFields);
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    // Get the updated document
+    const updatedDoc = await getDoc(docRef);
+    const post = convertTimestamps({
+      id: updatedDoc.id,
+      ...updatedDoc.data()
+    });
 
     return NextResponse.json({ post });
   } catch (error) {
+    console.error('PUT error:', error);
     return NextResponse.json(
       { error: 'Failed to update post' },
       { status: 500 }
@@ -120,17 +127,13 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const { error } = await supabase
-      .from('blog_posts')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const docRef = doc(db, 'blog_posts', id);
+    
+    await deleteDoc(docRef);
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('DELETE error:', error);
     return NextResponse.json(
       { error: 'Failed to delete post' },
       { status: 500 }

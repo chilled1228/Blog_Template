@@ -4,15 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { BlogPost, publishPost, unpublishPost, calculateReadingTime } from '@/lib/blogService';
 import SimpleEditor from './SimpleEditor';
 import MediaLibrary, { MediaFile } from './MediaLibrary';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 interface AdminBlogPost extends BlogPost {
-  id: number;
+  id: string;
   created_at: string;
   updated_at?: string;
 }
@@ -26,13 +20,19 @@ interface Category {
 }
 
 interface AdminUser {
-  id: string;
-  name?: string;
   email: string;
+  addedBy: string;
+  addedAt: string;
+}
+
+interface UserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL: string;
+  createdAt: string;
+  updatedAt: string;
   role: string;
-  is_active: boolean;
-  author_url?: string;
-  created_at: string;
 }
 
 interface User {
@@ -46,7 +46,7 @@ interface AdminDashboardProps {
   onLogout: () => void;
 }
 
-type TabType = 'posts' | 'stats' | 'settings' | 'media' | 'users';
+type TabType = 'posts' | 'stats' | 'settings' | 'media' | 'admins' | 'users';
 
 export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
   const [posts, setPosts] = useState<AdminBlogPost[]>([]);
@@ -70,10 +70,11 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddAdmin, setShowAddAdmin] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: '', slug: '', description: '' });
-  const [newAdmin, setNewAdmin] = useState({ name: '', email: '', password: '', role: 'admin' });
+  const [newAdmin, setNewAdmin] = useState({ email: '' });
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [activeEditTab, setActiveEditTab] = useState<'write' | 'media'>('write');
   const [showMediaLibrary, setShowMediaLibrary] = useState(false);
@@ -87,13 +88,9 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
 
   const fetchCategories = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      setCategories(data || []);
+      // For now, return empty categories array since we're using Firebase
+      // Categories can be added back later if needed
+      setCategories([]);
     } catch (error) {
       console.error('Failed to fetch categories:', error);
     }
@@ -102,19 +99,10 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data, error } = await supabase
-        .from('categories')
-        .insert([{
-          name: newCategory.name,
-          slug: newCategory.slug || newCategory.name.toLowerCase().replace(/\s+/g, '-'),
-          description: newCategory.description
-        }])
-        .select();
-      
-      if (error) throw error;
+      // Categories functionality disabled for Firebase migration
+      alert('Category management is temporarily disabled during Firebase migration');
       setNewCategory({ name: '', slug: '', description: '' });
       setShowAddCategory(false);
-      fetchCategories();
     } catch (error) {
       console.error('Failed to add category:', error);
     }
@@ -124,13 +112,8 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     if (!confirm('Are you sure you want to delete this category?')) return;
     
     try {
-      const { error } = await supabase
-        .from('categories')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
-      fetchCategories();
+      // Categories functionality disabled for Firebase migration
+      alert('Category management is temporarily disabled during Firebase migration');
     } catch (error) {
       console.error('Failed to delete category:', error);
     }
@@ -138,14 +121,9 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
 
   const handleUpdateCategory = async (id: string, updates: Partial<Category>) => {
     try {
-      const { error } = await supabase
-        .from('categories')
-        .update(updates)
-        .eq('id', id);
-      
-      if (error) throw error;
+      // Categories functionality disabled for Firebase migration
+      alert('Category management is temporarily disabled during Firebase migration');
       setEditingCategory(null);
-      fetchCategories();
     } catch (error) {
       console.error('Failed to update category:', error);
     }
@@ -153,70 +131,119 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
 
   const fetchAdmins = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('admin_users')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const response = await fetch('/api/admin/users', {
+        headers: {
+          'Authorization': `Bearer ${user.email}`
+        }
+      });
       
-      if (error) throw error;
-      setAdmins(data || []);
+      if (response.ok) {
+        const data = await response.json();
+        setAdmins(data.adminUsers || []);
+      } else {
+        console.error('Failed to fetch admin users:', await response.text());
+      }
     } catch (error) {
       console.error('Failed to fetch admins:', error);
     }
-  }, []);
+  }, [user.email]);
+
+  const fetchUserProfiles = useCallback(async () => {
+    try {
+      const response = await fetch('/api/admin/all-users', {
+        headers: {
+          'Authorization': `Bearer ${user.email}`
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setUserProfiles(data.users || []);
+      } else {
+        console.error('Failed to fetch user profiles:', await response.text());
+      }
+    } catch (error) {
+      console.error('Failed to fetch user profiles:', error);
+    }
+  }, [user.email]);
+
+  const promoteToAdmin = async (uid: string, email: string) => {
+    try {
+      const response = await fetch('/api/admin/all-users', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.email}`
+        },
+        body: JSON.stringify({ uid, updates: { role: 'admin' } })
+      });
+      
+      if (response.ok) {
+        await fetchAdmins();
+        await fetchUserProfiles();
+        alert(`${email} has been promoted to admin successfully!`);
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to promote user to admin');
+      }
+    } catch (error) {
+      console.error('Failed to promote user:', error);
+      alert('Failed to promote user to admin');
+    }
+  };
 
   const handleAddAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { data, error } = await supabase
-        .from('admin_users')
-        .insert([{
-          name: newAdmin.name,
-          email: newAdmin.email,
-          role: newAdmin.role,
-          is_active: true
-        }])
-        .select();
+      const response = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.email}`
+        },
+        body: JSON.stringify({ email: newAdmin.email })
+      });
       
-      if (error) throw error;
-      setNewAdmin({ name: '', email: '', password: '', role: 'admin' });
-      setShowAddAdmin(false);
-      fetchAdmins();
+      if (response.ok) {
+        await fetchAdmins();
+        setNewAdmin({ email: '' });
+        setShowAddAdmin(false);
+        alert('Admin user added successfully!');
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to add admin user');
+      }
     } catch (error) {
       console.error('Failed to add admin:', error);
+      alert('Failed to add admin user');
     }
   };
 
-  const handleDeleteAdmin = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this admin user?')) return;
+  const handleDeleteAdmin = async (email: string) => {
+    if (!confirm('Are you sure you want to remove this admin user?')) return;
     
     try {
-      const { error } = await supabase
-        .from('admin_users')
-        .delete()
-        .eq('id', id);
+      const response = await fetch(`/api/admin/users?email=${encodeURIComponent(email)}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.email}`
+        }
+      });
       
-      if (error) throw error;
-      fetchAdmins();
+      if (response.ok) {
+        await fetchAdmins();
+        alert('Admin user removed successfully!');
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to remove admin user');
+      }
     } catch (error) {
       console.error('Failed to delete admin:', error);
+      alert('Failed to remove admin user');
     }
   };
 
-  const handleToggleAdminStatus = async (admin: AdminUser) => {
-    try {
-      const { error } = await supabase
-        .from('admin_users')
-        .update({ is_active: !admin.is_active })
-        .eq('id', admin.id);
-      
-      if (error) throw error;
-      fetchAdmins();
-    } catch (error) {
-      console.error('Failed to toggle admin status:', error);
-    }
-  };
-
+  
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -287,10 +314,13 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     if (activeTab === 'media') {
       fetchCategories();
     }
-    if (activeTab === 'users') {
+    if (activeTab === 'admins') {
       fetchAdmins();
     }
-  }, [fetchPosts, activeTab, fetchCategories, fetchAdmins]);
+    if (activeTab === 'users') {
+      fetchUserProfiles();
+    }
+  }, [fetchPosts, activeTab, fetchCategories, fetchAdmins, fetchUserProfiles]);
 
   useEffect(() => {
     // Ensure behind_brain folder exists when dashboard loads
@@ -306,6 +336,11 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     
     ensureFolder();
   }, []);
+  
+  // Fetch admins on component mount for author dropdown
+  useEffect(() => {
+    fetchAdmins();
+  }, [fetchAdmins]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -576,7 +611,8 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     { id: 'stats' as TabType, icon: '📊', label: 'Stats', count: null },
     { id: 'settings' as TabType, icon: '⚙️', label: 'Settings', count: null },
     { id: 'media' as TabType, icon: '📁', label: 'Media', count: null },
-    { id: 'users' as TabType, icon: '👥', label: 'Users', count: null },
+    { id: 'admins' as TabType, icon: '🔐', label: 'Admins', count: admins.length },
+    { id: 'users' as TabType, icon: '👥', label: 'All Users', count: userProfiles.length },
   ];
 
   if (showCreateForm) {
@@ -756,6 +792,16 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       >
                         <option value="Freepik Team|">Freepik Team</option>
+                        {userProfiles.map((userProfile) => (
+                          <option key={userProfile.uid} value={`${userProfile.displayName || userProfile.email}|`}>
+                            {userProfile.displayName || userProfile.email}
+                          </option>
+                        ))}
+                        {admins.map((adminUser) => (
+                          <option key={adminUser.email} value={`${adminUser.email}|`}>
+                            {adminUser.displayName}
+                          </option>
+                        ))}
                         {admins.filter(admin => admin.is_active).map((admin) => (
                           <option key={admin.id} value={`${admin.name || admin.email}|${admin.author_url || ''}`}>
                             {admin.name || admin.email}
@@ -1550,6 +1596,107 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
           </div>
         )}
 
+        {activeTab === 'users' && (
+          <div className="space-y-6">
+            <div className="bg-white shadow-sm rounded-lg border border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">All Users</h3>
+                    <p className="text-sm text-gray-500">Manage all registered users and promote to admin</p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-500">
+                      {userProfiles.length} users total
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-0">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Display Name</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {userProfiles.map((user) => (
+                      <tr key={user.uid} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                              <span className="text-white text-sm font-medium">
+                                {user.displayName?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                              </span>
+                            </div>
+                            <div className="ml-3">
+                              <div className="text-sm font-medium text-gray-900">{user.email}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {user.displayName || 'N/A'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            user.role === 'admin' 
+                              ? 'bg-blue-100 text-blue-800' 
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {user.role === 'admin' ? 'Admin' : 'User'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(user.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex items-center justify-end space-x-2">
+                            {user.role !== 'admin' && (
+                              <button
+                                onClick={() => promoteToAdmin(user.uid, user.email)}
+                                className="text-blue-600 hover:text-blue-900 transition-colors"
+                                title="Promote to Admin"
+                              >
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.031 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {userProfiles.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="px-6 py-12 text-center">
+                          <div className="text-gray-500">
+                            <div className="text-2xl mb-2">👥</div>
+                            <p>No users found.</p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'media' && (
+          <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-12">
+            <div className="text-center">
+              <div className="text-6xl mb-4">📁</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Media Library</h3>
+              <p className="text-lg text-gray-600 max-w-md mx-auto">Manage your images, files, and media assets. Upload, organize, and select media for your blog posts.</p>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'stats' && (
           <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-12">
             <div className="text-center">
@@ -1570,24 +1717,20 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
           </div>
         )}
 
-        {activeTab === 'media' && (
+        {activeTab === 'users' && (
           <div className="space-y-6">
             <div className="bg-white shadow-sm rounded-lg border border-gray-200">
               <div className="px-6 py-4 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Category Management</h3>
-                    <p className="text-sm text-gray-500">Manage blog post categories</p>
+                    <h3 className="text-lg font-semibold text-gray-900">All Users</h3>
+                    <p className="text-sm text-gray-500">Manage all registered users and promote to admin</p>
                   </div>
-                  <button
-                    onClick={() => setShowAddCategory(true)}
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Add Category
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-500">
+                      {userProfiles.length} users total
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -1784,7 +1927,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
           </div>
         )}
 
-        {activeTab === 'users' && (
+        {activeTab === 'admins' && (
           <div className="space-y-6">
             <div className="bg-white shadow-sm rounded-lg border border-gray-200">
               <div className="px-6 py-4 border-b border-gray-200">
@@ -1809,77 +1952,39 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added By</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added At</th>
                       <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {admins.map((admin) => (
-                      <tr key={admin.id} className="hover:bg-gray-50">
+                      <tr key={admin.email} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                               <span className="text-white text-sm font-medium">
-                                {(admin.name?.charAt(0) || admin.email?.charAt(0))?.toUpperCase() || 'A'}
+                                {admin.email?.charAt(0)?.toUpperCase() || 'A'}
                               </span>
                             </div>
                             <div className="ml-3">
-                              <div className="text-sm font-medium text-gray-900">{admin.name || 'No Name'}</div>
-                              <div className="text-sm text-gray-500">{admin.email}</div>
+                              <div className="text-sm font-medium text-gray-900">{admin.email}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            admin.role === 'admin' 
-                              ? 'bg-purple-100 text-purple-800' 
-                              : admin.role === 'editor'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}>
-                            {admin.role}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            admin.is_active 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {admin.is_active ? 'Active' : 'Inactive'}
-                          </span>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {admin.addedBy}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(admin.created_at).toLocaleDateString()}
+                          {new Date(admin.addedAt).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex items-center justify-end space-x-2">
-                            <button
-                              onClick={() => handleToggleAdminStatus(admin)}
-                              className={`${
-                                admin.is_active 
-                                  ? 'text-red-600 hover:text-red-900' 
-                                  : 'text-green-600 hover:text-green-900'
-                              }`}
-                              title={admin.is_active ? 'Deactivate' : 'Activate'}
-                            >
-                              {admin.is_active ? (
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
-                                </svg>
-                              ) : (
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                              )}
-                            </button>
                             {admin.email !== user?.email && (
                               <button
-                                onClick={() => handleDeleteAdmin(admin.id)}
+                                onClick={() => handleDeleteAdmin(admin.email)}
                                 className="text-red-600 hover:text-red-900"
-                                title="Delete Admin"
+                                title="Remove Admin"
                               >
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -1920,25 +2025,14 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                       </svg>
                     </button>
                   </div>
-                  <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-sm text-green-800">
-                      <strong>Note:</strong> Add an admin user by email. They will need to create a Supabase Auth account to access the admin panel.
+                  <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      <strong>Note:</strong> Add an admin user by email. They will need to sign in with Google or email/password to access the admin panel.
                     </p>
                   </div>
                   <form onSubmit={handleAddAdmin} className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={newAdmin.name}
-                        onChange={(e) => setNewAdmin(prev => ({ ...prev, name: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="John Doe"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
                       <input
                         type="email"
                         required
@@ -1947,18 +2041,6 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="admin@example.com"
                       />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                      <select
-                        value={newAdmin.role}
-                        onChange={(e) => setNewAdmin(prev => ({ ...prev, role: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        <option value="admin">Admin</option>
-                        <option value="editor">Editor</option>
-                        <option value="moderator">Moderator</option>
-                      </select>
                     </div>
                     <div className="flex items-center justify-end space-x-3">
                       <button

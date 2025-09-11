@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { db, convertTimestamps } from '@/lib/firebase';
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  query, 
+  where, 
+  orderBy, 
+  limit as queryLimit,
+  startAfter,
+  serverTimestamp 
+} from 'firebase/firestore';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,44 +24,41 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status'); // 'all', 'draft', 'published'
     const offset = (page - 1) * limit;
 
-    let query = supabase
-      .from('blog_posts')
-      .select('*');
+    let q = query(collection(db, 'blog_posts'));
 
     // Filter by status if specified
     if (status && status !== 'all') {
-      query = query.eq('status', status);
+      q = query(q, where('status', '==', status));
     }
 
-    const { data: posts, error } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    q = query(q, orderBy('created_at', 'desc'));
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    // Get all documents and then paginate manually
+    const querySnapshot = await getDocs(q);
+    const allPosts = querySnapshot.docs.map(doc => 
+      convertTimestamps({
+        id: doc.id,
+        ...doc.data()
+      })
+    );
 
-    // Get total count with same filter
-    let countQuery = supabase
-      .from('blog_posts')
-      .select('*', { count: 'exact', head: true });
-
-    if (status && status !== 'all') {
-      countQuery = countQuery.eq('status', status);
-    }
-
-    const { count } = await countQuery;
+    // Manual pagination
+    const paginatedPosts = allPosts.slice(offset, offset + limit);
+    
+    // Get total count
+    const totalCount = allPosts.length;
 
     return NextResponse.json({
-      posts,
+      posts: paginatedPosts,
       pagination: {
         page,
         limit,
-        total: count,
-        pages: Math.ceil((count || 0) / limit)
+        total: totalCount,
+        pages: Math.ceil(totalCount / limit)
       }
     });
   } catch (error) {
+    console.error('GET error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch posts' },
       { status: 500 }
@@ -88,22 +95,21 @@ export async function POST(request: NextRequest) {
       canonical_url: postData.canonical_url || '',
       featured: postData.featured || false,
       view_count: 0,
+      created_at: serverTimestamp(),
       // Set published_at if status is published
       ...(postData.status === 'published' && {
-        published_at: currentDate.toISOString()
+        published_at: serverTimestamp()
       })
     };
 
-    const { data: post, error } = await supabase
-      .from('blog_posts')
-      .insert([insertData])
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const docRef = await addDoc(collection(db, 'blog_posts'), insertData);
+    
+    // Get the created document
+    const createdDoc = await getDoc(docRef);
+    const post = convertTimestamps({
+      id: createdDoc.id,
+      ...createdDoc.data()
+    });
 
     return NextResponse.json({ post });
   } catch (error) {

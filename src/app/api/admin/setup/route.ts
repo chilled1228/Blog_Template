@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-// Use service role key for admin operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { auth } from '@/lib/firebase';
+import { updatePassword } from 'firebase/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,19 +11,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    // Update the user's password
-    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(
-      '3f53b199-1601-4d4a-8ecc-544deac856ea', // The user ID we found earlier
-      { password: password }
-    );
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ message: 'Password updated successfully' });
+    // Note: Firebase doesn't have a direct way to update user password from server-side
+    // without user authentication. This endpoint is kept for backward compatibility
+    // but the actual password reset should be done through Firebase auth methods
+    
+    return NextResponse.json({ 
+      message: 'Password setup endpoint migrated to Firebase. Use password reset flow instead.' 
+    });
   } catch (error) {
     console.error('Setup error:', error);
-    return NextResponse.json({ error: 'Failed to update password' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to setup password' }, { status: 500 });
   }
 }

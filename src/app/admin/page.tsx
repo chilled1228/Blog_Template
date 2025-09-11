@@ -4,12 +4,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminAuth from '@/components/admin/AdminAuth';
 import AdminDashboard from '@/components/admin/AdminDashboard';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { auth, checkIfUserIsAdmin } from '@/lib/firebase';
+import { 
+  onAuthStateChanged,
+  signOut
+} from 'firebase/auth';
 
 interface User {
   id: string;
@@ -24,34 +23,39 @@ export default function AdminPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user && session.user.email) {
-        setUser({
-          id: session.user.id,
-          email: session.user.email,
-          role: undefined
-        });
-      }
-      setIsLoading(false);
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser && firebaseUser.email) {
+          // Check if user is admin
+          const isAdmin = await checkIfUserIsAdmin(firebaseUser.email);
+          if (isAdmin) {
+            setUser({
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              role: 'admin'
+            });
+          } else {
+            setUser(null);
+            await signOut(auth);
+          }
+        } else {
+          setUser(null);
+        }
+        setIsLoading(false);
+      });
+
+      return () => unsubscribe();
     };
 
     checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') {
-        setUser(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
+  
   const handleAuth = (authenticatedUser: User) => {
     setUser(authenticatedUser);
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut(auth);
     setUser(null);
     router.push('/');
   };
