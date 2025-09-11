@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { dimensions: string[] } }
+  { params }: { params: Promise<{ dimensions: string[] }> }
 ) {
   try {
-    const dimensions = params.dimensions;
+    const { dimensions } = await params;
     
     if (!dimensions || dimensions.length < 2) {
       return NextResponse.json({ error: 'Invalid dimensions format' }, { status: 400 });
