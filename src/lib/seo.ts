@@ -56,12 +56,10 @@ export function createMetadata({
     },
     icons: {
       icon: [
-        { url: '/icon.svg', type: 'image/svg+xml' },
         { url: '/logo.svg', type: 'image/svg+xml' },
       ],
       shortcut: '/logo.svg',
       apple: [
-        { url: '/apple-icon', sizes: '180x180', type: 'image/png' },
         { url: '/logo.svg', type: 'image/svg+xml' },
       ],
       other: [
