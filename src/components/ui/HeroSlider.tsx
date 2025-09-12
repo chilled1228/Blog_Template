@@ -103,7 +103,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
   };
 
   if (loading) {
-    return <HeroSliderSkeleton />;
+    return <HeroSliderSkeleton slideCount={posts?.length || 3} />;
   }
 
   if (slides.length === 0) {

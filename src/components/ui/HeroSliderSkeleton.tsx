@@ -1,7 +1,11 @@
 import React from 'react';
 import Skeleton from './Skeleton';
 
-const HeroSliderSkeleton: React.FC = () => {
+interface HeroSliderSkeletonProps {
+  slideCount?: number;
+}
+
+const HeroSliderSkeleton: React.FC<HeroSliderSkeletonProps> = ({ slideCount = 3 }) => {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="rounded-xl sm:rounded-2xl transition-all duration-300 my-4 sm:my-8 overflow-hidden animate-pulse" style={{ background: 'linear-gradient(135deg, #fef9f8 0%, #f9f3f2 30%, #f4edec 70%, #efebe9 100%)', border: '1px solid #3d8a8e' }}>
@@ -49,10 +53,10 @@ const HeroSliderSkeleton: React.FC = () => {
           </div>
 
           {/* Slider Controls Skeleton */}
-          <div className="absolute bottom-3 sm:bottom-4 left-1/2 transform -translate-x-1/2 lg:bottom-6 lg:left-1/2 lg:-translate-x-1/2 z-20">
-            <div className="flex gap-2 sm:gap-3 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2 lg:backdrop-blur-sm lg:shadow-md lg:px-4 lg:py-2" style={{ background: 'rgba(254, 249, 248, 0.9)' }}>
-              {[1, 2, 3, 4, 5].map((index) => (
-                <div key={index} className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gray-400" />
+          <div className="absolute bottom-6 left-4 sm:left-6 lg:left-8 z-20">
+            <div className="flex gap-2">
+              {Array.from({ length: slideCount }, (_, index) => (
+                <div key={index} className="w-2 h-2 rounded-full bg-gray-400" />
               ))}
             </div>
           </div>

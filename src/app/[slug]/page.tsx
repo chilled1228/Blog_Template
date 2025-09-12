@@ -7,7 +7,6 @@ import BlogContentRenderer from '@/components/ui/BlogContentRenderer';
 import StructuredData from '@/components/ui/StructuredData';
 import RelatedPosts from '@/components/ui/RelatedPosts';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import TableOfContents from '@/components/ui/TableOfContents';
 import MobileTableOfContents from '@/components/ui/MobileTableOfContents';
 import { createMetadata, generateArticleJsonLd } from '@/lib/seo';
 import { Metadata } from 'next';
@@ -158,7 +157,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
               </div>
 
               {/* Mobile TOC outside blog content to prevent layout conflicts */}
-              <div className="lg:hidden mb-8" style={{background: 'transparent'}}>
+              <div className="mb-8" style={{background: 'transparent'}}>
                 <div id="inline-mobile-toc" className="mobile-toc-inline" style={{background: 'none', backgroundColor: 'transparent'}}>
                   <div className="mobile-toc-inline-header">
                     <span className="mobile-toc-icon">📄</span>
@@ -196,10 +195,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
             </div>
           </div>
 
-          {/* Sidebar with Table of Contents - Desktop Only */}
-          <aside className="hidden lg:block lg:w-64">
-            <TableOfContents />
-          </aside>
+          
         </div>
 
         {/* Related Posts Section */}

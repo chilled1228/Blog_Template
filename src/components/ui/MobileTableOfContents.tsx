@@ -181,7 +181,6 @@ const MobileTableOfContents: React.FC = () => {
 
   return (
     <>
-      {/* Floating Toggle Button - Shows when scrolled past inline TOC */}
       <button
         onClick={toggleDrawer}
         className={`mobile-toc-toggle ${isFloating ? 'mobile-toc-toggle-show' : 'mobile-toc-toggle-hide'}`}
