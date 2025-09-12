@@ -40,7 +40,11 @@ export default function DynamicFooter() {
           {/* Brand Section */}
           <div className="md:col-span-3">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <Brain className="h-8 w-8 text-teal-600" />
+              <img 
+                src="/logo.svg" 
+                alt="BehindTheBrain" 
+                className="h-8 w-8"
+              />
               <span className="font-extrabold text-xl text-stone-800">behindthebrain</span>
             </Link>
             <p className="text-sm text-stone-600 max-w-xs">
@@ -73,7 +77,6 @@ export default function DynamicFooter() {
           <div className="md:col-span-2">
             <h3 className="font-semibold text-stone-800 mb-4 uppercase tracking-wider text-sm">Resources</h3>
             <ul className="space-y-3">
-              <li><Link href="/authors" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">Our Authors</Link></li>
               <li><Link href="/archive" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">Archive</Link></li>
               <li><Link href="/sitemap.xml" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">Sitemap</Link></li>
               <li><Link href="/rss.xml" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">RSS Feed</Link></li>

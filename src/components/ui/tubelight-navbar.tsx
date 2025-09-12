@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import type { Route } from 'next'
 import { usePathname } from "next/navigation"
-import { Home, Lightbulb, TrendingUp, Sparkles, Newspaper, ChevronDown, Menu, X, Brain } from "lucide-react"
+import { Home, Lightbulb, TrendingUp, Sparkles, Newspaper, ChevronDown, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { typography } from "@/lib/typography"
 
@@ -36,7 +36,6 @@ const iconMap = {
   TrendingUp: TrendingUp,
   Sparkles: Sparkles,
   Newspaper: Newspaper,
-  Brain: Brain,
 }
 
 export function NavBar({ items, categories = [], className, isSticky = false, categoriesLoading = false }: NavBarProps) {
@@ -152,7 +151,6 @@ export function NavBar({ items, categories = [], className, isSticky = false, ca
           {/* Left: Brand Name */}
           <div className="flex items-center">
             {items.filter(item => item.name === 'Home').map((item) => {
-              const Icon = iconMap[item.icon as keyof typeof iconMap]
               const isActive = isItemActive(item)
 
               return (
@@ -166,7 +164,11 @@ export function NavBar({ items, categories = [], className, isSticky = false, ca
                     isActive && "bg-muted text-primary",
                   )}
                 >
-                  <Brain size={18} strokeWidth={2.5} />
+                  <img 
+                    src="/logo.svg" 
+                    alt="BehindTheBrain" 
+                    className="w-6 h-6"
+                  />
                   <span className="text-sm font-semibold">BehindTheBrain</span>
                   {isActive && (
                     <motion.div
@@ -209,7 +211,6 @@ export function NavBar({ items, categories = [], className, isSticky = false, ca
         {/* Desktop: All Items */}
         <div className="hidden md:flex items-center gap-3">
           {items.map((item) => {
-            const Icon = iconMap[item.icon as keyof typeof iconMap]
             const isActive = isItemActive(item)
             const displayName = item.name === 'Home' ? 'BehindTheBrain' : item.name
 
@@ -224,7 +225,13 @@ export function NavBar({ items, categories = [], className, isSticky = false, ca
                   isActive && "bg-muted text-primary",
                 )}
               >
-                {item.name === 'Home' && <Brain size={18} strokeWidth={2.5} />}
+                {item.name === 'Home' && (
+                  <img 
+                    src="/logo.svg" 
+                    alt="BehindTheBrain" 
+                    className="w-5 h-5"
+                  />
+                )}
                 <span className="inline">{displayName}</span>
                 {isActive && (
                   <motion.div

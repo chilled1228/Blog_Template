@@ -63,17 +63,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         </h1>
         
         <div className={`flex items-center ${typography.meta} mt-auto`}>
-          <span className="mr-1">By</span>
-          <Link 
-            href={post.author_url as Route} 
-            className={`${typography.link} mr-2`}
-            style={{ color: '#4B5D58' }}
-            onMouseEnter={(e) => e.currentTarget.style.color = '#4CA4A8'}
-            onMouseLeave={(e) => e.currentTarget.style.color = '#4B5D58'}
-          >
-            {post.author}
-          </Link>
-          <span className="text-gray-300 mr-2">•</span>
           <time dateTime={post.datetime} className={textColors.muted}>
             {post.date}
           </time>

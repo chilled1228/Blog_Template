@@ -130,21 +130,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
                 )}
               </h1>
 
-              {/* Author Section */}
-              <div className="blog-author-section">
-                <div className="blog-author-avatar">
-                  <Image 
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=48`} 
-                    alt={post.author}
-                    width={24}
-                    height={24}
-                  />
-                </div>
-                <div className="blog-author-info">
-                  <span>By </span>
-                  <a href={post.author_url} className="blog-author-link">{post.author}</a>
-                </div>
-                <div className="blog-meta-divider">•</div>
+              <div className="flex flex-row items-center">
                 <div className="blog-category-section">
                   <a href={post.category_url} className="blog-category-link">
                     {post.category}
@@ -176,22 +162,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
                 )}
               </div>
 
-              {/* Author Footer */}
-              <div className="blog-author-footer">
-                <div className="blog-author-avatar-large">
-                  <Image 
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=6366f1&color=fff&size=96`} 
-                    alt={post.author}
-                    width={48}
-                    height={48}
-                  />
-                </div>
-                <div className="blog-author-footer-info">
-                  <span>By </span>
-                  <a href={post.author_url} className="blog-author-footer-link">{post.author}</a>
-                </div>
-              </div>
-              </article>
+                  </article>
             </div>
           </div>
 

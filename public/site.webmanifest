@@ -1,0 +1,19 @@
+{
+    "name": "behindthebrain - Learn, Code, Create!",
+    "short_name": "behindthebrain",
+    "icons": [
+        {
+            "src": "/logo.svg",
+            "type": "image/svg+xml",
+            "sizes": "any"
+        },
+        {
+            "src": "/favicon.ico",
+            "sizes": "48x48",
+            "type": "image/x-icon"
+        }
+    ],
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

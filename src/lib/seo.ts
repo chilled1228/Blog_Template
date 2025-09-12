@@ -54,6 +54,24 @@ export function createMetadata({
     alternates: {
       canonical: url,
     },
+    icons: {
+      icon: [
+        { url: '/logo.svg', type: 'image/svg+xml' },
+        { url: '/favicon.ico', sizes: '48x48' },
+      ],
+      shortcut: '/favicon.ico',
+      apple: [
+        { url: '/logo.svg', type: 'image/svg+xml' },
+      ],
+      other: [
+        {
+          rel: 'mask-icon',
+          url: '/logo.svg',
+          color: '#000000',
+        },
+      ],
+    },
+    manifest: '/manifest.json',
     openGraph: {
       type,
       locale: SITE_CONFIG.locale,
@@ -77,6 +95,16 @@ export function createMetadata({
       title: fullTitle,
       description: metaDescription,
       images: [ogImage],
+    },
+    other: {
+      'apple-mobile-web-app-capable': 'yes',
+      'apple-mobile-web-app-status-bar-style': 'black-translucent',
+      'apple-mobile-web-app-title': SITE_CONFIG.name,
+      'application-name': SITE_CONFIG.name,
+      'msapplication-TileColor': SITE_CONFIG.themeColor,
+      'msapplication-config': '/browserconfig.xml',
+      'mobile-web-app-capable': 'yes',
+      'format-detection': 'telephone=no',
     },
   };
 

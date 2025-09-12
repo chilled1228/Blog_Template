@@ -168,14 +168,6 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                       {slide.excerpt || 'Read more about this article...'}
                     </p>
                     <div className="mt-4 flex items-center text-sm text-stone-500">
-                      <span>By</span>
-                      <Link 
-                        href={(slide.author_url || '#') as Route}
-                        className="ml-1 font-semibold text-stone-700 hover:text-teal-700 transition-colors"
-                      >
-                        {slide.author}
-                      </Link>
-                      <span className="mx-2">•</span>
                       <time dateTime={slide.datetime || slide.date}>
                         {slide.date}
                       </time>
