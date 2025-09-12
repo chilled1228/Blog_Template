@@ -30,7 +30,7 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
 5. Add your domain to authorized domains (including localhost)
 
 ### 3. Admin Access
-Your email `bipul281b@gmail.com` has been set up as the first admin.
+Your email `behindthebrainblog@gmail.com` has been set up as the first admin.
 
 ## How to Use
 

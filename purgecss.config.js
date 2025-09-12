@@ -5,7 +5,7 @@ module.exports = {
     './src/app/**/*.{js,jsx,ts,tsx}',
   ],
   safelist: [
-    // behindyourbrain Brand Colors
+    // behindthebrain Brand Colors
     'text-client-clr',
     'text-client-clr--hover',
     'text-client-btn',

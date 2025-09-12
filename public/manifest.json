@@ -1,7 +1,7 @@
 {
-  "name": "behindyourbrain Blog",
-  "short_name": "behindyourbrain Blog",
-  "description": "The official behindyourbrain blog for design inspiration and tutorials",
+  "name": "behindthebrain",
+  "short_name": "behindthebrain",
+  "description": "behindthebrain - Personal growth and self-help insights",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

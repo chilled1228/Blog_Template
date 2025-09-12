@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const { email, password } = await request.json();
     
     // Security check - only allow for the specific admin email
-    if (email !== 'bipul281b@gmail.com') {
+    if (email !== 'behindthebrainblog@gmail.com') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 

@@ -63,7 +63,7 @@ export default function CategoryStructuredData({ category, url, posts = [] }: Ca
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Freepik Blog",
+      "name": "behindthebrain",
       "url": siteUrl,
       "logo": {
         "@type": "ImageObject",

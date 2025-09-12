@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { Layout } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - behindyourbrain Blog',
-  description: 'Comprehensive privacy policy for behindyourbrain Blog explaining how we collect, use, and protect your personal information and data.',
+  title: 'Privacy Policy - behindthebrain',
+  description: 'Comprehensive privacy policy for behindthebrain explaining how we collect, use, and protect your personal information and data.',
 }
 
 export default function Privacy() {

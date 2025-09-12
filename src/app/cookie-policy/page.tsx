@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Layout } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'Cookie Policy - behindyourbrain Blog',
-  description: 'Learn about how behindyourbrain Blog uses cookies to enhance your browsing experience and provide personalized content.',
+  title: 'Cookie Policy - behindthebrain',
+  description: 'Learn about how behindthebrain uses cookies to enhance your browsing experience and provide personalized content.',
 }
 
 export default function CookiePolicy() {
@@ -15,7 +15,7 @@ export default function CookiePolicy() {
           <div className="text-center mb-12">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Cookie Policy</h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              This Cookie Policy explains how behindyourbrain Blog uses cookies and similar technologies to enhance your browsing experience.
+              This Cookie Policy explains how behindthebrain uses cookies and similar technologies to enhance your browsing experience.
             </p>
             <div className="mt-4 inline-block bg-gray-100 px-4 py-2 rounded-lg">
               <span className="text-sm font-medium text-gray-700">

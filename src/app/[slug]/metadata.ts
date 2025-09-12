@@ -22,17 +22,17 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const imageUrl = post.image || `${siteUrl}/default-og-image.jpg`;
 
   return {
-    title: `${post.title} | behindyourbrain Blog`,
-    description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post on behindyourbrain Blog',
-    keywords: post.category ? [post.category, 'freepik blog', 'design', 'creative resources'] : ['freepik blog', 'design', 'creative resources'],
+    title: `${post.title} | behindthebrain`,
+    description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post on behindthebrain',
+    keywords: post.category ? [post.category, 'behindthebrain', 'self-help', 'personal growth'] : ['behindthebrain', 'self-help', 'personal growth'],
     authors: [{ name: post.author, url: post.author_url }],
-    creator: "behindyourbrain",
-    publisher: "behindyourbrain",
+    creator: "behindthebrain",
+    publisher: "behindthebrain",
     openGraph: {
       title: post.title,
       description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post',
       url: `${siteUrl}/${slug}`,
-      siteName: 'behindyourbrain Blog',
+      siteName: 'behindthebrain',
       images: [
         {
           url: imageUrl,
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: post.title,
       description: post.excerpt || post.content?.substring(0, 160) || 'Read this blog post',
       images: [imageUrl],
-      creator: '@behindyourbrain',
+      creator: '@behindthebrain',
     },
     alternates: {
       canonical: `${siteUrl}/${slug}`,

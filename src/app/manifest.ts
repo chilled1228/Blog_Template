@@ -3,9 +3,9 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   
   return {
-    name: 'behindyourbrain Blog - Learn, Get Inspired, Create!',
-    short_name: 'behindyourbrain Blog',
-    description: 'The official behindyourbrain blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources.',
+    name: 'behindthebrain - Learn, Code, Create!',
+    short_name: 'behindthebrain',
+    description: 'behindthebrain - Empowering personal growth through self-help, mindfulness, productivity tips, and life transformation strategies.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

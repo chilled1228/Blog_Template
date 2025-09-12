@@ -25,14 +25,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <meta name="theme-color" content="#000000" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
-      <body className={`${funnelSans.variable} font-sans antialiased freepik home blog wp-theme-freepik-blog hfeed`}>
+      <body className={`${funnelSans.variable} font-sans antialiased freepik home blog wp-theme-freepik-blog hfeed overflow-x-hidden`} style={{touchAction: 'manipulation'}}>
         {children}
       </body>
     </html>

@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Layout } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'Disclaimer - behindyourbrain Blog',
-  description: 'Important disclaimer information for behindyourbrain Blog regarding content accuracy, affiliate links, and liability limitations.',
+  title: 'Disclaimer - behindthebrain',
+  description: 'Important disclaimer information for behindthebrain regarding content accuracy, affiliate links, and liability limitations.',
 }
 
 export default function Disclaimer() {
@@ -15,7 +15,7 @@ export default function Disclaimer() {
           <div className="text-center mb-12">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Disclaimer</h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Important information about the content, recommendations, and services provided on behindyourbrain Blog.
+              Important information about the content, recommendations, and services provided on behindthebrain.
             </p>
             <div className="mt-4 inline-block bg-gray-100 px-4 py-2 rounded-lg">
               <span className="text-sm font-medium text-gray-700">
@@ -42,7 +42,7 @@ export default function Disclaimer() {
               <h2 className="text-xl font-semibold mb-4 text-gray-900">2. Professional Advice Disclaimer</h2>
               <div className="space-y-4 text-gray-700">
                 <p>
-                  The content on behindyourbrain Blog is for informational and educational purposes only and should 
+                  The content on behindthebrain is for informational and educational purposes only and should 
                   not be construed as professional advice. While we strive to provide accurate and up-to-date 
                   information, we make no representations or warranties of any kind about:
                 </p>
@@ -64,7 +64,7 @@ export default function Disclaimer() {
               <h2 className="text-xl font-semibold mb-4 text-gray-900">3. Affiliate Links & Compensation</h2>
               <div className="space-y-4 text-gray-700">
                 <p>
-                  behindyourbrain Blog may contain affiliate links to products and services. This means we may 
+                  behindthebrain may contain affiliate links to products and services. This means we may 
                   receive a commission if you click on these links and make a purchase, at no additional 
                   cost to you.
                 </p>
@@ -126,7 +126,7 @@ export default function Disclaimer() {
             <section className="bg-gray-50 p-6 rounded-lg">
               <h2 className="text-xl font-semibold mb-4 text-gray-900">7. Limitation of Liability</h2>
               <p className="mb-4 text-gray-700">
-                Under no circumstances shall behindyourbrain Blog, its authors, or contributors be liable for any 
+                Under no circumstances shall behindthebrain, its authors, or contributors be liable for any 
                 direct, indirect, incidental, consequential, or punitive damages arising from:
               </p>
               <ul className="list-disc pl-6 text-gray-700 space-y-1">

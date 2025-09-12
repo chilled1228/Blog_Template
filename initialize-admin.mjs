@@ -25,7 +25,7 @@ const db = getFirestore(app);
 
 async function initializeFirstAdmin() {
   try {
-    const adminEmail = 'bipul281b@gmail.com'; // Replace with your email
+    const adminEmail = 'behindthebrainblog@gmail.com'; // Replace with your email
     
     console.log('🔧 Initializing admin user...');
     

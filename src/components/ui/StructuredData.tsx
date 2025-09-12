@@ -40,7 +40,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "behindyourbrain Blog",
+      "name": "behindthebrain Blog",
       "url": siteUrl,
       "logo": {
         "@type": "ImageObject",
@@ -49,9 +49,9 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
         "height": 60
       },
       "sameAs": [
-        "https://twitter.com/freepik",
-        "https://facebook.com/freepik",
-        "https://instagram.com/freepik"
+        "https://twitter.com/behindthebrain",
+        "https://facebook.com/behindthebrain",
+        "https://instagram.com/behindthebrain"
       ]
     },
     "mainEntityOfPage": {
@@ -68,7 +68,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     "isFamilyFriendly": true,
     "copyrightHolder": {
       "@type": "Organization",
-      "name": "behindyourbrain"
+      "name": "behindthebrain"
     },
     "copyrightYear": new Date(post.published_at || post.datetime).getFullYear(),
     "creativeWorkStatus": "Published",
@@ -114,12 +114,12 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
   const websiteStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "behindyourbrain Blog",
+    "name": "behindthebrain Blog",
     "url": siteUrl,
-    "description": "The official behindyourbrain blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources.",
+    "description": "behindthebrain - Empowering personal growth through self-help, mindfulness, productivity, and life transformation.",
     "publisher": {
       "@type": "Organization",
-      "name": "behindyourbrain"
+      "name": "behindthebrain"
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -135,13 +135,13 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
   const organizationStructuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "behindyourbrain",
-    "url": "https://freepik.com",
+    "name": "behindthebrain",
+    "url": "https://behindthebrain.com",
     "logo": `${siteUrl}/logo.png`,
     "sameAs": [
-      "https://twitter.com/freepik",
-      "https://facebook.com/freepik",
-      "https://instagram.com/freepik"
+      "https://twitter.com/behindthebrain",
+      "https://facebook.com/behindthebrain",
+      "https://instagram.com/behindthebrain"
     ],
     "contactPoint": {
       "@type": "ContactPoint",

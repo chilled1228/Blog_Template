@@ -1,17 +1,17 @@
 import { Metadata } from 'next';
 
 export const SITE_CONFIG = {
-  name: 'Freepik Blog',
-  description: 'The official Freepik blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources for designers and creators.',
+  name: 'behindthebrain',
+  description: 'behindthebrain - Empowering personal growth through self-help, mindfulness, productivity tips, and life transformation strategies.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com',
-  siteName: 'Freepik Blog',
+  siteName: 'behindthebrain',
   locale: 'en_US',
   themeColor: '#000000',
-  twitterHandle: '@freepik',
-  keywords: ['freepik blog', 'design blog', 'graphic design', 'stock images', 'design tips', 'creative resources', 'vectors', 'design trends'],
-  author: 'Freepik Team',
-  creator: 'Freepik',
-  publisher: 'Freepik',
+  twitterHandle: '@behindthebrain',
+  keywords: ['behindthebrain', 'self-help', 'personal growth', 'mindfulness', 'productivity', 'life coaching', 'motivation', 'wellness'],
+  author: 'behindthebrain Team',
+  creator: 'behindthebrain',
+  publisher: 'behindthebrain',
 };
 
 export function createMetadata({

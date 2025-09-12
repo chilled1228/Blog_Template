@@ -17,8 +17,8 @@ const PostEditor = ({ post, onSave, onCancel, user }: {
     content: '',
     excerpt: '',
     image: '',
-    author: 'Freepik Team',
-    category: 'Technology',
+    author: 'behindthebrain Wellness Team',
+    category: 'Personal Growth',
     status: 'draft' as 'draft' | 'published',
     meta_title: '',
     meta_description: '',
@@ -160,7 +160,7 @@ const PostEditor = ({ post, onSave, onCancel, user }: {
                   onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option>Freepik Team</option>
+                  <option>behindthebrain Wellness Team</option>
                   {authors.map(author => (
                     <option key={author.uid} value={author.displayName || author.email}>
                       {author.displayName || author.email}

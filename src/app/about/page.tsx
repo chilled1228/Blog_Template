@@ -4,8 +4,8 @@ import { Layout } from '@/components/layout'
 import { typography, textSpacing, textColors } from '@/lib/typography'
 
 export const metadata: Metadata = {
-  title: 'About Us - behindyourbrain Blog',
-  description: 'Learn about behindyourbrain Blog, our mission to share design knowledge, our expert team of designers and developers, and our commitment to quality content.',
+  title: 'About Us - behindthebrain',
+  description: 'Learn about behindthebrain, our mission to empower personal growth, our expert team of life coaches and wellness experts, and our commitment to transformation.',
 }
 
 export default function About() {
@@ -16,11 +16,11 @@ export default function About() {
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h1 className={`${typography.h1} ${textSpacing.heading} ${textColors.heading}`}>
-              About behindyourbrain Blog
+              About behindthebrain
             </h1>
             <p className={`${typography.bodyLarge} ${textColors.secondary} max-w-2xl mx-auto`}>
-              We&apos;re passionate about sharing design knowledge and helping creators, designers, and developers 
-              grow in their careers through high-quality content, expert insights, and practical resources.
+              We&apos;re passionate about empowering personal growth and helping individuals transform their lives through 
+              self-help strategies, mindfulness practices, and practical life guidance.
             </p>
           </div>
 
@@ -29,10 +29,10 @@ export default function About() {
             <div className="bg-gray-50 p-8 rounded-lg">
               <h2 className={`${typography.h2} ${textSpacing.subheading} ${textColors.heading}`}>Our Mission</h2>
               <p className={`${typography.body} ${textColors.body} leading-relaxed`}>
-                behindyourbrain Blog is dedicated to empowering the global creative community with comprehensive 
-                resources, tutorials, and insights about design, graphic design tools, creative workflows, 
-                and industry trends. We believe in making design knowledge accessible to everyone, from 
-                beginners taking their first steps to seasoned professionals looking to stay ahead of the curve.
+                behindthebrain is dedicated to empowering individuals worldwide with comprehensive 
+                resources, guidance, and insights about personal growth, self-help strategies, mindfulness practices, 
+                and life transformation. We believe in making personal development accessible to everyone, from 
+                those just starting their journey to experienced practitioners looking to deepen their growth.
               </p>
             </div>
           </section>
@@ -45,9 +45,9 @@ export default function About() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">🎨</span>
                 </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Frontend Development</h3>
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Personal Growth</h3>
                 <p className={`${typography.body} ${textColors.secondary}`}>
-                  Modern JavaScript frameworks, CSS techniques, responsive design, and user experience best practices.
+                  Self-improvement strategies, goal setting, habit formation, and mindset development for lasting change.
                 </p>
               </div>
               
@@ -55,9 +55,9 @@ export default function About() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">⚙️</span>
                 </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Backend Development</h3>
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Mindfulness & Wellness</h3>
                 <p className={`${typography.body} ${textColors.secondary}`}>
-                  Server-side technologies, databases, APIs, cloud computing, and scalable architecture patterns.
+                  Meditation techniques, stress management, emotional wellbeing, and mental health awareness practices.
                 </p>
               </div>
               
@@ -65,9 +65,9 @@ export default function About() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">🚀</span>
                 </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Technology Trends</h3>
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Life Transformation</h3>
                 <p className={`${typography.body} ${textColors.secondary}`}>
-                  Emerging technologies, industry insights, career advice, and software development methodologies.
+                  Life coaching insights, personal development strategies, and practical guidance for meaningful change.
                 </p>
               </div>
               
@@ -75,9 +75,9 @@ export default function About() {
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <span className="text-xl">✨</span>
                 </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>CSS & Design</h3>
+                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Productivity & Motivation</h3>
                 <p className={`${typography.body} ${textColors.secondary}`}>
-                  Modern CSS techniques, animations, design systems, and creating beautiful user interfaces.
+                  Time management, productivity systems, motivation techniques, and achieving work-life balance.
                 </p>
               </div>
             </div>
@@ -87,8 +87,8 @@ export default function About() {
           <section className="mb-16">
             <h2 className="text-2xl font-bold mb-8 text-gray-900">Our Team</h2>
             <p className="text-gray-700 mb-6">
-              Our content is created by experienced developers and industry professionals who are 
-              passionate about sharing their knowledge.
+              Our content is created by experienced life coaches, wellness experts, and personal development professionals who are 
+              passionate about empowering others on their growth journey.
             </p>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -97,7 +97,7 @@ export default function About() {
                   <span className="text-lg text-white">SC</span>
                 </div>
                 <h3 className="font-bold mb-1 text-gray-900">Sarah Chen</h3>
-                <p className="text-sm text-gray-600">Frontend Specialist</p>
+                <p className="text-sm text-gray-600">Life Coach & Mindfulness Expert</p>
               </div>
               
               <div className="bg-white border border-gray-200 p-6 rounded-lg text-center">
@@ -105,7 +105,7 @@ export default function About() {
                   <span className="text-lg text-white">MR</span>
                 </div>
                 <h3 className="font-bold mb-1 text-gray-900">Michael Rodriguez</h3>
-                <p className="text-sm text-gray-600">Backend Expert</p>
+                <p className="text-sm text-gray-600">Wellness & Transformation Coach</p>
               </div>
               
               <div className="bg-white border border-gray-200 p-6 rounded-lg text-center">
@@ -113,7 +113,7 @@ export default function About() {
                   <span className="text-lg text-white">ET</span>
                 </div>
                 <h3 className="font-bold mb-1 text-gray-900">Emma Thompson</h3>
-                <p className="text-sm text-gray-600">Tech Analyst</p>
+                <p className="text-sm text-gray-600">Personal Growth Specialist</p>
               </div>
               
               <div className="bg-white border border-gray-200 p-6 rounded-lg text-center">
@@ -121,7 +121,7 @@ export default function About() {
                   <span className="text-lg text-white">DP</span>
                 </div>
                 <h3 className="font-bold mb-1 text-gray-900">David Park</h3>
-                <p className="text-sm text-gray-600">CSS Designer</p>
+                <p className="text-sm text-gray-600">Productivity & Motivation Expert</p>
               </div>
             </div>
           </section>
@@ -132,12 +132,12 @@ export default function About() {
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h2 className="text-xl font-bold mb-4 text-gray-900">Why We Started This Blog</h2>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  We believe that knowledge should be accessible to everyone. Our blog was created to 
-                  bridge the gap between complex technical concepts and practical implementation.
+                  We believe that personal growth should be accessible to everyone. Our blog was created to 
+                  bridge the gap between self-help theory and practical life transformation.
                 </p>
                 <p className="text-gray-700 leading-relaxed">
-                  Whether you&apos;re a beginner looking to learn the basics or an experienced developer 
-                  seeking advanced techniques, we have content for you.
+                  Whether you&apos;re just beginning your personal development journey or are an experienced 
+                  seeker looking for deeper insights, we have content for you.
                 </p>
               </div>
               
@@ -166,7 +166,7 @@ export default function About() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
                     </div>
-                    <span className="text-gray-700">Supporting the developer community</span>
+                    <span className="text-gray-700">Supporting the personal growth community</span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -182,7 +182,7 @@ export default function About() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
                     </div>
-                    <span className="text-gray-700">Fostering inclusive learning environments</span>
+                    <span className="text-gray-700">Fostering supportive transformation environments</span>
                   </li>
                 </ul>
               </div>

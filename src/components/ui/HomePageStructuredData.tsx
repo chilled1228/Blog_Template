@@ -8,8 +8,8 @@ export default function HomePageStructuredData({ url }: HomePageStructuredDataPr
   const websiteStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Freepik Blog",
-    "description": "The official Freepik blog with expert insights on royalty-free stock images, vectors, design trends, graphic design tips, and free creative resources.",
+    "name": "behindthebrain",
+    "description": "behindthebrain - Empowering personal growth through self-help, mindfulness, productivity, and life transformation.",
     "url": url,
     "potentialAction": {
       "@type": "SearchAction",
@@ -21,7 +21,7 @@ export default function HomePageStructuredData({ url }: HomePageStructuredDataPr
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Freepik",
+      "name": "behindthebrain",
       "logo": {
         "@type": "ImageObject",
         "url": `${url}/logo.png`
@@ -32,19 +32,19 @@ export default function HomePageStructuredData({ url }: HomePageStructuredDataPr
   const organizationStructuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Freepik",
+    "name": "behindthebrain",
     "url": url,
     "logo": {
       "@type": "ImageObject",
       "url": `${url}/logo.png`
     },
     "sameAs": [
-      "https://twitter.com/freepik",
-      "https://facebook.com/freepik",
-      "https://instagram.com/freepik",
-      "https://linkedin.com/company/freepik"
+      "https://twitter.com/behindthebrain",
+      "https://facebook.com/behindthebrain",
+      "https://instagram.com/behindthebrain",
+      "https://linkedin.com/company/behindthebrain"
     ],
-    "description": "Freepik is the leading search engine for stock photos, vectors, and PSD files. Find the perfect graphic resources for your creative projects."
+    "description": "behindthebrain is a leading resource for personal growth, self-help strategies, and life transformation guidance."
   };
 
   const breadcrumbStructuredData = {

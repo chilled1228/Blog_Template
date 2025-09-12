@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { Layout } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - behindyourbrain Blog',
-  description: 'Terms of service and usage guidelines for behindyourbrain Blog. Learn about your rights and responsibilities when using our website.',
+  title: 'Terms of Service - behindthebrain',
+  description: 'Terms of service and usage guidelines for behindthebrain. Learn about your rights and responsibilities when using our website.',
 }
 
 export default function Terms() {
