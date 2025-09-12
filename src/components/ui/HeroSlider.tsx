@@ -155,9 +155,14 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
               <div 
                 key={slide.id}
                 className={`absolute inset-0 grid grid-cols-1 lg:grid-cols-2 w-full transition-all duration-700 ${
-                  activeSlide === index 
-                    ? 'opacity-100 translate-x-0 scale-100 z-10' 
-                    : 'opacity-0 translate-x-4 scale-95 z-0'
+                  activeSlide === index
+                    ? 'opacity-100 translate-x-0 z-10'
+                    : 'opacity-0 ' +
+                      (((activeSlide === slides.length - 1 && index === 0) ||
+                        (index > activeSlide && !(activeSlide === 0 && index === slides.length - 1)))
+                        ? '-translate-x-full'
+                        : 'translate-x-full') +
+                      ' z-0'
                 }`} 
                 data-index={slide.id}
                 style={{
@@ -225,8 +230,8 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
                 <Link href={`/${slide.slug}` as Route} className="block h-full group">
                   <div className={`relative w-full rounded-lg sm:rounded-xl overflow-hidden transition-all duration-700 delay-200 ${
                     activeSlide === index 
-                      ? 'opacity-100 scale-100' 
-                      : 'opacity-0 scale-105'
+                      ? 'opacity-100' 
+                      : 'opacity-0'
                   }`}>
                     <div className="relative aspect-[16/10] sm:aspect-[4/3] lg:h-full">
                       <Image 
