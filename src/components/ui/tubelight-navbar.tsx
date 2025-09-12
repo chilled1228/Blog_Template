@@ -26,6 +26,7 @@ interface NavBarProps {
   items: NavItem[]
   categories?: CategoryItem[]
   className?: string
+  isSticky?: boolean
 }
 
 const iconMap = {
@@ -37,7 +38,7 @@ const iconMap = {
   Brain: Brain,
 }
 
-export function NavBar({ items, categories = [], className }: NavBarProps) {
+export function NavBar({ items, categories = [], className, isSticky = false }: NavBarProps) {
   const [clickedTab, setClickedTab] = useState<string | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -141,11 +142,17 @@ export function NavBar({ items, categories = [], className }: NavBarProps) {
   return (
     <div
       className={cn(
-        "fixed top-0 left-1/2 -translate-x-1/2 z-[9999] mt-4 pt-6",
+        "relative w-full flex justify-center py-2",
         className,
       )}
     >
-      <div className="flex items-center bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
+      <div className={cn(
+        "flex items-center backdrop-blur-lg py-1 px-1 rounded-full",
+        {
+          "border border-border": !isSticky,
+          "bg-background/5": !isSticky,
+        }
+      )}>
         {/* Mobile Layout */}
         <div className="md:hidden flex items-center w-full">
           {/* Left: Brand Name */}

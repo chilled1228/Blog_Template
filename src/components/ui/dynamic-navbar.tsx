@@ -19,7 +19,7 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap
 
-export function DynamicNavBar() {
+export function DynamicNavBar({ isSticky }: { isSticky: boolean }) {
   const [navItems, setNavItems] = useState([
     { name: 'Home', url: '/', icon: 'Home' as IconName },
     { name: 'About', url: '/about', icon: 'Info' as IconName },
@@ -67,5 +67,5 @@ export function DynamicNavBar() {
 
   console.log('Categories loaded:', categoryItems.length, categoryItems)
 
-  return <NavBar items={navItems} categories={categoryItems} />
+  return <NavBar items={navItems} categories={categoryItems} isSticky={isSticky} />
 }

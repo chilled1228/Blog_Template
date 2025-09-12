@@ -256,7 +256,7 @@ const HeroSlider: React.FC<HeroSliderProps> = ({ posts }) => {
               {slides.map((slide, index) => (
                 <li key={slide.id}>
                   <button 
-                    className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
+                    className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-300 ${
                       activeSlide === index 
                         ? 'shadow-lg' 
                         : 'hover:bg-gray-600'
