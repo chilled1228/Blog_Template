@@ -31,18 +31,41 @@ export function DynamicNavBar({ isSticky }: { isSticky: boolean }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        // Check cache first
+        const cachedCategories = localStorage.getItem('cached-categories')
+        const cachedTime = localStorage.getItem('cached-categories-time')
+        
+        // Use cache if it's less than 1 hour old
+        if (cachedCategories && cachedTime) {
+          const isCacheValid = (Date.now() - parseInt(cachedTime)) < 3600000 // 1 hour
+          if (isCacheValid) {
+            setCategories(JSON.parse(cachedCategories))
+            setLoading(false)
+            return
+          }
+        }
+        
         const fetchedCategories = await getAllCategories()
         setCategories(fetchedCategories)
+        
+        // Cache the results
+        localStorage.setItem('cached-categories', JSON.stringify(fetchedCategories))
+        localStorage.setItem('cached-categories-time', Date.now().toString())
       } catch (error) {
         console.error('Error fetching categories:', error)
         // Fallback to default categories
-        setCategories([
+        const defaultCategories = [
           { name: 'Personal Growth', slug: 'personal-growth', id: '1' },
           { name: 'Mindfulness', slug: 'mindfulness', id: '2' },
           { name: 'Wellness', slug: 'wellness', id: '3' },
           { name: 'Productivity', slug: 'productivity', id: '4' },
           { name: 'Motivation', slug: 'motivation', id: '5' }
-        ] as Category[])
+        ] as Category[]
+        
+        setCategories(defaultCategories)
+        // Cache the default categories
+        localStorage.setItem('cached-categories', JSON.stringify(defaultCategories))
+        localStorage.setItem('cached-categories-time', Date.now().toString())
       } finally {
         setLoading(false)
       }
@@ -51,21 +74,12 @@ export function DynamicNavBar({ isSticky }: { isSticky: boolean }) {
     fetchCategories()
   }, [])
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-4">
-        <div className="animate-pulse bg-gray-200 rounded h-8 w-96"></div>
-      </div>
-    )
-  }
-
-  const categoryItems = categories.map((category: Category) => ({
+  // Progressive loading - show navigation immediately, categories load in background
+  const categoryItems = loading ? [] : categories.map((category: Category) => ({
     name: category.name,
     slug: category.slug,
     url: `/category/${category.slug}`
   }))
 
-  console.log('Categories loaded:', categoryItems.length, categoryItems)
-
-  return <NavBar items={navItems} categories={categoryItems} isSticky={isSticky} />
+  return <NavBar items={navItems} categories={categoryItems} isSticky={isSticky} categoriesLoading={loading} />
 }

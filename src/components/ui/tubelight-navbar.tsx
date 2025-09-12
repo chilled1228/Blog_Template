@@ -27,6 +27,7 @@ interface NavBarProps {
   categories?: CategoryItem[]
   className?: string
   isSticky?: boolean
+  categoriesLoading?: boolean
 }
 
 const iconMap = {
@@ -38,7 +39,7 @@ const iconMap = {
   Brain: Brain,
 }
 
-export function NavBar({ items, categories = [], className, isSticky = false }: NavBarProps) {
+export function NavBar({ items, categories = [], className, isSticky = false, categoriesLoading = false }: NavBarProps) {
   const [clickedTab, setClickedTab] = useState<string | null>(null)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -174,8 +175,8 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
                       initial={false}
                       transition={{
                         type: "spring",
-                        stiffness: 300,
-                        damping: 30,
+                        stiffness: 200,
+                        damping: 25,
                       }}
                     >
                       <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full">
@@ -232,8 +233,8 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
                     initial={false}
                     transition={{
                       type: "spring",
-                      stiffness: 300,
-                      damping: 30,
+                      stiffness: 200,
+                      damping: 25,
                     }}
                   >
                     <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full">
@@ -248,7 +249,7 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
           })}
           
           {/* Desktop: Categories Dropdown */}
-          {categories.length > 0 && (
+          {(categories.length > 0 || categoriesLoading) && (
             <button
               ref={buttonRef}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -258,7 +259,9 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
                 isDropdownOpen && "bg-muted text-primary",
               )}
             >
-              <span className="inline">Categories</span>
+              <span className="inline">
+                {categoriesLoading ? "Loading..." : "Categories"}
+              </span>
               <ChevronDown size={14} className={cn(
                 "transition-transform",
                 isDropdownOpen && "rotate-180"
@@ -269,7 +272,7 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
       </div>
       
       {/* Portal dropdown */}
-      {isDropdownOpen && categories.length > 0 && typeof window !== 'undefined' && 
+      {isDropdownOpen && (categories.length > 0 || categoriesLoading) && typeof window !== 'undefined' && 
         createPortal(
           <div
             ref={dropdownRef}
@@ -285,19 +288,29 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
               exit={{ opacity: 0, y: 10 }}
               className="min-w-48 max-w-xs bg-background/95 border border-border backdrop-blur-lg rounded-lg shadow-xl py-2 mx-4 md:mx-0"
             >
-              {categories.map((category) => (
-                <Link
-                  key={category.slug}
-                  href={category.url as Route}
-                  onClick={() => setIsDropdownOpen(false)}
-                  className={cn(
-                    "block px-4 py-2 text-sm hover:bg-muted transition-colors",
-                    pathname === category.url && "bg-muted text-primary"
-                  )}
-                >
-                  {category.name}
-                </Link>
-              ))}
+              {categoriesLoading ? (
+                <div className="px-4 py-6 text-center">
+                  <div className="animate-pulse space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto"></div>
+                  </div>
+                </div>
+              ) : (
+                categories.map((category) => (
+                  <Link
+                    key={category.slug}
+                    href={category.url as Route}
+                    onClick={() => setIsDropdownOpen(false)}
+                    className={cn(
+                      "block px-4 py-2 text-sm hover:bg-muted transition-colors",
+                      pathname === category.url && "bg-muted text-primary"
+                    )}
+                  >
+                    {category.name}
+                  </Link>
+                ))
+              )}
             </motion.div>
           </div>,
           document.body
@@ -344,12 +357,21 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
                 })}
 
                 {/* Categories */}
-                {categories.length > 0 && (
+                {(categories.length > 0 || categoriesLoading) && (
                   <div className="border-t border-border pt-2 mt-2">
                     <div className="px-4 py-2">
-                      <span className="text-xs font-semibold text-foreground/60 uppercase tracking-wider">Categories</span>
+                      <span className="text-xs font-semibold text-foreground/60 uppercase tracking-wider">
+                        {categoriesLoading ? "Loading..." : "Categories"}
+                      </span>
                     </div>
-                    {categories.map((category) => (
+                    {categoriesLoading ? (
+                      <div className="px-4 py-4 space-y-2">
+                        <div className="h-3 bg-gray-200 rounded w-full"></div>
+                        <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                        <div className="h-3 bg-gray-200 rounded w-4/6"></div>
+                      </div>
+                    ) : (
+                      categories.map((category) => (
                       <Link
                         key={category.slug}
                         href={category.url as Route}
@@ -363,7 +385,8 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
                         <Lightbulb size={16} strokeWidth={2.5} />
                         <span>{category.name}</span>
                       </Link>
-                    ))}
+                    ))
+                  )}
                   </div>
                 )}
               </div>
