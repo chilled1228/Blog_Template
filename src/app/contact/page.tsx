@@ -1,188 +1,143 @@
-import { Metadata } from 'next'
-import Link from 'next/link'
-import { Layout } from '@/components/layout'
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { Layout } from '@/components/layout';
+import { Mail, MessageSquare, HelpCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Contact Us - behindthebrain',
   description: 'Get in touch with the behindthebrain team for questions, feedback, collaboration opportunities, or technical support. We respond within 24-48 hours.',
-}
+};
 
 export default function Contact() {
   return (
     <Layout>
-      <div className="min-h-screen bg-white">
-        <div className="max-w-4xl mx-auto px-4 py-16">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We&apos;d love to hear from you! Get in touch for questions, feedback, or collaboration opportunities.
-            </p>
-          </div>
-      
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-xl font-semibold mb-6 text-gray-900">Get In Touch</h2>
-          <p className="text-gray-700 mb-6">
-            We&apos;d love to hear from you! Whether you have questions about our content, 
-            suggestions for new topics, or would like to collaborate with us, don&apos;t 
-            hesitate to reach out.
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        {/* Hero Section */}
+        <section className="text-center mb-16">
+          <p className="font-semibold text-sm uppercase tracking-wider text-teal-600 mb-4">Get In Touch</p>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-stone-900 leading-tight tracking-tight">
+            Contact Us
+          </h1>
+          <p className="max-w-2xl mx-auto mt-6 text-lg text-stone-600">
+            We&apos;d love to hear from you! Whether you have questions, feedback, or collaboration ideas, our door is always open.
           </p>
+        </section>
 
-          <div className="space-y-4 mb-8">
-            <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-              <div>
-                <h3 className="font-semibold text-gray-900">General Inquiries</h3>
-                <p className="text-gray-600">For general questions and feedback</p>
-              </div>
+        {/* Contact Form and Info Section */}
+        <section className="grid md:grid-cols-2 gap-12 items-start">
+          {/* Contact Info */}
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-2xl font-bold text-stone-800 mb-4">Contact Information</h2>
+              <p className="text-stone-600">
+                For any inquiries, please feel free to send us a message using the form. We typically respond within 24-48 hours.
+              </p>
             </div>
-            
-            <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Content Suggestions</h3>
-                <p className="text-gray-600">Have an idea for a tutorial or topic?</p>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0 h-10 w-10 bg-teal-100/70 rounded-lg flex items-center justify-center">
+                  <Mail className="h-6 w-6 text-teal-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-stone-900">General Inquiries</h3>
+                  <p className="text-stone-600">For general questions and feedback.</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Collaboration</h3>
-                <p className="text-gray-600">Interested in writing for us?</p>
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0 h-10 w-10 bg-teal-100/70 rounded-lg flex items-center justify-center">
+                  <MessageSquare className="h-6 w-6 text-teal-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-stone-900">Content Suggestions</h3>
+                  <p className="text-stone-600">Have an idea for a new topic?</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Technical Issues</h3>
-                <p className="text-gray-600">Found a bug or having trouble with the site?</p>
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0 h-10 w-10 bg-teal-100/70 rounded-lg flex items-center justify-center">
+                  <HelpCircle className="h-6 w-6 text-teal-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-stone-900">Technical Support</h3>
+                  <p className="text-stone-600">Found a bug or need help with the site?</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h3 className="text-lg font-semibold mb-3 text-gray-900">Response Time</h3>
-            <p className="text-gray-700">
-              We typically respond to all inquiries within 24-48 hours. For urgent matters, 
-              please mention &ldquo;URGENT&rdquo; in your subject line.
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-6 text-center text-gray-900">Send Us a Message</h2>
-            <form className="space-y-4">
+          {/* Contact Form */}
+          <div className="bg-stone-100/80 border border-stone-200/60 rounded-2xl p-8">
+            <h2 className="text-2xl font-bold text-stone-800 mb-6 text-center">Send Us a Message</h2>
+            <form className="space-y-5">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name *
+                <label htmlFor="name" className="block text-sm font-medium text-stone-700 mb-1">
+                  Full Name
                 </label>
                 <input
                   type="text"
                   id="name"
                   name="name"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Your full name"
+                  className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                  placeholder="Your Name"
                 />
               </div>
-
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address *
+                <label htmlFor="email" className="block text-sm font-medium text-stone-700 mb-1">
+                  Email Address
                 </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="your.email@example.com"
+                  className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                  placeholder="you@example.com"
                 />
               </div>
-
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                  Subject *
+                <label htmlFor="subject" className="block text-sm font-medium text-stone-700 mb-1">
+                  Subject
                 </label>
                 <select
                   id="subject"
                   name="subject"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/50"
                 >
                   <option value="">Select a subject</option>
                   <option value="general">General Inquiry</option>
                   <option value="content">Content Suggestion</option>
                   <option value="collaboration">Collaboration</option>
                   <option value="technical">Technical Issue</option>
-                  <option value="other">Other</option>
                 </select>
               </div>
-
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Message *
+                <label htmlFor="message" className="block text-sm font-medium text-stone-700 mb-1">
+                  Message
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   required
-                  rows={5}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Please provide as much detail as possible..."
+                  rows={4}
+                  className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/50"
+                  placeholder="How can we help you?"
                 ></textarea>
               </div>
-
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-600 transition-colors focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full bg-teal-600 text-white py-3 px-6 rounded-full font-semibold hover:bg-teal-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
               >
                 Send Message
               </button>
             </form>
-
-            <div className="mt-4 text-sm text-gray-600">
-              <p>
-                * Required fields. By submitting this form, you agree to our{' '}
-                <Link href="/privacy" className="text-blue-500 hover:underline">Privacy Policy</Link>.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-12 bg-gray-50 p-6 rounded-lg">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900">Frequently Asked Questions</h2>
-        <div className="space-y-4">
-          <div>
-            <h3 className="font-semibold text-gray-900">Can I guest post on your blog?</h3>
-            <p className="text-gray-700">
-              Yes! We welcome guest contributors. Please reach out with your topic ideas and 
-              writing samples.
+            <p className="mt-4 text-xs text-stone-500 text-center">
+              By submitting, you agree to our{' '}
+              <Link href="/privacy" className="text-teal-600 hover:underline">Privacy Policy</Link>.
             </p>
           </div>
-          <div>
-            <h3 className="font-semibold text-gray-900">How often do you publish new content?</h3>
-            <p className="text-gray-700">
-              We typically publish 2-3 new articles per week, covering various aspects of 
-              web development and technology.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900">Do you offer consulting services?</h3>
-            <p className="text-gray-700">
-              While our primary focus is on content creation, some of our team members may 
-              be available for consulting. Please contact us to discuss your needs.
-            </p>
-          </div>
-        </div>
-        </div>
-        </div>
+        </section>
       </div>
     </Layout>
-  )
+  );
 }

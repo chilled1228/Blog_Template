@@ -1,214 +1,88 @@
-import { Metadata } from 'next'
-import Link from 'next/link'
-import { Layout } from '@/components/layout'
-import { typography, textSpacing, textColors } from '@/lib/typography'
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { Layout } from '@/components/layout';
+import { CheckCircle, Quote } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'About Us - behindthebrain',
   description: 'Learn about behindthebrain, our mission to empower personal growth, our expert team of life coaches and wellness experts, and our commitment to transformation.',
-}
+};
+
+const values = [
+  { title: 'Empowerment', description: 'Providing accurate, up-to-date information to empower your growth.' },
+  { title: 'Actionable Content', description: 'Creating practical, actionable content that you can apply to your life.' },
+  { title: 'Community Support', description: 'Fostering a supportive community for personal growth enthusiasts.' },
+  { title: 'High Standards', description: 'Maintaining the highest editorial standards for quality and integrity.' },
+];
 
 export default function About() {
   return (
     <Layout>
-      <div className="min-h-screen bg-white">
-        <div className="max-w-4xl mx-auto px-4 py-16">
-          {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h1 className={`${typography.h1} ${textSpacing.heading} ${textColors.heading}`}>
-              About behindthebrain
-            </h1>
-            <p className={`${typography.bodyLarge} ${textColors.secondary} max-w-2xl mx-auto`}>
-              We&apos;re passionate about empowering personal growth and helping individuals transform their lives through 
-              self-help strategies, mindfulness practices, and practical life guidance.
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        {/* Hero Section */}
+        <section className="text-center mb-20">
+          <p className="font-semibold text-sm uppercase tracking-wider text-teal-600 mb-4">Our Story</p>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-stone-900 leading-tight tracking-tight">
+            About behindthebrain
+          </h1>
+          <p className="max-w-2xl mx-auto mt-6 text-lg text-stone-600">
+            We&apos;re passionate about empowering personal growth and helping individuals transform their lives through 
+            self-help strategies, mindfulness practices, and practical life guidance.
+          </p>
+        </section>
+
+        {/* Mission Section with Blockquote */}
+        <section className="mb-24 flex justify-center">
+          <blockquote className="relative w-full text-center p-8 sm:p-12 bg-stone-100/80 rounded-2xl border border-stone-200/60">
+            <Quote className="absolute top-6 left-6 w-8 h-8 text-teal-200" strokeWidth={1.5} />
+            <h2 className="text-2xl sm:text-3xl font-bold text-stone-800 mb-4">Our Mission</h2>
+            <p className="text-lg sm:text-xl text-stone-700 leading-relaxed italic">
+              To empower individuals worldwide with comprehensive resources, guidance, and insights for personal growth, 
+              self-help, mindfulness, and life transformation.
             </p>
+            <Quote className="absolute bottom-6 right-6 w-8 h-8 text-teal-200" strokeWidth={1.5} />
+          </blockquote>
+        </section>
+
+        {/* Values Section */}
+        <section className="mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-stone-800">Our Core Values</h2>
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-10">
+            {values.map((value) => (
+              <div key={value.title} className="flex items-start space-x-4">
+                <div className="flex-shrink-0 h-10 w-10 bg-teal-500 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-stone-900">{value.title}</h3>
+                  <p className="text-stone-600">{value.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-          {/* Mission Section */}
-          <section className="mb-16">
-            <div className="bg-gray-50 p-8 rounded-lg">
-              <h2 className={`${typography.h2} ${textSpacing.subheading} ${textColors.heading}`}>Our Mission</h2>
-              <p className={`${typography.body} ${textColors.body} leading-relaxed`}>
-                behindthebrain is dedicated to empowering individuals worldwide with comprehensive 
-                resources, guidance, and insights about personal growth, self-help strategies, mindfulness practices, 
-                and life transformation. We believe in making personal development accessible to everyone, from 
-                those just starting their journey to experienced practitioners looking to deepen their growth.
-              </p>
-            </div>
-          </section>
-
-          {/* What We Cover */}
-          <section className="mb-16">
-            <h2 className={`${typography.h2} ${textSpacing.subheading} ${textColors.heading}`}>What We Cover</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white border border-gray-200 p-6 rounded-lg">
-                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-xl">🎨</span>
-                </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Personal Growth</h3>
-                <p className={`${typography.body} ${textColors.secondary}`}>
-                  Self-improvement strategies, goal setting, habit formation, and mindset development for lasting change.
-                </p>
-              </div>
-              
-              <div className="bg-white border border-gray-200 p-6 rounded-lg">
-                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-xl">⚙️</span>
-                </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Mindfulness & Wellness</h3>
-                <p className={`${typography.body} ${textColors.secondary}`}>
-                  Meditation techniques, stress management, emotional wellbeing, and mental health awareness practices.
-                </p>
-              </div>
-              
-              <div className="bg-white border border-gray-200 p-6 rounded-lg">
-                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-xl">🚀</span>
-                </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Life Transformation</h3>
-                <p className={`${typography.body} ${textColors.secondary}`}>
-                  Life coaching insights, personal development strategies, and practical guidance for meaningful change.
-                </p>
-              </div>
-              
-              <div className="bg-white border border-gray-200 p-6 rounded-lg">
-                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-xl">✨</span>
-                </div>
-                <h3 className={`${typography.h5} ${textSpacing.title} ${textColors.heading}`}>Productivity & Motivation</h3>
-                <p className={`${typography.body} ${textColors.secondary}`}>
-                  Time management, productivity systems, motivation techniques, and achieving work-life balance.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Team Section */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-8 text-gray-900">Our Team</h2>
-            <p className="text-gray-700 mb-6">
-              Our content is created by experienced life coaches, wellness experts, and personal development professionals who are 
-              passionate about empowering others on their growth journey.
+        {/* Call to Action */}
+        <section>
+          <div className="bg-teal-600 p-10 sm:p-12 rounded-2xl text-center text-white">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Join Our Community</h2>
+            <p className="max-w-2xl mx-auto mb-8 text-teal-50">
+              We love hearing from our readers! Whether you have questions, suggestions, or would 
+              like to contribute content, we encourage you to reach out.
             </p>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white border border-gray-200 p-6 rounded-lg text-center">
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-lg text-white">SC</span>
-                </div>
-                <h3 className="font-bold mb-1 text-gray-900">Sarah Chen</h3>
-                <p className="text-sm text-gray-600">Life Coach & Mindfulness Expert</p>
-              </div>
-              
-              <div className="bg-white border border-gray-200 p-6 rounded-lg text-center">
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-lg text-white">MR</span>
-                </div>
-                <h3 className="font-bold mb-1 text-gray-900">Michael Rodriguez</h3>
-                <p className="text-sm text-gray-600">Wellness & Transformation Coach</p>
-              </div>
-              
-              <div className="bg-white border border-gray-200 p-6 rounded-lg text-center">
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-lg text-white">ET</span>
-                </div>
-                <h3 className="font-bold mb-1 text-gray-900">Emma Thompson</h3>
-                <p className="text-sm text-gray-600">Personal Growth Specialist</p>
-              </div>
-              
-              <div className="bg-white border border-gray-200 p-6 rounded-lg text-center">
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-lg text-white">DP</span>
-                </div>
-                <h3 className="font-bold mb-1 text-gray-900">David Park</h3>
-                <p className="text-sm text-gray-600">Productivity & Motivation Expert</p>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact" className="bg-white text-teal-600 px-8 py-3 rounded-full font-semibold hover:bg-stone-100 transition-colors">
+                Contact Us
+              </Link>
+              <Link href="/" className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-teal-600 transition-colors">
+                Read Our Blog
+              </Link>
             </div>
-          </section>
-
-          {/* Values Section */}
-          <section className="mb-16">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h2 className="text-xl font-bold mb-4 text-gray-900">Why We Started This Blog</h2>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  We believe that personal growth should be accessible to everyone. Our blog was created to 
-                  bridge the gap between self-help theory and practical life transformation.
-                </p>
-                <p className="text-gray-700 leading-relaxed">
-                  Whether you&apos;re just beginning your personal development journey or are an experienced 
-                  seeker looking for deeper insights, we have content for you.
-                </p>
-              </div>
-              
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h2 className="text-xl font-bold mb-4 text-gray-900">Our Commitment</h2>
-                <ul className="space-y-2">
-                  <li className="flex items-start space-x-2">
-                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">Providing accurate, up-to-date information</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">Creating practical, actionable content</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">Supporting the personal growth community</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">Maintaining high editorial standards</span>
-                  </li>
-                  <li className="flex items-start space-x-2">
-                    <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </div>
-                    <span className="text-gray-700">Fostering supportive transformation environments</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* Call to Action */}
-          <section>
-            <div className="bg-blue-500 p-8 rounded-lg text-center text-white">
-              <h2 className="text-2xl font-bold mb-4">Get Involved</h2>
-              <p className="mb-6">
-                We love hearing from our readers! Whether you have questions, suggestions, or would 
-                like to contribute content, we encourage you to reach out.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/contact" className="bg-white text-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                  Contact Us
-                </Link>
-                <Link href="/blog" className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-500 transition-colors">
-                  Read Our Blog
-                </Link>
-              </div>
-            </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
     </Layout>
-  )
+  );
 }

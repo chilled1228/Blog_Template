@@ -41,12 +41,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, []);
 
   return (
-    <div className="freepik home blog wp-theme-freepik-blog hfeed min-h-screen flex flex-col">
+    <div className="freepik home blog wp-theme-freepik-blog hfeed min-h-screen flex flex-col font-sans">
       <div ref={navContainerRef} style={{ height: isSticky ? navHeight : 'auto' }}>
         <div
           className={`w-full transition-all duration-500 ease-in-out ${
             isSticky
-              ? 'fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg shadow-md'
+              ? 'fixed top-0 left-0 right-0 z-50 bg-[#fef9f8]/80 backdrop-blur-lg shadow-md'
               : 'relative py-10'
           }`}
         >

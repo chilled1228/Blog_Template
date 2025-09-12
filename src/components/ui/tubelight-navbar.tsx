@@ -48,40 +48,33 @@ export function NavBar({ items, categories = [], className, isSticky = false }: 
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
-  // Update button position when dropdown opens
+  // Update button position when dropdown opens and on scroll/resize
   useEffect(() => {
-    if (isDropdownOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect()
-      const isMobile = window.innerWidth < 768
-      
-      setButtonPosition({
-        top: rect.bottom + window.scrollY + 8, // Below navbar for both mobile and desktop
-        left: isMobile ? (window.innerWidth - 192) / 2 : rect.left + window.scrollX, // Center on mobile
-        width: rect.width
-      })
-    }
-  }, [isDropdownOpen])
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
+    const updatePosition = () => {
       if (isDropdownOpen && buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect()
-        const isMobile = window.innerWidth < 768
+        const rect = buttonRef.current.getBoundingClientRect();
+        const isMobile = window.innerWidth < 768;
         
         setButtonPosition({
-          top: rect.bottom + window.scrollY + 8,
-          left: isMobile ? (window.innerWidth - 192) / 2 : rect.left + window.scrollX,
-          width: rect.width
-        })
+          top: rect.bottom + 8, // Use viewport-relative position
+          left: isMobile ? (window.innerWidth - 192) / 2 : rect.left, // Center on mobile
+          width: rect.width,
+        });
       }
-    }
+    };
+
+    // Update position immediately when dropdown opens
+    updatePosition();
 
     if (isDropdownOpen) {
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
+      window.addEventListener('scroll', updatePosition);
+      window.addEventListener('resize', updatePosition);
+      return () => {
+        window.removeEventListener('scroll', updatePosition);
+        window.removeEventListener('resize', updatePosition);
+      };
     }
-  }, [isDropdownOpen])
+  }, [isDropdownOpen]);
 
   // Close dropdown when clicking outside
   useEffect(() => {

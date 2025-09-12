@@ -2,7 +2,6 @@ import { getBlogPostsByCategory } from '@/lib/blogService';
 import { getCategoryBySlug } from '@/lib/firebase';
 import React from 'react';
 import { Layout } from '@/components/layout';
-import HeroSlider from '@/components/ui/HeroSlider';
 import BlogPostsGrid from '@/components/ui/BlogPostsGrid';
 import Pagination from '@/components/ui/Pagination';
 import CategoryStructuredData from '@/components/ui/CategoryStructuredData';
@@ -46,12 +45,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-          {/* Hero Slider for Featured Posts */}
-          {posts.length > 0 && (
-            <div className="mb-12">
-              <HeroSlider posts={posts.slice(0, 5)} />
-            </div>
-          )}
+          
 
           {/* Posts Grid Section */}
           <div className="mb-8">
