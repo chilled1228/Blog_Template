@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 export const SITE_CONFIG = {
   name: 'behindthebrain',
   description: 'behindthebrain - Empowering personal growth through self-help, mindfulness, productivity tips, and life transformation strategies.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com',
   siteName: 'behindthebrain',
   locale: 'en_US',
   themeColor: '#000000',
@@ -12,6 +12,7 @@ export const SITE_CONFIG = {
   author: 'behindthebrain Team',
   creator: 'behindthebrain',
   publisher: 'behindthebrain',
+  contactEmail: 'blog.boopul@gmail.com',
 };
 
 export function createMetadata({

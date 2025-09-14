@@ -172,6 +172,9 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
 
   // Process and execute inline scripts for games
   const processInlineScripts = useCallback(() => {
+    // Check if we're in a valid environment for script execution
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    
     const scripts = document.querySelectorAll('script:not([data-processed])');
     scripts.forEach((script) => {
       const scriptElement = script as HTMLScriptElement;
@@ -238,12 +241,51 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
             
             // If we found global functions or game functions, execute in global scope
             if (globalFunctions.length > 0 || hasGameFunctions) {
-              // Execute in global scope using eval for games that need global function access
-              window.eval(scriptContent);
+              // Wrap in requestAnimationFrame to ensure DOM is ready and avoid stream issues
+              requestAnimationFrame(() => {
+                try {
+                  // Create a safer execution context that preserves global scope
+                  const wrappedScript = `
+                    (function() {
+                      try {
+                        ${scriptContent}
+                      } catch (e) {
+                        console.warn('Script execution error:', e);
+                      }
+                    })();
+                  `;
+                  // Execute in global scope using a safer approach
+                  const scriptTag = document.createElement('script');
+                  scriptTag.textContent = wrappedScript;
+                  
+                  // Check if document.head is still available
+                  if (document.head) {
+                    document.head.appendChild(scriptTag);
+                    // Use setTimeout to ensure script executes before removal
+                    setTimeout(() => {
+                      if (document.head && document.head.contains(scriptTag)) {
+                        document.head.removeChild(scriptTag);
+                      }
+                    }, 0);
+                  }
+                } catch (error) {
+                  console.warn('Error in script execution wrapper:', error);
+                }
+              });
             } else {
-              // Use Function constructor for isolated execution
-              const executeScript = new Function(scriptContent);
-              executeScript();
+              // Use Function constructor for isolated execution with error wrapping
+              try {
+                const executeScript = new Function(`
+                  try {
+                    ${scriptContent}
+                  } catch (e) {
+                    console.warn('Isolated script execution error:', e);
+                  }
+                `);
+                executeScript();
+              } catch (error) {
+                console.warn('Error creating isolated script function:', error);
+              }
             }
           } catch (runtimeError) {
             console.warn('Runtime error in inline script:', runtimeError);
@@ -337,25 +379,66 @@ const BlogContentRenderer: React.FC<BlogContentRendererProps> = ({ content }) =>
                    content.includes('p5.') ||
                    content.includes('Matter.'));
 
+  // Add fallback for common game functions to prevent ReferenceError
+  const addFallbackFunctions = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Create fallback functions for common game functions
+    const fallbackFunctions = {
+      checkAnswer: function() {
+        console.warn('checkAnswer function called but not defined');
+        return false;
+      },
+      selectNumber: function() {
+        console.warn('selectNumber function called but not defined');
+      },
+      resetGame: function() {
+        console.warn('resetGame function called but not defined');
+      },
+      nextWord: function() {
+        console.warn('nextWord function called but not defined');
+      },
+      updateTimer: function() {
+        console.warn('updateTimer function called but not defined');
+      },
+      generateStroopWord: function() {
+        console.warn('generateStroopWord function called but not defined');
+        return { word: '', color: '' };
+      }
+    };
+    
+    // Add fallback functions to window if they don't exist
+    Object.keys(fallbackFunctions).forEach(funcName => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (!(window as any)[funcName]) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any)[funcName] = fallbackFunctions[funcName as keyof typeof fallbackFunctions];
+      }
+    });
+  }, []);
+
   // Optimized effect with proper cleanup - only run on client
   useEffect(() => {
     if (typeof window === 'undefined' || hasInitialized.current) return;
     hasInitialized.current = true;
+
+    // Add fallback functions first
+    addFallbackFunctions();
 
     if (hasCharts) {
       loadChartJS();
     }
 
     if (hasInteractiveElements || hasInlineScripts) {
-      // Delay execution to ensure DOM is ready
+      // Delay execution to ensure DOM is ready and content is rendered
       const timer = setTimeout(() => {
         const cleanup = processInteractiveElements();
         return cleanup;
-      }, 100);
+      }, 200); // Increased delay to ensure DOM is fully ready
       
       return () => clearTimeout(timer);
     }
-  }, [content, loadChartJS, processInteractiveElements, hasCharts, hasInteractiveElements, hasInlineScripts, hasGames]);
+  }, [content, loadChartJS, processInteractiveElements, hasCharts, hasInteractiveElements, hasInlineScripts, hasGames, addFallbackFunctions]);
 
   // Check if content contains games
   const isGameContent = (htmlContent: string): boolean => {

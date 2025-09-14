@@ -8,7 +8,7 @@ interface CategoryStructuredDataProps {
 }
 
 export default function CategoryStructuredData({ category, url, posts = [] }: CategoryStructuredDataProps) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com';
   
   // Category page structured data
   const categoryStructuredData = {

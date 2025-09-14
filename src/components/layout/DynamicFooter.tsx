@@ -70,6 +70,7 @@ export default function DynamicFooter() {
               <li><Link href="/terms" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">Terms of Service</Link></li>
               <li><Link href="/cookie-policy" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">Cookie Policy</Link></li>
               <li><Link href="/disclaimer" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">Disclaimer</Link></li>
+              <li><Link href="/dmca" className="text-sm text-stone-600 hover:text-teal-600 transition-colors">DMCA Policy</Link></li>
             </ul>
           </div>
 
@@ -138,6 +139,7 @@ export default function DynamicFooter() {
                 <Link href="/terms" className="text-stone-500 hover:text-teal-600 transition-colors">Terms of Service</Link>
                 <Link href="/cookie-policy" className="text-stone-500 hover:text-teal-600 transition-colors">Cookie Policy</Link>
                 <Link href="/disclaimer" className="text-stone-500 hover:text-teal-600 transition-colors">Disclaimer</Link>
+                <Link href="/dmca" className="text-stone-500 hover:text-teal-600 transition-colors">DMCA Policy</Link>
               </div>
             </div>
             <div className="flex space-x-4">

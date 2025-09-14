@@ -152,21 +152,31 @@ export const getBlogPostsByCategory = async (categorySlug: string, includeUnpubl
       return [];
     }
     
-    let q = query(collection(db, BLOG_POSTS_COLLECTION), where('category', '==', category.name));
-    
-    if (!includeUnpublished) {
-      q = query(q, where('status', '==', 'published'));
-    }
-    
-    q = query(q, orderBy('published_at', 'desc'));
+    // Simplified query to avoid composite index requirement while index is building
+    const q = query(
+      collection(db, BLOG_POSTS_COLLECTION), 
+      where('category', '==', category.name)
+    );
     
     const querySnapshot = await getDocs(q);
-    const posts = querySnapshot.docs.map(doc => 
+    let posts = querySnapshot.docs.map(doc => 
       convertTimestamps({
         id: doc.id,
         ...doc.data()
       }) as BlogPost
     );
+    
+    // Filter unpublished posts in memory if needed
+    if (!includeUnpublished) {
+      posts = posts.filter(post => post.status === 'published');
+    }
+    
+    // Sort by published_at in memory
+    posts.sort((a, b) => {
+      const dateA = new Date(a.published_at || a.created_at || 0);
+      const dateB = new Date(b.published_at || b.created_at || 0);
+      return dateB.getTime() - dateA.getTime();
+    });
     
     // Update category URLs dynamically
     return await updatePostsCategoryUrls(posts);

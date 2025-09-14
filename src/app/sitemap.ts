@@ -2,7 +2,7 @@ import { getBlogPosts } from '@/lib/blogService';
 import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com';
   
   try {
     // Fetch all published blog posts

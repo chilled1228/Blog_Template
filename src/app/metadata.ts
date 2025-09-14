@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com';
   
   return {
     title: "Latest Blog Posts | behindthebrain",

@@ -70,7 +70,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
 
   const publishedDate = post.published_at || post.created_at || new Date().toISOString();
   const modifiedDate = post.updated_at || publishedDate;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com';
   const postUrl = `${siteUrl}/${slug}`;
 
   // Only generate structured data for published posts

@@ -17,7 +17,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   const { category } = await params;
   const posts = await getBlogPostsByCategory(category);
   const categoryData = await getCategoryBySlug(category);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com';
 
   // Use database category data if available, otherwise fallback
   const content = {

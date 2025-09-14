@@ -1,20 +1,30 @@
-# Robots.txt for Blog Template
-# Prevent search engines from crawling draft content and admin areas
-
 User-agent: *
-Disallow: /admin/
-Disallow: /api/
-Disallow: /_next/
-Disallow: /draft/
-Disallow: /*?*utm_*
-Disallow: /*?*ref=*
-Disallow: /*?*fbclid=*
-
-# Allow all other pages
 Allow: /
 
-# Sitemap location
-Sitemap: NEXT_PUBLIC_SITE_URL/sitemap.xml
+# Block common bot paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+
+# Block error pages explicitly
+Disallow: /404
+Disallow: /500
+Disallow: /*?error=*
+Disallow: /*?status=*
+
+# Block common file types
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
+
+# Block common parameters that might create duplicate content
+Disallow: /*?page=*
+Disallow: /*?sort=*
+Disallow: /*?filter=*
+
+# Sitemap
+Sitemap: https://behindyourbrain.com/sitemap.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1

@@ -12,7 +12,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     return null;
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com';
   const imageUrl = post.image || `${siteUrl}/default-og-image.jpg`;
   const readingTime = post.content ? calculateReadingTime(post.content) : 0;
   
@@ -136,7 +136,7 @@ export default async function StructuredData({ slug }: StructuredDataProps) {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "behindthebrain",
-    "url": "https://behindthebrain.com",
+    "url": siteUrl,
     "logo": `${siteUrl}/logo.png`,
     "sameAs": [
       "https://twitter.com/behindthebrain",

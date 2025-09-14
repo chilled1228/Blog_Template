@@ -41,6 +41,7 @@ export default function Contact() {
                 <div>
                   <h3 className="text-lg font-semibold text-stone-900">General Inquiries</h3>
                   <p className="text-stone-600">For general questions and feedback.</p>
+                  <p className="text-stone-600 text-sm mt-1">Email: blog.boopul@gmail.com</p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">

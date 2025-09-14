@@ -6,7 +6,7 @@ import Pagination from '@/components/ui/Pagination';
 import HomePageStructuredData from '@/components/ui/HomePageStructuredData';
 
 const HomePage: React.FC = () => {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://behindyourbrain.com';
   
   return (
     <Layout>

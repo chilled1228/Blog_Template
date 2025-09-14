@@ -212,19 +212,27 @@ const GameContainer: React.FC<GameContainerProps> = ({ htmlContent, className = 
 
         // Execute in global scope for games
         try {
-          // Use window.eval for games that need global scope
-          window.eval(scriptContent);
+          // Use a safer execution method that preserves global scope
+          const wrappedScript = `
+            (function() {
+              ${scriptContent}
+            })();
+          `;
+          const scriptElement = document.createElement('script');
+          scriptElement.textContent = wrappedScript;
+          document.head.appendChild(scriptElement);
+          document.head.removeChild(scriptElement);
           console.log('✅ Game script executed successfully');
         } catch (runtimeError) {
           console.warn('❌ Runtime error executing script:', runtimeError);
           
           // Try alternative execution method
           try {
-            const scriptElement = document.createElement('script');
-            scriptElement.textContent = scriptContent;
-            document.body.appendChild(scriptElement);
-            document.body.removeChild(scriptElement);
-            console.log('✅ Game script executed via DOM injection');
+            const fallbackScript = document.createElement('script');
+            fallbackScript.textContent = scriptContent;
+            document.body.appendChild(fallbackScript);
+            document.body.removeChild(fallbackScript);
+            console.log('✅ Game script executed via fallback DOM injection');
           } catch (domError) {
             console.warn('❌ DOM injection also failed:', domError);
           }
